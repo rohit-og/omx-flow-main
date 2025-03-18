@@ -56,7 +56,7 @@ $appName = getAppSettings('name');
             background-color: #232fcc !important;
         }
         .card:hover h5 {
-            color: #0866FF !important; 
+            color:rgb(67, 223, 126) !important; 
             transition: color 0.3s ease; 
         }
         .card i {
@@ -452,28 +452,29 @@ $appName = getAppSettings('name');
                 <p class="mt-3"><strong>Selected Plan:</strong> <span id="selectedPlan">Monthly</span></p>
             </div>
 
-            <div class="container py-5">
-                <div class="row g-4">
+            <div class="container py-5 ">
+                <div class="row g-4 d-flex justify-content-md-around ">
                     <!-- OMX Sync - Task Automations -->
                     <div class="col-md-4">
-                        <div class="card shadow-lg">
+                        <div class="card shadow-lg price-card">
                             <div class="card-body">
-                                <h5 class="card-title text-success"><strong>OMX Sync</strong></h5>
-                                <h6 class="card-subtitle mb-3 text-muted">Task Automations</h6>
-                                <p>Delegate Tasks and get them completed without manual follow-ups</p>
-                                <h3 class="text-primary">₹1,999 <small class="text-muted"><del>₹3,999</del></small></h3>
-                                <p class="text-muted">Per user | 1-Year Subscription</p>
+                                <h5 class="card-title text-success">OMX Flow</h5>
+                                <h6 class="card-subtitle mb-3 text-muted">Premium</h6>
+                                
+                                <h3 class="text-primary amount">₹15,000.00</h3>
+                                <p class="text-muted original-price"><del>₹20,999</del></p>
+                                <p class="text-muted subscription-period">Monthly Subscription</p>
                                 <button class="btn btn-success w-100">Buy Now</button>
                                 <hr>
                                 <ul class="list-unstyled">
-                                    <li>✅ Delegate Unlimited Tasks</li>
-                                    <li>✅ Team Performance Report</li>
-                                    <li>✅ Attach Links and Voice Notes</li>
-                                    <li>✅ Expense Manager</li>
-                                    <li>✅ Email & WhatsApp Notifications</li>
-                                    <li>✅ Mobile Apps & Repeated Tasks</li>
-                                    <li>✅ Task Wise Reminders</li>
-                                    <li>✅ Save more than 4 hours per day per employee</li>
+                                    <li>✅ 1000 Contacts</li>
+                                    <li>✅ 50 Campaigns Per Month</li>
+                                    <li>✅ 100 Bot Replies</li>
+                                    <li>✅ 10 Team Members/Agents</li>
+                                    <li>✅ 10 Bot Flows</li>
+                                    <li>✅ 100 Contact Custom Fields</li>
+                                    <li>✅ AI Chat Bot</li>
+                                    <li>✅ API and Webhook Access</li>
                                 </ul>
                             </div>
                         </div>
@@ -481,55 +482,32 @@ $appName = getAppSettings('name');
             
                     <!-- OMX Sync - Attendance & Leave Automations -->
                     <div class="col-md-4">
-                        <div class="card shadow-lg">
-                            <div class="card-body">
-                                <h5 class="card-title text-success"><strong>OMX Sync</strong></h5>
-                                <h6 class="card-subtitle mb-3 text-muted">Attendance & Leave Automations</h6>
-                                <p>Make sure employees get to work on time</p>
-                                <h3 class="text-primary">₹499 <small class="text-muted"><del>₹999</del></small></h3>
-                                <p class="text-muted">Per user | 1-Year Subscription</p>
+                        <div class="card shadow-lg price-card">
+                            <div class="card-body product-header">
+                                <h5 class="card-title text-success">OMX Flow</h5>
+                                <h6 class="card-subtitle mb-3 text-muted">Ultimate</h6>
+                              
+                                <h3 class="text-primary amount">₹20,000.00</h3>
+                                <p class="text-muted original-price"><del>₹24,999.00</del></p>
+                                <p class="text-muted subscription-period">1-Year Subscription</p>
                                 <button class="btn btn-success w-100">Buy Now</button>
                                 <hr>
                                 <ul class="list-unstyled">
-                                    <li>✅ Attendance Marking via Geolocation & QR</li>
-                                    <li>✅ Easy Leave Application</li>
-                                    <li>✅ Attendance & Leave Tracking</li>
-                                    <li>✅ WhatsApp & Email Notifications</li>
-                                    <li>✅ Approval Process</li>
-                                    <li>✅ Regularization Process</li>
-                                    <li>✅ Reports & Dashboards</li>
-                                    <li>✅ Mobile Apps</li>
+                                    <li>✅ Unlimited Contacts</li>
+                                    <li>✅ Unlimited Campaigns Per Month</li>
+                                    <li>✅ Unlimited Bot Replies</li>
+                                    <li>✅ Unlimited Bot Flows</li>
+                                    <li>✅ Unlimited Contact Custom Fields</li>
+                                    <li>✅ Unlimited Team Members/Agents</li>
+                                    <li>✅ AI Chat Bot</li>
+                                    <li>✅ API and Webhook Access</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
             
                     <!-- OMX Sales - Automate Sales CRM -->
-                    <div class="col-md-4">
-                        <div class="card shadow-lg">
-                            <div class="card-body">
-                                <h5 class="card-title text-success"><strong>OMX Sales</strong></h5>
-                                <h6 class="card-subtitle mb-3 text-muted">Automate Sales CRM</h6>
-                                <p>Manage Your Leads and Grow Your Revenue</p>
-                                <h3 class="text-primary">₹2,999 <small class="text-muted"><del>₹5,999</del></small></h3>
-                                <p class="text-muted">Per user | 1-Year Subscription</p>
-                                <button class="btn btn-success w-100">Buy Now</button>
-                                <hr>
-                                <ul class="list-unstyled">
-                                    <li>✅ Multiple Pipelines & Custom Stages</li>
-                                    <li>✅ Import Leads via CSV</li>
-                                    <li>✅ Track Lead History</li>
-                                    <li>✅ Indiamart, TradeIndia, & more integrations</li>
-                                    <li>✅ Add Leads via API (Pabbly)</li>
-                                    <li>✅ WhatsApp Message Templates</li>
-                                    <li>✅ Automatic Lead Assignment</li>
-                                    <li>✅ Sales Team Performance Report</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                   
             
         </section>
         <!-- pricing block -->
@@ -686,21 +664,105 @@ $appName = getAppSettings('name');
                 locale: '{{ app()->getLocale() }}',
             }
         })();
-   
-                function setActive(selectedBtn) {
-                    // Remove active class from all buttons
-                    document.querySelectorAll(".btn-toggle").forEach(btn => {
-                        btn.classList.remove("active");
-                    });
-            
-                    // Add active class to the selected button
-                    selectedBtn.classList.add("active");
-            
-                    // Update the displayed selected plan
-                    document.getElementById("selectedPlan").innerText = selectedBtn.getAttribute("data-value").charAt(0).toUpperCase() + selectedBtn.getAttribute("data-value").slice(1);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Price configuration for different plans
+            const priceConfig = {
+                monthly: {
+                    premium: {
+                        price: 1499,
+                        original: 1999
+                    },
+                    ultimate: {
+                        price: 2499,
+                        original: 2999
+                    }
+                },
+                quarterly: {
+                    premium: {
+                        price: 3999,  // ~3 months price with some discount
+                        original: 5997  // 3 x monthly original price
+                    },
+                    ultimate: {
+                        price: 6999,
+                        original: 8997
+                    }
+                },
+                yearly: {
+                    premium: {
+                        price: 14999,  // ~12 months price with significant discount
+                        original: 23988  // 12 x monthly original price
+                    },
+                    ultimate: {
+                        price: 20000,
+                        original: 30988
+                    }
                 }
-               
-           
+            };
+
+            // Function to format number with commas
+            function formatPrice(number) {
+                return new Intl.NumberFormat('en-IN').format(number);
+            }
+
+            // Function to update prices
+            function updatePrices(period) {
+                const cards = document.querySelectorAll('.price-card');
+                
+                cards.forEach((card, index) => {
+                    const planType = index === 0 ? 'premium' : 'ultimate';
+                    const prices = priceConfig[period][planType];
+                    
+                    const amountElement = card.querySelector('.amount');
+                    const originalPriceElement = card.querySelector('.original-price');
+                    const subscriptionPeriodElement = card.querySelector('.subscription-period');
+
+                    // Update the prices
+                    amountElement.textContent = `₹${formatPrice(prices.price)}`;
+                    originalPriceElement.innerHTML = `<del>₹${formatPrice(prices.original)}</del>`;
+                    
+                    // Update subscription period text
+                    const periodText = period.charAt(0).toUpperCase() + period.slice(1);
+                    subscriptionPeriodElement.textContent = `${periodText} Subscription`;
+                });
+            }
+
+            // Add click handlers to toggle buttons
+            const toggleButtons = document.querySelectorAll('.btn-toggle');
+            toggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    toggleButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get the selected period and update prices
+                    const period = this.getAttribute('data-value').toLowerCase();
+                    updatePrices(period);
+                    
+                    // Update the selected plan text
+                    document.getElementById('selectedPlan').textContent = 
+                        period.charAt(0).toUpperCase() + period.slice(1);
+                });
+            });
+
+            // Initialize with monthly prices
+            updatePrices('monthly');
+        });
+ 
+
+        function setActive(selectedBtn) {
+            // Remove active class from all buttons
+            document.querySelectorAll(".btn-toggle").forEach(btn => {
+                btn.classList.remove("active");
+            });
+    
+            // Add active class to the selected button
+            selectedBtn.classList.add("active");
+    
+            // Update the displayed selected plan
+            document.getElementById("selectedPlan").innerText = selectedBtn.getAttribute("data-value").charAt(0).toUpperCase() + selectedBtn.getAttribute("data-value").slice(1);
+        }
         </script>
         {!! __yesset([
         'dist/js/common-vendorlibs.js',
