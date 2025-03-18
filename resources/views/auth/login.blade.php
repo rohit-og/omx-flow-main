@@ -19,14 +19,16 @@
        
     }
     .form-container .form-icon{
-        font-size: 55px;
         text-align: center;
-        line-height: 100px;
         width: 100px;
-        height:100px;
+        height: 100px;
         margin: 0 auto 15px;
-        border-radius: 50px;
+        border-radius: 50%;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
     }
     .form-container .title{
         color:rgb(0, 0, 0);
@@ -117,7 +119,9 @@
         <div class="row justify-content-center">
             <div class="col-md-6 col-md-offset-6">
                 <div class="form-container">
-                <div class="form-icon"><i class="fa fa-user gradient-icon-1"></i></div>
+                <div class="form-icon">
+                    <img src="{{ asset('imgs/omxiconn.png') }}" alt="Logo" style="width: 100px; height: 100px; object-fit: contain; border-radius: 50%;">
+                </div>
                     <h3 class="title">Login</h3>
                 @if (isDemo())
                     <button onclick="document.getElementById('lwLoginEmail').value='demosuperadmin';document.getElementById('lwLoginPassword').value='demopass12';" class="btn btn-sm btn-danger">{{  __tr('Demo Super Admin Login') }}</button>
