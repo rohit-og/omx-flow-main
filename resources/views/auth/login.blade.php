@@ -117,7 +117,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6 col-md-offset-6">
                 <div class="form-container">
-                    <div class="form-icon"><img src="{{resources ('./imgs/Untitled-3.png') }}" alt="Logo"> </div>
+                    
                     <h3 class="title">Login</h3>
                 @if (isDemo())
                     <button onclick="document.getElementById('lwLoginEmail').value='demosuperadmin';document.getElementById('lwLoginPassword').value='demopass12';" class="btn btn-sm btn-danger">{{  __tr('Demo Super Admin Login') }}</button>
