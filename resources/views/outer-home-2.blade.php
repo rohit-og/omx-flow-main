@@ -670,6 +670,55 @@ $appName = getAppSettings('name');
             </div>
         </section>
       
+        <!-- Add this section after the FAQ section and before the footer -->
+        <section style="background-color: #fff;" class="py-5">
+            <div class="container">
+                <div class="row align-items-center">
+                    <!-- Left side - Contact heading and text -->
+                    <div class="col-md-5">
+                        <h1 class="fw-bold mb-4">Contact <span class="text-success">Us</span></h1>
+                        <p class="text-muted mb-4">Have questions about our WhatsApp Business solutions? We're here to help! Reach out to us for personalized support, demo requests, or any inquiries about our services.</p>
+                        
+                        <!-- Additional contact info -->
+                        <div class="contact-info mt-4">
+                        @if (getAppSettings('contact_details'))
+                <div class="lw-ws-pre-line" style="width:188px;">
+                    {!! getAppSettings('contact_details') !!}
+                </div>
+                    <hr>
+                @endif
+                        </div>
+                    </div>
+
+                    <!-- Right side - Contact form -->
+                    <div class="col-md-6 offset-md-1">
+                        <div class="bg-white rounded-3 shadow-sm">
+                            <form class="p-4">
+                                <div class="form-floating mb-4">
+                                    <input type="text" class="form-control" id="floatingName" placeholder=" " 
+                                        style="background-color: #F2F4F7; border: none; height: 60px;">
+                                    <label for="floatingName" class="text-muted">Name</label>
+                                </div>
+                                <div class="form-floating mb-4">
+                                    <input type="tel" class="form-control" id="floatingPhone" placeholder=" " 
+                                        style="background-color: #F2F4F7; border: none; height: 60px;">
+                                    <label for="floatingPhone" class="text-muted">Phone Number</label>
+                                </div>
+                                <div class="form-floating mb-4">
+                                    <textarea class="form-control" id="floatingComment" placeholder=" " 
+                                        style="background-color: #F2F4F7; border: none; height: 150px;"></textarea>
+                                    <label for="floatingComment" class="text-muted">Comment</label>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100 p-3" 
+                                    style="background: linear-gradient(135deg, #22D571, #00bc51);">
+                                    <strong>Submit</strong>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <!-- footer -->
         <footer class="footer-section text-center d-none">
             <div class="container">
