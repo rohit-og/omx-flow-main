@@ -56,12 +56,45 @@ $appName = getAppSettings('name');
             background-color: #232fcc !important;
         }
         .card:hover h5 {
-            color:rgb(67, 223, 126) !important; 
+            color:rgb(8, 128, 54) !important; 
             transition: color 0.3s ease; 
+        }
+      
+        .inner {
+            padding: 20px;
+            align-items: center;
+            background-color: #ecf0ff;
+            padding-top: 40px;
+            position: relative;
+            border-radius: 12px;
         }
         .card i {
             color: #0866FF !important;
         }
+        .go-corner {
+            padding:20px;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            
+            height: 32px;
+            overflow: hidden;
+            display: flex;
+            right: 0;
+            top: 0;
+            border-radius: 0 4px 0 32px;
+            background-color: #00838d;
+}
+
+        .go-arrow {
+            margin-right: -4px;
+            margin-top: -4px;
+           
+            font-weight:400;
+            color: white;
+}
+
+
         .gradient-icon-1 {
             font-size: 30px !important;
             background: linear-gradient(135deg, #41C6B5, #1771E6); 
@@ -176,6 +209,41 @@ $appName = getAppSettings('name');
             color: white !important;
             border-radius: 50px;
         }
+        .btnn{
+            background: linear-gradient(
+      15deg,
+        rgb(0, 136, 68),
+        rgb(32, 170, 129),
+        rgb(13, 90, 67),
+        rgb(26, 160, 131),
+        rgb(8, 136, 97),
+        rgb(17, 119, 68),
+        rgb(63, 204, 169),
+        rgb(9, 95, 62),
+        rgb(0, 136, 95)
+    )
+            no-repeat;
+            background-size: 300%;
+            background-position: left center;
+            transition: background 1s ease;
+            color: white !important;
+            animation: gradientMove 4s linear infinite;
+  
+}
+.btnn:after {
+  background-size: 320%;
+  background-position: right center;
+  transition: 1s ease;
+}
+@keyframes gradientMove {
+    0% {
+        background-position: right center;
+    }
+    100% {
+        background-position: center left;
+    }
+}
+        
     </style>
 
 <body class="lw-outer-home-page">
@@ -430,9 +498,7 @@ $appName = getAppSettings('name');
             <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6 text-center">
-                    <h1 class="fw-bold text-success">{!! __tr(' __appName__', ['__appName__' => $appName]) !!}</h1>
-                    <h2 class="fw-bold text-muted">is based on</h2>
-                    <h1 class="fw-bold text-muted">Official Whatsapp Cloud API <i class="fab fa-whatsapp text-success"></i></h1>
+                <img src="{{ asset('imgs/pqomx.jpg') }}" alt="Logo" style="width: 100%; height: 50vh; object-fit: contain; border-radius: 10px;">
                 </div>
                 <div class="col-md-6">
                     <div class="description text-muted" style="text-align: justify;"><span class="fw-bold text-success">{!! __tr(' __appName__', ['__appName__' => $appName]) !!} </span> integrates with the <span class="fw-bold text-success">Official WhatsApp Cloud API</span>, providing a streamlined solution for businesses to enhance customer communication. This powerful integration allows for real-time messaging, automated responses, and easy management of WhatsApp interactions. With full access to the WhatsApp Cloud API, businesses can send and receive messages, share multimedia, and maintain secure conversations with customers worldwide. The panel simplifies the process of connecting to the WhatsApp platform, offering features like automated workflows, data analytics, and template management. Experience the flexibility and efficiency of <span class="fw-bold text-success">WhatsApp business communications</span>, all within one unified interface.</div>
@@ -453,21 +519,29 @@ $appName = getAppSettings('name');
             </div>
 
             <div class="container py-5 ">
-                <div class="row g-4 d-flex justify-content-md-around ">
+                <div class="row g-4 d-flex justify-content-md-evenly ">
                     <!-- OMX Sync - Task Automations -->
                     <div class="col-md-4">
-                        <div class="card shadow-lg price-card">
+                        <div class="card shadow-lg price-card" style="border-radius:1.25rem;">
+                            
                             <div class="card-body">
+                                
+                            <div class="inner">
+                            <div class="go-corner" href="#">
+                             <div class="go-arrow">
+                                 Standard
+                            </div>
+                            </div>
+                                
                                 <h5 class="card-title text-success">OMX Flow</h5>
-                                <h6 class="card-subtitle mb-3 text-muted">Premium</h6>
                                 
                                 <h3 class="text-primary amount">₹15,000.00</h3>
                                 <p class="text-muted original-price"><del>₹20,999</del></p>
                                 <p class="text-muted subscription-period">Monthly Subscription</p>
-                                <button class="btn btn-success w-100">Buy Now</button>
+                                <button class="btn  btn-success w-100">Book Demo</button>
                                 <hr>
-                                <ul class="list-unstyled">
-                                    <li>✅ 1000 Contacts</li>
+                                <ul class="list-unstyled " style="font-size:0.75em">
+                                    <li >✅ 1000 Contacts</li>
                                     <li>✅ 50 Campaigns Per Month</li>
                                     <li>✅ 100 Bot Replies</li>
                                     <li>✅ 10 Team Members/Agents</li>
@@ -477,22 +551,29 @@ $appName = getAppSettings('name');
                                     <li>✅ API and Webhook Access</li>
                                 </ul>
                             </div>
+                            </div>
                         </div>
                     </div>
             
                     <!-- OMX Sync - Attendance & Leave Automations -->
                     <div class="col-md-4">
-                        <div class="card shadow-lg price-card">
+                        <div class="card shadow-lg price-card" style="border-radius:1.25rem;">
                             <div class="card-body product-header">
+                                <div class="inner">
+                                <div class="go-corner btnn" href="#">
+                             <div class="go-arrow">
+                             Premium
+                            </div>
+                            </div>
                                 <h5 class="card-title text-success">OMX Flow</h5>
-                                <h6 class="card-subtitle mb-3 text-muted">Ultimate</h6>
+                                
                               
                                 <h3 class="text-primary amount">₹20,000.00</h3>
                                 <p class="text-muted original-price"><del>₹24,999.00</del></p>
                                 <p class="text-muted subscription-period">1-Year Subscription</p>
-                                <button class="btn btn-success w-100">Buy Now</button>
+                                <button class="btn btn-success w-100">Book Demo</button>
                                 <hr>
-                                <ul class="list-unstyled">
+                                <ul class="list-unstyled"  style="font-size:0.75em">
                                     <li>✅ Unlimited Contacts</li>
                                     <li>✅ Unlimited Campaigns Per Month</li>
                                     <li>✅ Unlimited Bot Replies</li>
@@ -502,6 +583,7 @@ $appName = getAppSettings('name');
                                     <li>✅ AI Chat Bot</li>
                                     <li>✅ API and Webhook Access</li>
                                 </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -587,6 +669,7 @@ $appName = getAppSettings('name');
                 
             </div>
         </section>
+      
         <!-- footer -->
         <footer class="footer-section text-center d-none">
             <div class="container">
