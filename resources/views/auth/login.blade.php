@@ -133,7 +133,7 @@
             <div class="col-md-6 col-md-offset-6">
                 <div class="form-container">
                 <div class="form-icon">
-                    <img src="{{ asset('imgs/omxiconn.png') }}" alt="Logo" style="width: 100px; height: 100px; object-fit: contain; border-radius: 50%;">
+                    <img src="{{ getAppSettings('favicon_image_url') }}" alt="Logo" style="width: 100px; height: 100px; object-fit: contain; border-radius: 50%;">
                 </div>
                     <h3 class="title">Login</h3>
                 @if (isDemo())
