@@ -334,7 +334,7 @@ $appName = getAppSettings('name');
                         <!-- buttons -->
                     </div>
                     <div class="col-sm-12 col-md-12 col-lg-6 text-center mt-4 mt-lg-0">
-                        <div class="lw-image-fluid"><img class="img-fluid w-75" style="border-radius: 10px; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.5);" src="{{ asset('imgs/outer-home/masthead.png') }}" alt="..." />
+                        <div class="lw-image-fluid"><img class="img-fluid w-75" style="border-radius: 15px; box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);" src="{{ asset('imgs/outer-home/masthead.png') }}" alt="..." />
                         </div>
                     </div>
                 </div>
