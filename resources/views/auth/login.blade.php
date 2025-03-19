@@ -68,7 +68,6 @@
         letter-spacing: 1px;
         border: none;
         border-radius: 25px;
-        
         display: inline-block;
         transition: all 0.3s ease 0s;
     }
@@ -82,7 +81,6 @@
     }
     .form-container .form-horizontal .btn{
         color: #000;
-        
         font-size: 15px;
         font-weight: bold;
         text-transform: uppercase;
@@ -102,7 +100,6 @@
     }
     .btn{
         color: #000;
-
         font-size: 15px;
         font-weight: bold;
         text-transform: uppercase;
@@ -113,9 +110,25 @@
         border: none;
         transition: all 0.5s ease 0s;
     }
+    .form-bg{
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: linear-gradient(to bottom right, #339699, #297386);
+ 
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100vh;
+    }
+    }
 </style>
-<div class="form-bg">
-    <div class="container">
+<div class="form-bg py-5" > <canvas id="networkCanvas" class="position-absolute"></canvas>
+
+    <div class="container ">
         <div class="row justify-content-center">
             <div class="col-md-6 col-md-offset-6">
                 <div class="form-container">
@@ -187,6 +200,134 @@
             </div>
         </div>
     </div>
+    
+  <script>
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas to full window size
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Mouse position tracking
+    let mouse = {
+      x: undefined,
+      y: undefined,
+      radius: 150
+    };
+
+    window.addEventListener('mousemove', function(event) {
+      mouse.x = event.x;
+      mouse.y = event.y;
+    });
+
+    // Particles class
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.density = (Math.random() * 30) + 1;
+        this.speed = 0.05;
+        this.brightness = Math.random() * 50 + 50; // Controls brightness
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fillStyle = `rgba(0, ${this.brightness + 150}, ${this.brightness + 200}, ${0.8 + (this.size/3)})`;
+        ctx.fill();
+      }
+
+      update() {
+        // Mouse interaction
+        if (mouse.x !== undefined && mouse.y !== undefined) {
+          let dx = mouse.x - this.x;
+          let dy = mouse.y - this.y;
+          let distance = Math.sqrt(dx * dx + dy * dy);
+          let forceDirectionX = dx / distance;
+          let forceDirectionY = dy / distance;
+          
+          // Max distance for force to apply (mouse radius)
+          const maxDistance = mouse.radius;
+          
+          // Calculate force (inversely proportional to distance)
+          let force = (maxDistance - distance) / maxDistance;
+          
+          // If we're close enough, apply force
+          if (distance < maxDistance) {
+            this.x -= forceDirectionX * force * this.density;
+            this.y -= forceDirectionY * force * this.density;
+          } else {
+            // Return to original position
+            if (this.x !== this.baseX) {
+              let dx = this.x - this.baseX;
+              this.x -= dx * this.speed;
+            }
+            if (this.y !== this.baseY) {
+              let dy = this.y - this.baseY;
+              this.y -= dy * this.speed;
+            }
+          }
+        }
+      }
+    }
+
+    // Initialize particles
+    const numberOfParticles = 150;
+    let particlesArray = [];
+
+    function init() {
+      particlesArray = [];
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    // Connect particles with lines
+    function connect() {
+      let opacityValue = 1;
+      for (let a = 0; a < particlesArray.length; a++) {
+        for (let b = a; b < particlesArray.length; b++) {
+          let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
+                        ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+          
+          if (distance < (canvas.width/7) * (canvas.height/7)) {
+            opacityValue = 1 - (distance/20000);
+            ctx.strokeStyle = `rgba(0, 180, 255, ${opacityValue})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = 0; i < particlesArray.length; i++) {
+        particlesArray[i].update();
+        particlesArray[i].draw();
+      }
+      connect();
+    }
+
+    init();
+    animate();
+  </script>
 </div>
-</div>
+
 @endsection
