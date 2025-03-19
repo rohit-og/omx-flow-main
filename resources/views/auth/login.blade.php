@@ -68,7 +68,6 @@
         letter-spacing: 1px;
         border: none;
         border-radius: 25px;
-        
         display: inline-block;
         transition: all 0.3s ease 0s;
     }
@@ -82,7 +81,6 @@
     }
     .form-container .form-horizontal .btn{
         color: #000;
-        
         font-size: 15px;
         font-weight: bold;
         text-transform: uppercase;
@@ -102,7 +100,6 @@
     }
     .btn{
         color: #000;
-
         font-size: 15px;
         font-weight: bold;
         text-transform: uppercase;
@@ -332,5 +329,5 @@
     animate();
   </script>
 </div>
-</div>
+
 @endsection
