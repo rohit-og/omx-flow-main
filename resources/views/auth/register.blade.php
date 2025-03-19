@@ -4,7 +4,7 @@
 @include('layouts.headers.guest')
 <style>
     .gradient-icon-1 {
-        background: linear-gradient(135deg, #41C6B5, #1771E6); 
+        background: linear-gradient(135deg, #339699, #78c48f);
         -webkit-background-clip: text; 
         -webkit-text-fill-color: transparent; 
         display: inline-block; 
