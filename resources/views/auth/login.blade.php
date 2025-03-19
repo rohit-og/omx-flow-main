@@ -214,17 +214,15 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Mouse position tracking
-    let mouse = {
-      x: undefined,
-      y: undefined,
-      radius: 150
+    // Create virtual mouse position that moves automatically
+    let virtualMouse = {
+      x: canvas.width / 2,
+      y: canvas.height / 2,
+      radius: 150,
+      angle: 0,
+      speed: 0.005,
+      radius: 200
     };
-
-    window.addEventListener('mousemove', function(event) {
-      mouse.x = event.x;
-      mouse.y = event.y;
-    });
 
     // Particles class
     class Particle {
@@ -248,34 +246,32 @@
       }
 
       update() {
-        // Mouse interaction
-        if (mouse.x !== undefined && mouse.y !== undefined) {
-          let dx = mouse.x - this.x;
-          let dy = mouse.y - this.y;
-          let distance = Math.sqrt(dx * dx + dy * dy);
-          let forceDirectionX = dx / distance;
-          let forceDirectionY = dy / distance;
-          
-          // Max distance for force to apply (mouse radius)
-          const maxDistance = mouse.radius;
-          
-          // Calculate force (inversely proportional to distance)
-          let force = (maxDistance - distance) / maxDistance;
-          
-          // If we're close enough, apply force
-          if (distance < maxDistance) {
-            this.x -= forceDirectionX * force * this.density;
-            this.y -= forceDirectionY * force * this.density;
-          } else {
-            // Return to original position
-            if (this.x !== this.baseX) {
-              let dx = this.x - this.baseX;
-              this.x -= dx * this.speed;
-            }
-            if (this.y !== this.baseY) {
-              let dy = this.y - this.baseY;
-              this.y -= dy * this.speed;
-            }
+        // Virtual mouse interaction
+        let dx = virtualMouse.x - this.x;
+        let dy = virtualMouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let forceDirectionX = dx / distance;
+        let forceDirectionY = dy / distance;
+        
+        // Max distance for force to apply
+        const maxDistance = virtualMouse.radius;
+        
+        // Calculate force (inversely proportional to distance)
+        let force = (maxDistance - distance) / maxDistance;
+        
+        // If we're close enough, apply force
+        if (distance < maxDistance) {
+          this.x -= forceDirectionX * force * this.density;
+          this.y -= forceDirectionY * force * this.density;
+        } else {
+          // Return to original position
+          if (this.x !== this.baseX) {
+            let dx = this.x - this.baseX;
+            this.x -= dx * this.speed;
+          }
+          if (this.y !== this.baseY) {
+            let dy = this.y - this.baseY;
+            this.y -= dy * this.speed;
           }
         }
       }
@@ -313,10 +309,27 @@
       }
     }
 
+    // Update virtual mouse position in a circular pattern
+    function updateVirtualMouse() {
+      virtualMouse.angle += virtualMouse.speed;
+      
+      // Create a figure-8 pattern
+      virtualMouse.x = canvas.width/2 + Math.sin(virtualMouse.angle) * canvas.width/4;
+      virtualMouse.y = canvas.height/2 + Math.sin(virtualMouse.angle * 2) * canvas.height/4;
+      
+      // Add some randomness
+      if (Math.random() < 0.02) {
+        virtualMouse.radius = Math.random() * 100 + 100;
+      }
+    }
+
     // Animation loop
     function animate() {
       requestAnimationFrame(animate);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Update virtual mouse position
+      updateVirtualMouse();
       
       for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
@@ -324,6 +337,27 @@
       }
       connect();
     }
+
+    // Handle real mouse interaction too (optional)
+    let realMouse = {
+      x: undefined,
+      y: undefined
+    };
+
+    window.addEventListener('mousemove', function(event) {
+      realMouse.x = event.x;
+      realMouse.y = event.y;
+      
+      // Temporarily override virtual mouse with real mouse
+      virtualMouse.x = realMouse.x;
+      virtualMouse.y = realMouse.y;
+      
+      // Reset the automatic movement after 2 seconds
+      setTimeout(() => {
+        virtualMouse.x = canvas.width/2;
+        virtualMouse.y = canvas.height/2;
+      }, 2000);
+    });
 
     init();
     animate();

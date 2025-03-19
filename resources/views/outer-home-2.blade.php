@@ -311,33 +311,99 @@ $appName = getAppSettings('name');
         </header>
         <!-- /Navigation -->
         <!-- masthead section -->
-        <section class="">
+        <section class="position-relative overflow-hidden py-7">
             <div class="container mt-5">
                 <div class="row align-items-center">
-                    <div class="col-sm-12 col-md-12 col-lg-6">
-                        <div class="fs-1 fw-bold text-success">
-                            {!! __tr(' __appName__ ', ['__appName__' => $appName]) !!}
+                    <!-- Left Content -->
+                    <div class="col-lg-6 position-relative">
+                        <div class="pe-lg-4">
+                            <!-- Gradient Badge -->
+                            <div class="d-inline-block position-relative mb-3">
+                                <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill" 
+                                      style="background: linear-gradient(135deg, rgba(34, 213, 113, 0.1), rgba(0, 188, 81, 0.1));">
+                                    <i class="fab fa-whatsapp me-2"></i>Official WhatsApp Business Solution
+                                </span>
+                            </div>
+
+                            <!-- Main Heading with Gradient -->
+                            <h1 class="display-5 fw-bold mb-3">
+                                {!! __tr(' __appName__', ['__appName__' => $appName]) !!}
+                                <span class="d-block text-gradient fs-2" 
+                                      style="background: linear-gradient(135deg, #22D571, #00bc51); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                                    Ultimate Solution for WhatsApp Marketing
+                                </span>
+                            </h1>
+
+                            <!-- Description with Custom Background -->
+                            <div class="p-3 rounded-3 mb-3" style="background: rgba(34, 213, 113, 0.05);">
+                                <p class="mb-0 fs-6">
+                                    {{ __tr(
+                                        'Our  __appName__  is a trusted and efficient platform designed to revolutionize the way businesses connect with their customers. With official verification by Meta our portal ensures secure reliable and compliant communication solutions.',
+                                        [
+                                            '__appName__' => $appName,
+                                        ],
+                                    ) }}
+                                </p>
+                            </div>
+
+                            <!-- CTA Buttons -->
+                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                <a href="{{ route('auth.register') }}" class="btn px-4 py-2 btnn">
+                                    <i class="fas fa-rocket me-2"></i>Get Started
+                                </a>
+                                <a href="#pricing" class="btn btn-outline-success px-4 py-2">
+                                    <i class="fas fa-play-circle me-2"></i>Watch Demo
+                                </a>
+                            </div>
+
+                            <!-- Stats Section -->
+                            <div class="row g-3">
+                                <div class="col-4">
+                                    <h4 class="fw-bold text-success mb-0">10K+</h4>
+                                    <p class="text-muted small mb-0">Active Users</p>
+                                </div>
+                                <div class="col-4">
+                                    <h4 class="fw-bold text-success mb-0">98%</h4>
+                                    <p class="text-muted small mb-0">Satisfaction</p>
+                                </div>
+                                <div class="col-4">
+                                    <h4 class="fw-bold text-success mb-0">24/7</h4>
+                                    <p class="text-muted small mb-0">Support</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="fs-2">
-                            {{ __tr('Ultimate Solution for Whatsapp Marketing ') }}
-                        </div>
-                        <!-- description -->
-                        <hr>
-                        <div class="description text-dark">
-                            {{ __tr(
-                                'Our  __appName__  is a trusted and efficient platform designed to revolutionize the way businesses connect with their customers. With official verification by Meta our portal ensures secure reliable and compliant communication solutions tailored to meet modern marketing needs.',
-                                [
-                                    '__appName__' => $appName,
-                                ],
-                            ) }}
-                        </div>
-                        <!-- buttons -->
                     </div>
-                    <div class="col-sm-12 col-md-12 col-lg-6 text-center mt-4 mt-lg-0">
-                        <div class="lw-image-fluid"><img class="img-fluid w-75" style="border-radius: 15px; box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.2);" src="{{ asset('imgs/outer-home/masthead.png') }}" alt="..." />
+
+                    <!-- Right Image with Effects -->
+                    <div class="col-lg-6 position-relative mt-4 mt-lg-0">
+                        <div class="position-relative" style="max-width: 500px; margin: 0 auto;">
+                            <!-- Main Image -->
+                            <img class="img-fluid rounded-4 shadow-lg" 
+                                 src="{{ asset('imgs/outer-home/masthead.png') }}" 
+                                 alt="Dashboard Preview"
+                                 style="transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);">
+                            
+                            <!-- Floating Elements -->
+                            <div class="position-absolute top-0 start-0 translate-middle-y p-3 bg-white rounded-3 shadow-sm" 
+                                 style="animation: float 3s ease-in-out infinite;">
+                                <div class="d-flex align-items-center gap-2">
+                                    <i class="fas fa-check-circle text-success fs-4"></i>
+                                    <span class="fw-semibold">Meta Verified</span>
+                                </div>
+                            </div>
+                            
+                            
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Background Elements -->
+            <div class="position-absolute top-0 end-0 mt-4 me-4 d-none d-lg-block">
+                <div style="width: 200px; height: 200px; background: linear-gradient(135deg, rgba(34, 213, 113, 0.1), rgba(0, 188, 81, 0.1)); border-radius: 50%; filter: blur(40px);"></div>
+            </div>
+            <div class="position-absolute bottom-0 start-0 mb-4 ms-4 d-none d-lg-block">
+                <div style="width: 150px; height: 150px; background: linear-gradient(135deg, rgba(34, 213, 113, 0.1), rgba(0, 188, 81, 0.1)); border-radius: 50%; filter: blur(30px);"></div>
             </div>
         </section>
         <!-- /masthead section -->
