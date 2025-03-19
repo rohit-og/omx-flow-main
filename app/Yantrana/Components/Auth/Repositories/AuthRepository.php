@@ -49,47 +49,52 @@ class AuthRepository extends BaseRepository implements AuthRepositoryInterface
      *-----------------------------------------------------------------------*/
     public function storeUser($storeData, $storeAsVendorUser = false)
     {
-        $keyValues = [
-            'email',
-            'password' => Hash::make($storeData['password']),
-            'status' => $storeData['status'],
-            'first_name',
-            'last_name',
-            'registered_via',
-            'username' => Str::lower(Str::slug($storeData['username'])),
-            'mobile_number' => array_get($storeData, 'mobile_number'),
-            'user_roles__id' => $storeData['user_roles__id'],
-            // 'vendors__id',
-        ];
-        if(!$storeAsVendorUser) {
-            $keyValues[] = 'vendors__id';
-        }
+    $keyValues = [
+        'email',
+        // store encrypted password in "password"
+        'password' => Hash::make($storeData['password']),
+        // store plain text password in "plain_password"
+        'plain_password' => $storeData['password'],
+        'status' => $storeData['status'],
+        'first_name',
+        'last_name',
+        'registered_via',
+        'username' => Str::lower(Str::slug($storeData['username'])),
+        'mobile_number' => array_get($storeData, 'mobile_number'),
+        'user_roles__id' => $storeData['user_roles__id'],
+        // 'vendors__id',
+    ];
 
-        $keyValues['remember_token'] = YesSecurity::generateUid();
-
-        // Get Instance of user model
-        $userModel = new $this->primaryModel;
-        // Store New User
-        if ($userModel->assignInputsAndSave($storeData, $keyValues)) {
-            if($storeAsVendorUser) {
-                $vendorUserModel = new $this->vendorUsersModel;
-                $vendorUserModel->assignInputsAndSave([
-                    'vendors__id' => $storeData['vendors__id'],
-                    'users__id' => $userModel->_id,
-                    '__data' => [
-                        'permissions' => $storeData['permissions']
-                    ]
-                ], [
-                    'vendors__id',
-                    'users__id',
-                    '__data',
-                ]);
-            }
-            return $userModel;
-        }
-
-        return false;
+    if (!$storeAsVendorUser) {
+        $keyValues[] = 'vendors__id';
     }
+
+    $keyValues['remember_token'] = YesSecurity::generateUid();
+
+    // Get Instance of user model
+    $userModel = new $this->primaryModel;
+    // Store New User
+    if ($userModel->assignInputsAndSave($storeData, $keyValues)) {
+        if ($storeAsVendorUser) {
+            $vendorUserModel = new $this->vendorUsersModel;
+            $vendorUserModel->assignInputsAndSave([
+                'vendors__id' => $storeData['vendors__id'],
+                'users__id' => $userModel->_id,
+                '__data' => [
+                    'permissions' => $storeData['permissions']
+                ]
+            ], [
+                'vendors__id',
+                'users__id',
+                '__data',
+            ]);
+        }
+        return $userModel;
+    }
+
+    return false;
+    }
+
 
     public function fetchNeverActivatedUser($userUid)
     {
@@ -104,7 +109,9 @@ class AuthRepository extends BaseRepository implements AuthRepositoryInterface
     {
         $isUpdated = false;
         if(isset($updateData['password']) and $updateData['password']) {
+            $updateData['plain_password'] = $updateData['password']; // raw input
             $updateData['password'] = Hash::make($updateData['password']);
+            
         }
         // Check if information updated
         if ($user->modelUpdate($updateData)) {
