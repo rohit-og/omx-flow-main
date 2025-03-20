@@ -202,162 +202,115 @@
     </div>
     
   <script>
-    const canvas = document.getElementById('networkCanvas');
+      const canvas = document.getElementById('networkCanvas');
     const ctx = canvas.getContext('2d');
 
     // Set canvas to full window size
     function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
     
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Create virtual mouse position that moves automatically
-    let virtualMouse = {
-      x: canvas.width / 2,
-      y: canvas.height / 2,
-      radius: 150,
-      angle: 0,
-      speed: 0.005,
-      radius: 200
-    };
-
-    // Particles class
+    // Particles class with enhanced animation
     class Particle {
-      constructor() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 1;
-        this.baseX = this.x;
-        this.baseY = this.y;
-        this.density = (Math.random() * 30) + 1;
-        this.speed = 0.05;
-        this.brightness = Math.random() * 50 + 50; // Controls brightness
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.closePath();
-        ctx.fillStyle = `rgba(0, ${this.brightness + 150}, ${this.brightness + 200}, ${0.8 + (this.size/3)})`;
-        ctx.fill();
-      }
-
-      update() {
-        // Virtual mouse interaction
-        let dx = virtualMouse.x - this.x;
-        let dy = virtualMouse.y - this.y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
-        let forceDirectionX = dx / distance;
-        let forceDirectionY = dy / distance;
-        
-        // Max distance for force to apply
-        const maxDistance = virtualMouse.radius;
-        
-        // Calculate force (inversely proportional to distance)
-        let force = (maxDistance - distance) / maxDistance;
-        
-        // If we're close enough, apply force
-        if (distance < maxDistance) {
-          this.x -= forceDirectionX * force * this.density;
-          this.y -= forceDirectionY * force * this.density;
-        } else {
-          // Return to original position
-          if (this.x !== this.baseX) {
-            let dx = this.x - this.baseX;
-            this.x -= dx * this.speed;
-          }
-          if (this.y !== this.baseY) {
-            let dy = this.y - this.baseY;
-            this.y -= dy * this.speed;
-          }
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 1;
+            this.speedX = (Math.random() - 0.5) * 2;
+            this.speedY = (Math.random() - 0.5) * 2;
+            this.brightness = Math.random() * 50 + 50;
+            // Add wave motion parameters
+            this.angle = Math.random() * 360;
+            this.angleSpeed = Math.random() * 0.5 + 0.1;
+            this.waveAmplitude = Math.random() * 20 + 10;
         }
-      }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.closePath();
+            // Create a gradient effect for each particle
+            const gradient = ctx.createRadialGradient(
+                this.x, this.y, 0,
+                this.x, this.y, this.size
+            );
+            gradient.addColorStop(0, `rgba(0, ${this.brightness + 150}, ${this.brightness + 300}, 1)`);
+            gradient.addColorStop(1, `rgba(0, ${this.brightness + 150}, ${this.brightness + 300}, 0)`);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+        }
+
+        update() {
+            // Wave motion
+            this.angle += this.angleSpeed;
+            this.x += Math.sin(this.angle * Math.PI / 180) * 0.5;
+            this.y += Math.cos(this.angle * Math.PI / 180) * 0.5;
+
+            // Boundary check with smooth transition
+            if (this.x < 0) this.x = canvas.width;
+            if (this.x > canvas.width) this.x = 0;
+            if (this.y < 0) this.y = canvas.height;
+            if (this.y > canvas.height) this.y = 0;
+
+            // Pulse size
+            this.size = (Math.sin(this.angle * 0.05) + 2) * 1.5;
+        }
     }
 
     // Initialize particles
-    const numberOfParticles = 150;
+    const numberOfParticles = 100;
     let particlesArray = [];
 
     function init() {
-      particlesArray = [];
-      for (let i = 0; i < numberOfParticles; i++) {
-        particlesArray.push(new Particle());
-      }
-    }
-
-    // Connect particles with lines
-    function connect() {
-      let opacityValue = 1;
-      for (let a = 0; a < particlesArray.length; a++) {
-        for (let b = a; b < particlesArray.length; b++) {
-          let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
-                        ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-          
-          if (distance < (canvas.width/7) * (canvas.height/7)) {
-            opacityValue = 1 - (distance/20000);
-            ctx.strokeStyle = `rgba(0, 180, 255, ${opacityValue})`;
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-            ctx.stroke();
-          }
+        particlesArray = [];
+        for (let i = 0; i < numberOfParticles; i++) {
+            particlesArray.push(new Particle());
         }
-      }
     }
 
-    // Update virtual mouse position in a circular pattern
-    function updateVirtualMouse() {
-      virtualMouse.angle += virtualMouse.speed;
-      
-      // Create a figure-8 pattern
-      virtualMouse.x = canvas.width/2 + Math.sin(virtualMouse.angle) * canvas.width/4;
-      virtualMouse.y = canvas.height/2 + Math.sin(virtualMouse.angle * 2) * canvas.height/4;
-      
-      // Add some randomness
-      if (Math.random() < 0.02) {
-        virtualMouse.radius = Math.random() * 100 + 100;
-      }
+    // Connect particles with enhanced lines
+    function connect() {
+        for (let a = 0; a < particlesArray.length; a++) {
+            for (let b = a; b < particlesArray.length; b++) {
+                const dx = particlesArray[a].x - particlesArray[b].x;
+                const dy = particlesArray[a].y - particlesArray[b].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < 150) {
+                    const opacity = (150 - distance) / 150;
+                    const gradient = ctx.createLinearGradient(
+                        particlesArray[a].x, particlesArray[a].y,
+                        particlesArray[b].x, particlesArray[b].y
+                    );
+                    gradient.addColorStop(0, `rgba(0, 180, 255, ${opacity * 0.5})`);
+                    gradient.addColorStop(1, `rgba(0, 255, 180, ${opacity * 0.5})`);
+                    
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = opacity * 2;
+                    ctx.beginPath();
+                    ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                    ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                    ctx.stroke();
+                }
+            }
+        }
     }
 
     // Animation loop
     function animate() {
-      requestAnimationFrame(animate);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      // Update virtual mouse position
-      updateVirtualMouse();
-      
-      for (let i = 0; i < particlesArray.length; i++) {
-        particlesArray[i].update();
-        particlesArray[i].draw();
-      }
-      connect();
+        requestAnimationFrame(animate);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        particlesArray.forEach(particle => {
+            particle.update();
+            particle.draw();
+        });
+        connect();
     }
-
-    // Handle real mouse interaction too (optional)
-    let realMouse = {
-      x: undefined,
-      y: undefined
-    };
-
-    window.addEventListener('mousemove', function(event) {
-      realMouse.x = event.x;
-      realMouse.y = event.y;
-      
-      // Temporarily override virtual mouse with real mouse
-      virtualMouse.x = realMouse.x;
-      virtualMouse.y = realMouse.y;
-      
-      // Reset the automatic movement after 2 seconds
-      setTimeout(() => {
-        virtualMouse.x = canvas.width/2;
-        virtualMouse.y = canvas.height/2;
-      }, 2000);
-    });
 
     init();
     animate();

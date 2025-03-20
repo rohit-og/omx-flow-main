@@ -67,6 +67,7 @@ $appName = getAppSettings('name');
             padding-top: 40px;
             position: relative;
             border-radius: 12px;
+            height:100%
         }
         .card i {
             color: #0866FF !important;
@@ -349,10 +350,10 @@ $appName = getAppSettings('name');
                             <!-- CTA Buttons -->
                             <div class="d-flex flex-wrap gap-2 mb-4">
                                 <a href="{{ route('auth.register') }}" class="btn px-4 py-2 btnn">
-                                    <i class="fas fa-rocket me-2"></i>Get Started
+                                    <i class="fas fa-rocket me-2"></i>Book Live Demo
                                 </a>
                                 <a href="#pricing" class="btn btn-outline-success px-4 py-2">
-                                    <i class="fas fa-play-circle me-2"></i>Watch Demo
+                                    <i class="fas fa-play-circle me-2"></i>Watch Demo Video
                                 </a>
                             </div>
 
@@ -378,17 +379,15 @@ $appName = getAppSettings('name');
                     <div class="col-lg-6 position-relative mt-4 mt-lg-0">
                         <div class="position-relative" style="max-width: 500px; margin: 0 auto;">
                             <!-- Main Image -->
-                            <img class="img-fluid rounded-4 shadow-lg" 
+                            <img class="img-fluid rounded-4 " 
                                  src="{{ asset('imgs/outer-home/masthead.png') }}" 
                                  alt="Dashboard Preview"
-                                 style="transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);">
+                                 style="border-radius: 10px; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.62);">
                             
                             <!-- Floating Elements -->
-                            <div class="position-absolute top-0 start-0 translate-middle-y p-3 bg-white rounded-3 shadow-sm" 
+                            <div class="position-absolute top-0 start-2 translate-middle-y p-1 bg-white rounded-3 shadow-sm" 
                                  style="animation: float 3s ease-in-out infinite;">
-                                <div class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-check-circle text-success fs-4"></i>
-                                    <span class="fw-semibold">Meta Verified</span>
+                                <img src="{{ asset('imgs/meta-verified-removebg-preview.png') }}" alt="" style="    width: 150px;">
                                 </div>
                             </div>
                             
@@ -556,6 +555,34 @@ $appName = getAppSettings('name');
                     <!-- Description starts exactly below the heading -->
                     <div class="text-dark mt-2">{{ __tr('Effortlessly manage your campaigns with Campaign Management Feature.') }}</div>
                 </div>
+
+                <!-- New Feature: AI Chatbot -->
+                <div class="col-sm-10 col-lg-3 p-4 d-flex flex-column features rounded shadow bg-lime">
+                    <!-- Icon and Heading on the same line -->
+                    <div class="d-flex align-items-center">
+                        <a class="text-decoration-none rounded-icon p-4">
+                        <i class="fas fa-robot gradient-icon-3"></i>
+                        </a>
+                        <h3 class="fw-bold text-muted ms-3 fs-5">{{ __tr('AI Chatbot') }}</h3>
+                    </div>
+                
+                    <!-- Description starts exactly below the heading -->
+                    <div class="text-dark mt-2">{{ __tr('Leverage advanced AI to automate customer interactions with intelligent responses.') }}</div>
+                </div>
+
+                <!-- New Feature: WhatsApp Report -->
+                <div class="col-sm-10 col-lg-3 p-4 d-flex flex-column features rounded shadow bg-lime">
+                    <!-- Icon and Heading on the same line -->
+                    <div class="d-flex align-items-center">
+                        <a class="text-decoration-none rounded-icon p-4">
+                        <i class="fas fa-chart-bar gradient-icon-1"></i>
+                        </a>
+                        <h3 class="fw-bold text-muted ms-3 fs-5">{{ __tr('Chat Report') }}</h3>
+                    </div>
+                
+                    <!-- Description starts exactly below the heading -->
+                    <div class="text-dark mt-2">{{ __tr('Generate comprehensive analytics and reports on all your WhatsApp communications.') }}</div>
+                </div>
             </div>
             </div>
         </section>
@@ -566,9 +593,10 @@ $appName = getAppSettings('name');
                 <div class="col-md-6 text-center">
                 <img src="{{ asset('imgs/pqomx.jpg') }}" alt="Logo" style="width: 100%; height: 50vh; object-fit: contain; border-radius: 10px;">
                 </div>
-                <div class="col-md-6">
-                    <div class="description text-muted" style="text-align: justify;"><span class="fw-bold text-success">{!! __tr(' __appName__', ['__appName__' => $appName]) !!} </span> integrates with the <span class="fw-bold text-success">Official WhatsApp Cloud API</span>, providing a streamlined solution for businesses to enhance customer communication. This powerful integration allows for real-time messaging, automated responses, and easy management of WhatsApp interactions. With full access to the WhatsApp Cloud API, businesses can send and receive messages, share multimedia, and maintain secure conversations with customers worldwide. The panel simplifies the process of connecting to the WhatsApp platform, offering features like automated workflows, data analytics, and template management. Experience the flexibility and efficiency of <span class="fw-bold text-success">WhatsApp business communications</span>, all within one unified interface.</div>
-                </div>
+                <div class="col-md-6 text-center">
+                <h1 class="fw-bold text-success">{!! __tr(' __appName__', ['__appName__' => $appName]) !!}</h1>
+                     <h2 class="fw-bold text-muted ">is based on</h2>
+                     <h1 class="fw-bold text-muted">Official Whatsapp Cloud API <i class="fab fa-whatsapp text-success"></i></h1>
                 </div>
             </div>
         </section>
@@ -585,7 +613,7 @@ $appName = getAppSettings('name');
             </div>
 
             <div class="container py-5 ">
-                <div class="row g-4 d-flex justify-content-md-evenly ">
+                <div class="row g-4 d-flex justify-content-center ">
                     <!-- OMX Sync - Task Automations -->
                     <div class="col-md-4">
                         <div class="card shadow-lg price-card" style="border-radius:1.25rem;">
@@ -606,7 +634,7 @@ $appName = getAppSettings('name');
                                 <p class="text-muted subscription-period">Monthly Subscription</p>
                                 <button class="btn  btn-success w-100">Book Demo</button>
                                 <hr>
-                                <ul class="list-unstyled " style="font-size:0.75em">
+                                <ul class="list-unstyled " style="font-size:1rem">
                                     <li >✅ 1000 Contacts</li>
                                     <li>✅ 50 Campaigns Per Month</li>
                                     <li>✅ 100 Bot Replies</li>
@@ -639,7 +667,7 @@ $appName = getAppSettings('name');
                                 <p class="text-muted subscription-period">1-Year Subscription</p>
                                 <button class="btn btn-success w-100">Book Demo</button>
                                 <hr>
-                                <ul class="list-unstyled"  style="font-size:0.75em">
+                                <ul class="list-unstyled"  style="font-size:1rem">
                                     <li>✅ Unlimited Contacts</li>
                                     <li>✅ Unlimited Campaigns Per Month</li>
                                     <li>✅ Unlimited Bot Replies</li>
@@ -648,6 +676,7 @@ $appName = getAppSettings('name');
                                     <li>✅ Unlimited Team Members/Agents</li>
                                     <li>✅ AI Chat Bot</li>
                                     <li>✅ API and Webhook Access</li>
+                                    <li>✅ Live Chat Report</li>
                                 </ul>
                                 </div>
                             </div>
