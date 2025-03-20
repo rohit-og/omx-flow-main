@@ -70,7 +70,7 @@ $appName = getAppSettings('name');
             height:100%
         }
         .card i {
-            color: #0866FF !important;
+            color:rgb(6, 139, 73) !important;
         }
         .go-corner {
             padding:20px;
@@ -635,15 +635,15 @@ $appName = getAppSettings('name');
                                 <p class="text-muted subscription-period">Monthly Subscription</p>
                                 <button class="btn  btn-success w-100">Book Demo</button>
                                 <hr>
-                                <ul class="list-unstyled " style="font-size:1rem">
-                                    <li >✅ 1000 Contacts</li>
-                                    <li>✅ 50 Campaigns Per Month</li>
-                                    <li>✅ 100 Bot Replies</li>
-                                    <li>✅ 10 Team Members/Agents</li>
-                                    <li>✅ 10 Bot Flows</li>
-                                    <li>✅ 100 Contact Custom Fields</li>
-                                    <li>✅ AI Chat Bot</li>
-                                    <li>✅ API and Webhook Access</li>
+                                <ul class="list-unstyled " style="font-size:0.85em">
+                                    <li class='d-flex'><i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success "> 1000</strong> <p>Contacts</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">50 </strong><p>Campaigns Per Month</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">100 </strong><p>Bot Replies</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i><strong class="text-success "> 10 </strong><p>Team Members/Agents</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">10 </strong><p>Bot Flows</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">100 </strong><p>Contact Custom Fields</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> AI <p>Chat Bot</p></li>
+                                    <li class='d-flex'><i class="fas fa-check-circle  fs-4 me-2"> </i> API <p></p>and Webhook Access</li>
                                 </ul>
                             </div>
                             </div>
@@ -668,16 +668,16 @@ $appName = getAppSettings('name');
                                 <p class="text-muted subscription-period">1-Year Subscription</p>
                                 <button class="btn btn-success w-100">Book Demo</button>
                                 <hr>
-                                <ul class="list-unstyled"  style="font-size:1rem">
-                                    <li>✅ Unlimited Contacts</li>
-                                    <li>✅ Unlimited Campaigns Per Month</li>
-                                    <li>✅ Unlimited Bot Replies</li>
-                                    <li>✅ Unlimited Bot Flows</li>
-                                    <li>✅ Unlimited Contact Custom Fields</li>
-                                    <li>✅ Unlimited Team Members/Agents</li>
-                                    <li>✅ AI Chat Bot</li>
-                                    <li>✅ API and Webhook Access</li>
-                                    <li>✅ Live Chat Report</li>
+                                <ul class="list-unstyled"  style="font-size:0.85em">
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong> Contacts</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i> <p><strong class="text-success "> Unlimited</strong>Campaigns Per Month</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong>  Bot Replies</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p> <strong class="text-success "> Unlimited</strong>Bot Flows</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong>  Contact Custom Fields</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i> <p><strong class="text-success "> Unlimited</strong> Team Members/Agents</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i> <p>AI Chat Bot</li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p> API and Webhook Access</li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p> Live Chat Report</li>
                                 </ul>
                                 </div>
                             </div>
