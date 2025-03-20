@@ -344,6 +344,7 @@ $appName = getAppSettings('name');
                                         ],
                                     ) }}
                                 </p>
+                                
                             </div>
 
                             <!-- CTA Buttons -->
@@ -379,7 +380,7 @@ $appName = getAppSettings('name');
                         <div class="position-relative" style="max-width: 500px; margin: 0 auto;">
                             <!-- Main Image -->
                             <img class="img-fluid rounded-4 shadow-lg" 
-                                 src="{{ asset('imgs/outer-home/masthead.png') }}" 
+                                 src="{{ getAppSettings('hero_image')}}"
                                  alt="Dashboard Preview"
                                  style="transform: perspective(1000px) rotateY(-10deg) rotateX(5deg);">
                             

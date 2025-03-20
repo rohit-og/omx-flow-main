@@ -147,4 +147,38 @@ class MediaController extends BaseController
 
     return $this->processResponse($processReaction, [], [], true, $processReaction->success() ? 200 : 406);
     }
+
+    /**
+     * Upload Hero Image.
+     *
+     * @param object Request $request
+     * @return json object
+     *---------------------------------------------------------------- */
+    public function uploadHeroImage(Request $request)
+    {
+        try {
+            // Validate the request
+            $request->validate([
+                'filepond' => 'required|image|mimes:jpg,jpeg,png|max:5120' // 5MB max
+            ]);
+
+            // Process the upload
+            $processReaction = $this->mediaEngine->processUploadHeroImage($request->all());
+
+            // Check if file uploaded successfully
+            if ($processReaction->success()) {
+                $this->configurationEngine->processConfigurationsStore('general', [
+                    'hero_image' => $processReaction['data']['path'],
+                ], true);
+            }
+
+            return $this->processResponse($processReaction, [], [], true, $processReaction->success() ? 200 : 406);
+            
+        } catch (\Exception $e) {
+            return $this->processResponse([
+                'reaction_code' => -1,
+                'message' => $e->getMessage()
+            ], [], [], true);
+        }
+    }
 }

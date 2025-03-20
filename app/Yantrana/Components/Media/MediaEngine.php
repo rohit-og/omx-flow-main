@@ -379,7 +379,64 @@ class MediaEngine extends BaseMediaEngine implements MediaEngineInterface
         return $uploadedFileOnLocalServer;
     }
 
-   
+    /**
+     * Process Upload Hero Image
+     *
+     * @param array $inputData
+     * @return array
+     *---------------------------------------------------------------- */
+    public function processUploadHeroImage($inputData)
+    {
+        try {
+            // Check if file is valid
+            if (!isset($inputData['filepond']) || empty($inputData['filepond'])) {
+                return $this->engineErrorResponse([
+                    'message' => __tr('Invalid file uploaded.')
+                ]);
+            }
 
-     
+            $file = $inputData['filepond'];
+            
+            // Validate file size before processing
+            if ($file->getSize() > 5242880) { // 5MB limit
+                return $this->engineErrorResponse([
+                    'message' => __tr('File size should not exceed 5MB.')
+                ]);
+            }
+
+            // Get the current hero image path from the configuration
+            $currentHeroImagePath = getAppSettings('hero_image');
+
+            // Delete the previous hero image if it exists
+            if ($currentHeroImagePath && file_exists(public_path($currentHeroImagePath))) {
+                unlink(public_path($currentHeroImagePath));
+            }
+
+            $fileName = 'hero-image-' . time() . '.' . $file->getClientOriginalExtension();
+            $path = 'media/hero/';
+            $fullPath = public_path($path);
+            
+            // Ensure directory exists
+            if (!file_exists($fullPath)) {
+                mkdir($fullPath, 0777, true);
+            }
+
+            // Store file
+            if ($file->move($fullPath, $fileName)) {
+                return $this->engineSuccessResponse([
+                    'path' => getMediaUrl($path . $fileName),
+                    'message' => __tr('Hero Image uploaded successfully.')
+                ]);
+            }
+
+            return $this->engineErrorResponse([
+                'message' => __tr('Something went wrong while uploading hero image.')
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->engineErrorResponse([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }

@@ -62,6 +62,11 @@ Route::middleware([
             MediaController::class,
             'uploadTempMedia',
         ])->name('media.upload_temp_media');
+        // Upload Hero Image
+        Route::post('/upload-hero-image', [
+            MediaController::class,
+            'uploadHeroImage',
+        ])->name('media.upload_hero_image');
     });
 
     // User consoles
@@ -102,6 +107,12 @@ Route::middleware([
                 MediaController::class,
                 'uploadFavicon',
             ])->name('media.upload_favicon');
+
+            // Add this new route for Hero Image
+            Route::post('/upload-hero-image', [
+                MediaController::class,
+                'uploadHeroImage',
+            ])->name('media.upload_hero_image');
 
             Route::get('/subscription-plans', [
                 ConfigurationController::class,

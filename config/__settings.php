@@ -85,6 +85,21 @@ return [
                 'data_type' => 1,    // string
                 'default' => 'UTC',
             ],
+            'demo_video_link' => [
+                'key' => 'demo_video_link',
+                'data_type' => 1,
+                'default' => '',
+            ],
+            'whatsapp_demo_link' => [
+                'key' => 'whatsapp_demo_link', 
+                'data_type' => 1,
+                'default' => '',
+            ],
+            'hero_image' => [
+                'key' => 'hero_image',
+                'data_type' => 1, 
+                'default' => '',
+            ]
         ],
         'user' => [
             'enable_vendor_registration' => [

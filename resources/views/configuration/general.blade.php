@@ -66,6 +66,33 @@
     </fieldset>
 
     <fieldset>
+        <legend>{{  __tr('Additional Settings') }}</legend>
+            <!-- Contact Phone -->
+        
+        <!-- /Contact Phone -->
+       <!-- Demo Video Link -->
+       <div class="form-group">
+            <label for="lwDemoVideoLink"><?= __tr('Demo Video Link') ?></label>
+            <input type="text" class="form-control form-control-user" name="demo_video_link" id="lwDemoVideoLink" value="<?= $configurationData['demo_video_link'] ?>">
+            <small class="help-text">{{  __tr('It will be used to display Demo Video button in Homepage ') }}</small>
+        </div>
+        <!-- /Demo Video Link -->
+         <!-- WhatsApp Demo Link -->
+       <div class="form-group">
+            <label for="lwWhatsAppDemoLink"><?= __tr('WhatsApp Demo Link') ?></label>
+            <input type="text" class="form-control form-control-user" name="whatsapp_demo_link" id="lwWhatsAppDemoLink" value="<?= $configurationData['whatsapp_demo_link'] ?>">
+            <small class="help-text">{{  __tr('It will be used to add link for Book Demo Button in Homepage ') }}</small>
+        </div>
+        <!-- /WhatsApp Demo Link -->
+          <!-- upload hero image -->
+          <div class="form-group">
+                <label for="lwUploadHeroImage"><?= __tr('Hero Image') ?></label>
+                <input type="file" data-lw-plugin="lwUploader" data-label-idle="{{ __tr('Select New Hero Image') }}" data-instant-upload="true" data-action="<?= route('media.upload_hero_image') ?>" data-callback="afterUploadedFile" id="lwUploadHeroImage" data-default-image-url="<?= getAppSettings('hero_image') ?>">
+            </div>
+             <!-- /upload hero image -->
+    </fieldset>
+
+    <fieldset>
         <legend>{{  __tr('Localization') }}</legend>
         <!-- Select Timezone -->
     <div class="form-group">
