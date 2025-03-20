@@ -345,6 +345,7 @@ $appName = getAppSettings('name');
                                         ],
                                     ) }}
                                 </p>
+                                
                             </div>
 
                             <!-- CTA Buttons -->
@@ -379,8 +380,8 @@ $appName = getAppSettings('name');
                     <div class="col-lg-6 position-relative mt-4 mt-lg-0">
                         <div class="position-relative" style="max-width: 500px; margin: 0 auto;">
                             <!-- Main Image -->
-                            <img class="img-fluid rounded-4 " 
-                                 src="{{ asset('imgs/outer-home/masthead.png') }}" 
+                            <img class="img-fluid rounded-4 shadow-lg" 
+                                 src="{{ getAppSettings('hero_image')}}"
                                  alt="Dashboard Preview"
                                  style="border-radius: 10px; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.62);">
                             
