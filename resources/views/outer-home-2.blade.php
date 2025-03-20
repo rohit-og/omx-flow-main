@@ -350,10 +350,10 @@ $appName = getAppSettings('name');
 
                             <!-- CTA Buttons -->
                             <div class="d-flex flex-wrap gap-2 mb-4">
-                                <a href="{{ route('auth.register') }}" class="btn px-4 py-2 btnn">
+                                <a href="{{ getAppSettings('demo_video_link') }}" class="btn px-4 py-2 btnn">
                                     <i class="fas fa-rocket me-2"></i>Book Live Demo
                                 </a>
-                                <a href="#pricing" class="btn btn-outline-success px-4 py-2">
+                                <a href="{{ getAppSettings('whatsapp_demo_link') }}" class="btn btn-outline-success px-4 py-2">
                                     <i class="fas fa-play-circle me-2"></i>Watch Demo Video
                                 </a>
                             </div>
