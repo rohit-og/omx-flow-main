@@ -177,7 +177,7 @@ $appName = getAppSettings('name');
         }
         .features:hover h3,
         .features:hover h5 {
-            color: #0866FF !important; 
+            color: #339699 !important; 
             transition: color 0.3s ease; 
         }
         .bg-lime{
@@ -292,7 +292,7 @@ $appName = getAppSettings('name');
                             @if (getAppSettings('enable_vendor_registration') or
                             getAppSettings('message_for_disabled_registration'))
                             <!-- Login -->
-                            <li class="nav-item"><a class="nav-link me-lg-3 btn btn-success text-white" href="{{ route('auth.login') }}">{{ __tr('Login') }}</a></li>
+                            <li class="nav-item"><a class="nav-link me-lg-3 btn btnn text-white" href="{{ route('auth.login') }}">{{ __tr('Login') }}</a></li>
                             <!-- /Login -->
                             @endif
                             @endif
@@ -386,11 +386,7 @@ $appName = getAppSettings('name');
                                  style="border-radius: 10px; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.62);">
                             
                             <!-- Floating Elements -->
-                            <div class="position-absolute top-0 start-2 translate-middle-y p-1 bg-white rounded-3 shadow-sm" 
-                                 style="animation: float 3s ease-in-out infinite;">
-                                <img src="{{ asset('imgs/meta-verified-removebg-preview.png') }}" alt="" style="    width: 150px;">
-                                </div>
-                            </div>
+                          
                             
                             
                         </div>
@@ -587,17 +583,59 @@ $appName = getAppSettings('name');
             </div>
             </div>
         </section>
-        <!-- About Us Section -->
-        <section style="background-color: #fff;">
+        <!-- About Us Section - Updated Design -->
+        <section style="background-color: #f8f9fa; padding: 60px 0;">
             <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center">
-                <img src="{{ asset('imgs/pqomx.jpg') }}" alt="Logo" style="width: 100%; height: 50vh; object-fit: contain; border-radius: 10px;">
-                </div>
-                <div class="col-md-6 text-center">
-                <h1 class="fw-bold text-success">{!! __tr(' __appName__', ['__appName__' => $appName]) !!}</h1>
-                     <h2 class="fw-bold text-muted ">is based on</h2>
-                     <h1 class="fw-bold text-muted">Official Whatsapp Cloud API <i class="fab fa-whatsapp text-success"></i></h1>
+                <div class="row align-items-center">
+                    <!-- Image column with responsive adjustments -->
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <div class="d-flex justify-content-center flex-column align-items-center">
+                            <div class="position-relative" style="width: 100%; max-width: 350px;">
+                                <img src="{{ asset('imgs/qromx.png') }}" alt="QR Code" class="img-fluid shadow-lg"  
+                                     style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); width: 100%;">
+                                <div class="position-absolute" style="bottom: -20px; right: -20px; width: 80px; height: 80px; 
+                                     background: linear-gradient(135deg, rgba(34, 213, 113, 0.1), rgba(0, 188, 81, 0.1)); 
+                                     border-radius: 50%; z-index: -1;"></div>
+                            </div>
+                            
+                            <!-- QR code instructions with responsive width -->
+                            <div class="text-center mt-3 p-2" style="background-color: rgba(34, 213, 113, 0.1); border-radius: 8px; width: 100%; max-width: 350px;">
+                                <p class="mb-0 fw-bold">
+                                    <i class="fas fa-qrcode text-success me-2"></i> 
+                                    Scan the QR code to get our WhatsApp channel
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Text column with responsive padding -->
+                    <div class="col-md-6">
+                        <div class="px-2 py-3 p-md-4">
+                            <h2 class="fw-bold text-success mb-3">{!! __tr(' __appName__', ['__appName__' => $appName]) !!}</h2>
+                            <h3 class="fw-bold text-muted mb-3">is based on</h3>
+                            <h2 class="fw-bold text-muted mb-4">Official Whatsapp Cloud API <i class="fab fa-whatsapp text-success"></i></h2>
+                            
+                            <p class="text-muted mb-4" style="line-height: 1.6;">
+                                Our platform leverages the official WhatsApp Cloud API to provide businesses with a powerful communication solution. 
+                                This integration allows you to connect with customers seamlessly through WhatsApp, the world's most popular messaging app.
+                            </p>
+                            
+                            <div class="d-flex flex-wrap gap-3 mt-4">
+                                <div class="d-flex align-items-center me-3 mb-2">
+                                    <i class="fas fa-shield-alt text-success me-2"></i>
+                                    <span>Meta Verified</span>
+                                </div>
+                                <div class="d-flex align-items-center me-3 mb-2">
+                                    <i class="fas fa-lock text-success me-2"></i>
+                                    <span>Secure & Compliant</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-globe text-success me-2"></i>
+                                    <span>Global Reach</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -669,7 +707,7 @@ $appName = getAppSettings('name');
                                 <button class="btn btn-success w-100">Book Demo</button>
                                 <hr>
                                 <ul class="list-unstyled"  style="font-size:0.85em">
-                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong> Contacts</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong> Contacts</p></li>
                                     <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i> <p><strong class="text-success "> Unlimited</strong>Campaigns Per Month</p></li>
                                     <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong>  Bot Replies</p></li>
                                     <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p> <strong class="text-success "> Unlimited</strong>Bot Flows</p></li>
