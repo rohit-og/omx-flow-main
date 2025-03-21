@@ -368,7 +368,7 @@
                  <li class="nav-item">
                     <a class="nav-link" href="#vendorAutomationSubmenuNav" data-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="vendorAutomationSubmenuNav">
-                        <i class="fas fa-brain text-dark gradient-icon-8"></i>
+                        <i class="fas fa-robot text-dark gradient-icon-8"></i>
                         <span class="">{{ __tr('Chatbot') }}</span>
                     </a>
                 <div class="collapse lw-expandable-nav" id="vendorAutomationSubmenuNav">

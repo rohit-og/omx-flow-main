@@ -243,8 +243,43 @@ $appName = getAppSettings('name');
     100% {
         background-position: center left;
     }
-}
+    }
         
+        /* Feature card hover transform effects */
+        .features {
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .features:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+            border-color: rgba(51, 150, 153, 0.2);
+        }
+        
+        .features .rounded-icon {
+            transition: all 0.5s ease;
+        }
+        
+        .features:hover .rounded-icon {
+            transform: rotate(360deg);
+        }
+        
+        .features h3 {
+            transition: all 0.3s ease;
+        }
+        
+        .features:hover h3 {
+            transform: translateX(5px);
+        }
+        
+        .features .text-dark {
+            transition: all 0.3s ease;
+        }
+        
+        .features:hover .text-dark {
+            transform: translateY(-3px);
+        }
     </style>
 
 <body class="lw-outer-home-page">
@@ -458,7 +493,7 @@ $appName = getAppSettings('name');
                     <!-- Icon and Heading on the same line -->
                     <div class="d-flex align-items-center">
                         <a class="text-decoration-none rounded-icon p-4">
-                            <i class="fas fa-brain gradient-icon-4"></i>
+                        <i class="fas fa-robot gradient-icon-3"></i>
                         </a>
                         <h3 class="fw-bold text-muted ms-3 fs-5">{{ __tr('Chat-Bot') }}</h3>
                     </div>
@@ -558,7 +593,8 @@ $appName = getAppSettings('name');
                     <!-- Icon and Heading on the same line -->
                     <div class="d-flex align-items-center">
                         <a class="text-decoration-none rounded-icon p-4">
-                        <i class="fas fa-robot gradient-icon-3"></i>
+                        
+                        <i class="fas fa-brain gradient-icon-7"></i>
                         </a>
                         <h3 class="fw-bold text-muted ms-3 fs-5">{{ __tr('AI Chatbot') }}</h3>
                     </div>
@@ -674,14 +710,14 @@ $appName = getAppSettings('name');
                                 <button class="btn  btn-success w-100">Book Demo</button>
                                 <hr>
                                 <ul class="list-unstyled " style="font-size:0.85em">
-                                    <li class='d-flex'><i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success "> 1000</strong> <p>Contacts</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success "> 1000</strong> <p>Contacts</p></li>
                                     <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">50 </strong><p>Campaigns Per Month</p></li>
                                     <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">100 </strong><p>Bot Replies</p></li>
                                     <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i><strong class="text-success "> 10 </strong><p>Team Members/Agents</p></li>
                                     <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">10 </strong><p>Bot Flows</p></li>
                                     <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">100 </strong><p>Contact Custom Fields</p></li>
                                     <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> AI <p>Chat Bot</p></li>
-                                    <li class='d-flex'><i class="fas fa-check-circle  fs-4 me-2"> </i> API <p></p>and Webhook Access</li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"> </i> API <p></p>and Webhook Access</li>
                                 </ul>
                             </div>
                             </div>
