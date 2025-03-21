@@ -280,6 +280,182 @@ $appName = getAppSettings('name');
         .features:hover .text-dark {
             transform: translateY(-3px);
         }
+
+        /* Submit button hover effect */
+        .contact-submit-btn {
+            background: linear-gradient(135deg, rgb(14, 133, 65), rgb(25, 135, 84));
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .contact-submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgb(25, 135, 84), rgb(14, 133, 65));
+            transition: all 0.4s ease;
+            z-index: -1;
+        }
+        
+        .contact-submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(14, 133, 65, 0.3);
+        }
+        
+        .contact-submit-btn:hover::before {
+            left: 0;
+        }
+        
+        .contact-submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 8px rgba(14, 133, 65, 0.3);
+        }
+
+        /* Add this CSS for price card hover effects */
+        .price-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(180deg, rgba(34, 213, 113, 0.03), rgba(0, 188, 81, 0.01));
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+        
+        .price-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        .price-card:hover::before {
+            height: 100%;
+        }
+        
+        .price-card .inner {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .inner {
+            transform: scale(1.02);
+        }
+        
+        .price-card .go-corner {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .go-corner {
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .price-card .card-title {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .card-title {
+            transform: translateX(5px);
+           
+        }
+        
+        .price-card .amount {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .amount {
+            transform: scale(1.05);
+            color: #339699 !important;
+        }
+        
+        .price-card .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .btn {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(34, 213, 113, 0.2);
+            
+        }
+        
+        .price-card .fa-check-circle {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .fa-check-circle {
+            
+            transform: scale(1.1);
+        }
+
+        /* Improved scroll animation effects */
+        .scroll-fade {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.215, 0.61, 0.355, 1), 
+                        transform 0.9s cubic-bezier(0.215, 0.61, 0.355, 1);
+            will-change: opacity, transform;
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+        
+        .scroll-fade.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Smoother section title animation */
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #22D571, #00bc51);
+            bottom: -10px;
+            left: 0;
+            transition: width 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        
+        .section-title.active::after {
+            width: 80px;
+        }
+        
+        /* Different delay classes for staggered animations */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-400 { transition-delay: 0.4s; }
+        .delay-500 { transition-delay: 0.5s; }
+        
+        /* Add subtle animations for section titles */
+        .section-title {
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #22D571, #00bc51);
+            bottom: -10px;
+            left: 0;
+            transition: width 0.30s ease 0.3s;
+        }
+        
+       
     </style>
 
 <body class="lw-outer-home-page">
@@ -879,8 +1055,7 @@ $appName = getAppSettings('name');
                                         style="background-color: #F2F4F7; border: none; height: 150px;"></textarea>
                                     <label for="floatingComment" class="text-muted">Comment</label>
                                 </div>
-                                <button type="submit" class="btn btn-success w-100 p-3" 
-                                    style="background: linear-gradient(135deg, #22D571, #00bc51);">
+                                <button type="submit" class="btn btn-success w-100 p-3 contact-submit-btn">
                                     <strong>Submit</strong>
                                 </button>
                             </form>
@@ -1076,6 +1251,113 @@ $appName = getAppSettings('name');
         @if (isLoggedIn())
         {!! getAppSettings('page_footer_code_logged_user_only') !!}
         @endif
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scroll behavior to the entire page
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Group elements by section for simultaneous animation
+            const sections = document.querySelectorAll('section');
+            
+            sections.forEach((section, sectionIndex) => {
+                // Create a unique class for this section's elements
+                const sectionClass = `section-group-${sectionIndex}`;
+                
+                // Add scroll-fade to section titles
+                
+                
+                // Add scroll-fade to feature cards
+                const features = section.querySelectorAll('.features');
+                features.forEach(feature => {
+                    feature.classList.add('scroll-fade', sectionClass);
+                });
+                
+                // Add scroll-fade to price cards
+                const priceCards = section.querySelectorAll('.price-card');
+                priceCards.forEach(card => {
+                    card.classList.add('scroll-fade', sectionClass);
+                });
+                
+                // Add scroll-fade to FAQ items
+                const faqItems = section.querySelectorAll('.accordion-item');
+                faqItems.forEach(item => {
+                    item.classList.add('scroll-fade', sectionClass);
+                });
+                
+                // Add scroll-fade to contact form elements
+                const formElements = section.querySelectorAll('.form-floating, .contact-submit-btn');
+                formElements.forEach(element => {
+                    element.classList.add('scroll-fade', sectionClass);
+                });
+                
+                // Add scroll-fade to paragraphs and other content
+                const contentElements = section.querySelectorAll('p:not(.scroll-fade), .row > .col-md-5, .row > .col-md-6');
+                contentElements.forEach(element => {
+                    if (!element.closest('.features') && !element.closest('.price-card')) {
+                        element.classList.add('scroll-fade', sectionClass);
+                    }
+                });
+            });
+            
+            // Improved function to check if section is in viewport with threshold
+            function isSectionInViewport(elements) {
+                if (elements.length === 0) return false;
+                
+                // Check if any element in the section is in viewport
+                for (let i = 0; i < elements.length; i++) {
+                    const rect = elements[i].getBoundingClientRect();
+                    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                    // Adjust threshold for smoother triggering
+                    const threshold = windowHeight * 0.75;
+                    
+                    if (rect.top <= threshold && rect.bottom >= 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            // Throttle function to limit how often scroll handler runs
+            function throttle(func, limit) {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    const context = this;
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
+            }
+            
+            // Improved function to handle scroll animation with throttling
+            const handleScrollAnimation = throttle(function() {
+                // Get all section groups
+                const sectionCount = sections.length;
+                
+                for (let i = 0; i < sectionCount; i++) {
+                    const sectionElements = document.querySelectorAll(`.section-group-${i}`);
+                    
+                    // If any element in this section group is visible, activate all elements in the group
+                    if (isSectionInViewport(sectionElements)) {
+                        sectionElements.forEach(element => {
+                            element.classList.add('active');
+                        });
+                    }
+                }
+            }, 100); // Throttle to run at most every 100ms
+            
+            // Initial check on page load
+            setTimeout(handleScrollAnimation, 300); // Slight delay for initial load
+            
+            // Check on scroll with passive listener for better performance
+            window.addEventListener('scroll', handleScrollAnimation, { passive: true });
+            
+            // Also check on resize
+            window.addEventListener('resize', handleScrollAnimation, { passive: true });
+        });
+        </script>
     </body>
 
 </html>
