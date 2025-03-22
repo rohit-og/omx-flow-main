@@ -195,4 +195,15 @@ class CampaignController extends BaseController
     {
         return $this->campaignEngine->processGenerateQueueLogCampaignReport($campaignUid);
     }
+
+    /**
+     * Generate report for failed messages
+     *
+     * @param string $campaignUid
+     * @return Response
+     */
+    public function processGenerateFailedMessagesReport($campaignUid)
+    {
+        return $this->campaignEngine->processGenerateFailedMessagesReport($campaignUid);
+    }
 }

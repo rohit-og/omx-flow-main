@@ -586,6 +586,11 @@ Route::middleware([
                        CampaignController::class,
                        'processCampaignQueueLogReportGenerate',
                      ])->name('vendor.campaign.queue.log.report.write');
+                    // Campaign failed report generate
+                    Route::get('/campaign/failed-messages-report/{campaignUid}', [
+                        CampaignController::class,
+                        'processGenerateFailedMessagesReport',
+                    ])->name('vendor.campaign.failed.messages.report.write');
 
                 });
 

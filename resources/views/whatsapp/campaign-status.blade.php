@@ -180,6 +180,8 @@ $campaignUid=$campaign->_uid;
                                 <span class="text-nowrap" x-text="__Utils.formatAsLocaleNumber(totalFailed)"></span>
                                 <span class="text-nowrap">{{ __tr('Contacts') }}</span>
                             </p>
+                            <a href="{{ route('vendor.campaign.failed.messages.report.write',['campaignUid' => $campaignUid ] 
+                            ) }}" data-method="post" class="btn btn-dark btn-sm mt-2"><i class="fa fa-download "></i> {{  __tr('Report') }}</a>
                         </div>
                     </div>
                 </div>

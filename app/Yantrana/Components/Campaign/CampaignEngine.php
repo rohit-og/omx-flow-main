@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Request;
 use XLSXWriter;
+use Illuminate\Support\Facades\Log;
 
 class CampaignEngine extends BaseEngine implements CampaignEngineInterface
 {
@@ -569,6 +570,133 @@ private function getContactReply($contactWaId, $sentAt)
         $dateTime = str_slug(now()->format('Y-m-d-H-i-s'));
         // get back with response
         return response()->download($tempFile, "{$campaign->title}-Campaign-queue-log-Report-{$dateTime}.xlsx", [
+            'Content-Transfer-Encoding: binary',
+            'Content-Type: application/octet-stream',
+        ])->deleteFileAfterSend();
+    }
+
+    /**
+     * Generate report for failed campaign messages
+     *
+     * @param string $campaignUid
+     * @return Response
+     */
+    public function processGenerateFailedMessagesReport($campaignUid = null)
+    {
+        if (isDemo() && isDemoVendorAccount()) {
+            abort(403, __tr('This functionality has been disabled for demo'));
+        }
+
+        if (!$campaignUid) {
+            abort(403, __tr('Campaign uid required'));
+        }
+
+        // Fetch the campaign record
+        $campaign = $this->campaignRepository->fetchIt($campaignUid);
+        if (__isEmpty($campaign)) {
+            abort(403, __tr('Campaign not found'));
+        }
+
+        $campaignId = $campaign->_id;
+        // Excel campaign data
+        $campaignData = [
+            'campaign_name' => 'Campaign Name: ' . $campaign->title,
+            'template_name' => 'Template Name: ' . $campaign->template_name,
+            'template_language' => 'Template Language: ' . $campaign->template_language,
+            'scheduled_at' => 'Campaign Executed On: ' . formatDateTime($campaign->scheduled_at) . '      ' . 'Report Generated On:' . '  ' . formatDateTime(now()),
+            'design_manage' => '  ',
+        ];
+
+        // Create temp path for storing the excel file
+        $tempFile = tempnam(sys_get_temp_dir(), "{$campaign->title}-Failed-Messages-Report-{$campaignId}.xlsx");
+        $writer = new XLSXWriter();
+        $sheet1 = 'Failed Messages Report';
+
+        // Set header column string (removed Failure Time and Error Message)
+        $header = array("string", "string", "string"); // Only Full Name, Phone Number, and Failure Type
+
+        // Styles
+        $topHeader = array('halign' => 'center', 'valign' => 'center', 'font-size' => 12, 'font-style' => 'bold', 'height' => 26);
+        $styles1 = array('halign' => 'center', 'font-size' => 12, 'height' => 20);
+        $styles2 = array('halign' => 'left', 'font-style' => 'bold', 'font-size' => 10, 'height' => 15, 'border' => 'left,right,top,bottom', 'border-style' => 'thin');
+        $styles3 = array(
+            ['halign' => 'left', 'border' => 'left,right,top,bottom', 'border-style' => 'thin'],
+            ['halign' => 'left', 'border' => 'left,right,top,bottom', 'border-style' => 'thin'],
+            ['halign' => 'left', 'border' => 'left,right,top,bottom', 'border-style' => 'thin'],
+            'height' => 17,
+        );
+
+        // Write header
+        $writer->writeSheetHeader(
+            $sheet1,
+            $header,
+            $col_options = [
+                'suppress_row' => true,
+                'widths' => [
+                    25, // full_name
+                    25, // phone number
+                    30, // failure type
+                ],
+            ]
+        );
+
+        // Write campaign info
+        $writer->writeSheetRow($sheet1, ['Failed Messages Report'], $topHeader);
+        $writer->writeSheetRow($sheet1, [$campaignData['campaign_name']], $styles1);
+        $writer->writeSheetRow($sheet1, [$campaignData['template_name']], $styles1);
+        $writer->writeSheetRow($sheet1, [$campaignData['template_language']], $styles1);
+        $writer->writeSheetRow($sheet1, [$campaignData['scheduled_at']], $styles1);
+        $writer->writeSheetRow($sheet1, [$campaignData['design_manage']], $styles1);
+
+        // Write column headers
+        $writer->writeSheetRow($sheet1, [
+            'Full Name',
+            'Phone Number',
+            'Failure Type'
+        ], $styles2);
+
+        // Fetch failed message logs
+        $this->campaignRepository->fetchFailedMessageLogs($campaignId, function ($messageLog) use (&$writer, &$sheet1, &$styles3) {
+            // Check if __data is a string before decoding
+            $data = $messageLog->__data;
+
+            // Ensure __data is a string before decoding
+            if (is_string($data)) {
+                $data = json_decode($data, true); // Decode as associative array
+            }
+
+            // Check if __data is an array after decoding
+            if (is_array($data)) {
+                $contactData = $data['contact_data'] ?? [];
+                $fullName = ($contactData['first_name'] ?? '') . ' ' . ($contactData['last_name'] ?? '');
+
+                // Write to the report
+                $writer->writeSheetRow($sheet1, [
+                    $fullName,
+                    $messageLog->contact_wa_id, // phone number
+                    'Delivery Failed' // or any other status you want to indicate
+                ], $styles3);
+            } else {
+                Log::info('No data found in __data for message log: ' . $messageLog->_uid);
+            }
+        });
+
+        // Merge cells for headers
+        $writer->markMergedCell($sheet1, $start_row = 0, $start_col = 0, $end_row = 0, $end_col = 2);
+        $writer->markMergedCell($sheet1, $start_row = 1, $start_col = 0, $end_row = 1, $end_col = 2);
+        $writer->markMergedCell($sheet1, $start_row = 2, $start_col = 0, $end_row = 2, $end_col = 2);
+        $writer->markMergedCell($sheet1, $start_row = 3, $start_col = 0, $end_row = 3, $end_col = 2);
+        $writer->markMergedCell($sheet1, $start_row = 4, $start_col = 0, $end_row = 4, $end_col = 2);
+        $writer->markMergedCell($sheet1, $start_row = 5, $start_col = 0, $end_row = 5, $end_col = 2);
+
+        // Write to file
+        $writer->writeToFile($tempFile);
+
+        // Generate filename with timestamp
+        $dateTime = str_slug(now()->format('Y-m-d-H-i-s'));
+
+        // Return download response
+        return response()->download($tempFile, "{$campaign->title}-Failed-Messages-Report-{$dateTime}.xlsx", [
             'Content-Transfer-Encoding: binary',
             'Content-Type: application/octet-stream',
         ])->deleteFileAfterSend();

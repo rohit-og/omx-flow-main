@@ -13,6 +13,7 @@ use App\Yantrana\Components\Campaign\Models\CampaignModel;
 use App\Yantrana\Components\WhatsAppService\Models\WhatsAppMessageLogModel;
 use App\Yantrana\Components\WhatsAppService\Models\WhatsAppMessageQueueModel;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class CampaignRepository extends BaseRepository implements CampaignRepositoryInterface
 {
@@ -221,5 +222,39 @@ class CampaignRepository extends BaseRepository implements CampaignRepositoryInt
     public function fetchCampaignQueueLogDataLazily($campaignId, $callback)
     {
         return WhatsAppMessageQueueModel::where('campaigns__id', $campaignId)->lazy()->each($callback);
+    }
+
+    /**
+     * Fetch failed queue messages for a campaign
+     *
+     * @param int $campaignId
+     * @param callable $callback
+     * @return void
+     */
+    public function fetchFailedQueueMessages($campaignId, callable $callback)
+    {
+        QueueMessage::where('campaigns__id', $campaignId)
+            ->where('status', 2) // Assuming 2 is the status for failed messages
+            ->chunk(100, $callback);
+    }
+
+    /**
+     * Fetch failed message logs for a campaign
+     *
+     * @param int $campaignUid
+     * @param callable $callback
+     * @return void
+     */
+    public function fetchFailedMessageLogs($campaignUid, callable $callback)
+    {
+        // Fetch the failed message logs using the correct column name
+        $failedMessageLogs = WhatsAppMessageLogModel::where('campaigns__id', $campaignUid) // Use the correct column name
+            ->where('status', 'failed') // Ensure this condition matches your data
+            ->get();
+
+        // Process each log with the callback
+        foreach ($failedMessageLogs as $messageLog) {
+            $callback($messageLog);
+        }
     }
 }
