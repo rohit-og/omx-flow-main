@@ -2,6 +2,8 @@
 @section('content')
 @include('layouts.headers.guest')
 <style>
+   
+    
     .gradient-icon-1 {
         background: linear-gradient(135deg, #339699, #78c48f); 
         -webkit-background-clip: text; 
@@ -123,6 +125,7 @@
       display: block;
       width: 100%;
       height: 100vh;
+      overflow:hidden;
     }
     }
 </style>

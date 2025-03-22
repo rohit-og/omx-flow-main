@@ -70,7 +70,7 @@ $appName = getAppSettings('name');
             height:100%
         }
         .card i {
-            color: #0866FF !important;
+            color:rgb(6, 139, 73) !important;
         }
         .go-corner {
             padding:20px;
@@ -177,7 +177,7 @@ $appName = getAppSettings('name');
         }
         .features:hover h3,
         .features:hover h5 {
-            color: #0866FF !important; 
+            color: #339699 !important; 
             transition: color 0.3s ease; 
         }
         .bg-lime{
@@ -243,8 +243,219 @@ $appName = getAppSettings('name');
     100% {
         background-position: center left;
     }
-}
+    }
         
+        /* Feature card hover transform effects */
+        .features {
+            transition: all 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .features:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+            border-color: rgba(51, 150, 153, 0.2);
+        }
+        
+        .features .rounded-icon {
+            transition: all 0.5s ease;
+        }
+        
+        .features:hover .rounded-icon {
+            transform: rotate(360deg);
+        }
+        
+        .features h3 {
+            transition: all 0.3s ease;
+        }
+        
+        .features:hover h3 {
+            transform: translateX(5px);
+        }
+        
+        .features .text-dark {
+            transition: all 0.3s ease;
+        }
+        
+        .features:hover .text-dark {
+            transform: translateY(-3px);
+        }
+
+        /* Submit button hover effect */
+        .contact-submit-btn {
+            background: linear-gradient(135deg, rgb(14, 133, 65), rgb(25, 135, 84));
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .contact-submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgb(25, 135, 84), rgb(14, 133, 65));
+            transition: all 0.4s ease;
+            z-index: -1;
+        }
+        
+        .contact-submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 14px rgba(14, 133, 65, 0.3);
+        }
+        
+        .contact-submit-btn:hover::before {
+            left: 0;
+        }
+        
+        .contact-submit-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 3px 8px rgba(14, 133, 65, 0.3);
+        }
+
+        /* Add this CSS for price card hover effects */
+        .price-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(180deg, rgba(34, 213, 113, 0.03), rgba(0, 188, 81, 0.01));
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+        
+        .price-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        .price-card:hover::before {
+            height: 100%;
+        }
+        
+        .price-card .inner {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .inner {
+            transform: scale(1.02);
+        }
+        
+        .price-card .go-corner {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .go-corner {
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .price-card .card-title {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .card-title {
+            transform: translateX(5px);
+           
+        }
+        
+        .price-card .amount {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .amount {
+            transform: scale(1.05);
+            color: #339699 !important;
+        }
+        
+        .price-card .btn {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .btn {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(34, 213, 113, 0.2);
+            
+        }
+        
+        .price-card .fa-check-circle {
+            transition: all 0.3s ease;
+        }
+        
+        .price-card:hover .fa-check-circle {
+            
+            transform: scale(1.1);
+        }
+
+        /* Improved scroll animation effects */
+        .scroll-fade {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.215, 0.61, 0.355, 1), 
+                        transform 0.9s cubic-bezier(0.215, 0.61, 0.355, 1);
+            will-change: opacity, transform;
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+        
+        .scroll-fade.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Smoother section title animation */
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #22D571, #00bc51);
+            bottom: -10px;
+            left: 0;
+            transition: width 0.6s cubic-bezier(0.215, 0.61, 0.355, 1);
+        }
+        
+        .section-title.active::after {
+            width: 80px;
+        }
+        
+        /* Different delay classes for staggered animations */
+        .delay-100 { transition-delay: 0.1s; }
+        .delay-200 { transition-delay: 0.2s; }
+        .delay-300 { transition-delay: 0.3s; }
+        .delay-400 { transition-delay: 0.4s; }
+        .delay-500 { transition-delay: 0.5s; }
+        
+        /* Add subtle animations for section titles */
+        .section-title {
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #22D571, #00bc51);
+            bottom: -10px;
+            left: 0;
+            transition: width 0.30s ease 0.3s;
+        }
+        
+       
     </style>
 
 <body class="lw-outer-home-page">
@@ -292,7 +503,7 @@ $appName = getAppSettings('name');
                             @if (getAppSettings('enable_vendor_registration') or
                             getAppSettings('message_for_disabled_registration'))
                             <!-- Login -->
-                            <li class="nav-item"><a class="nav-link me-lg-3 btn btn-success text-white" href="{{ route('auth.login') }}">{{ __tr('Login') }}</a></li>
+                            <li class="nav-item"><a class="nav-link me-lg-3 btn btnn text-white" href="{{ route('auth.login') }}">{{ __tr('Login') }}</a></li>
                             <!-- /Login -->
                             @endif
                             @endif
@@ -386,11 +597,7 @@ $appName = getAppSettings('name');
                                  style="border-radius: 10px; box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.62);">
                             
                             <!-- Floating Elements -->
-                            <div class="position-absolute top-0 start-2 translate-middle-y p-1 bg-white rounded-3 shadow-sm" 
-                                 style="animation: float 3s ease-in-out infinite;">
-                                <img src="{{ asset('imgs/meta-verified-removebg-preview.png') }}" alt="" style="    width: 150px;">
-                                </div>
-                            </div>
+                          
                             
                             
                         </div>
@@ -462,7 +669,7 @@ $appName = getAppSettings('name');
                     <!-- Icon and Heading on the same line -->
                     <div class="d-flex align-items-center">
                         <a class="text-decoration-none rounded-icon p-4">
-                            <i class="fas fa-brain gradient-icon-4"></i>
+                        <i class="fas fa-robot gradient-icon-3"></i>
                         </a>
                         <h3 class="fw-bold text-muted ms-3 fs-5">{{ __tr('Chat-Bot') }}</h3>
                     </div>
@@ -562,7 +769,8 @@ $appName = getAppSettings('name');
                     <!-- Icon and Heading on the same line -->
                     <div class="d-flex align-items-center">
                         <a class="text-decoration-none rounded-icon p-4">
-                        <i class="fas fa-robot gradient-icon-3"></i>
+                        
+                        <i class="fas fa-brain gradient-icon-7"></i>
                         </a>
                         <h3 class="fw-bold text-muted ms-3 fs-5">{{ __tr('AI Chatbot') }}</h3>
                     </div>
@@ -587,17 +795,59 @@ $appName = getAppSettings('name');
             </div>
             </div>
         </section>
-        <!-- About Us Section -->
-        <section style="background-color: #fff;">
+        <!-- About Us Section - Updated Design -->
+        <section style="background-color: #f8f9fa; padding: 60px 0;">
             <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6 text-center">
-                <img src="{{ asset('imgs/pqomx.jpg') }}" alt="Logo" style="width: 100%; height: 50vh; object-fit: contain; border-radius: 10px;">
-                </div>
-                <div class="col-md-6 text-center">
-                <h1 class="fw-bold text-success">{!! __tr(' __appName__', ['__appName__' => $appName]) !!}</h1>
-                     <h2 class="fw-bold text-muted ">is based on</h2>
-                     <h1 class="fw-bold text-muted">Official Whatsapp Cloud API <i class="fab fa-whatsapp text-success"></i></h1>
+                <div class="row align-items-center">
+                    <!-- Image column with responsive adjustments -->
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <div class="d-flex justify-content-center flex-column align-items-center">
+                            <div class="position-relative" style="width: 100%; max-width: 350px;">
+                                <img src="{{ asset('imgs/qromx.png') }}" alt="QR Code" class="img-fluid shadow-lg"  
+                                     style="border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); width: 100%;">
+                                <div class="position-absolute" style="bottom: -20px; right: -20px; width: 80px; height: 80px; 
+                                     background: linear-gradient(135deg, rgba(34, 213, 113, 0.1), rgba(0, 188, 81, 0.1)); 
+                                     border-radius: 50%; z-index: -1;"></div>
+                            </div>
+                            
+                            <!-- QR code instructions with responsive width -->
+                            <div class="text-center mt-3 p-2" style="background-color: rgba(34, 213, 113, 0.1); border-radius: 8px; width: 100%; max-width: 350px;">
+                                <p class="mb-0 fw-bold">
+                                    <i class="fas fa-qrcode text-success me-2"></i> 
+                                    Scan the QR code to get our WhatsApp channel
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Text column with responsive padding -->
+                    <div class="col-md-6">
+                        <div class="px-2 py-3 p-md-4">
+                            <h2 class="fw-bold text-success mb-3">{!! __tr(' __appName__', ['__appName__' => $appName]) !!}</h2>
+                            <h3 class="fw-bold text-muted mb-3">is based on</h3>
+                            <h2 class="fw-bold text-muted mb-4">Official Whatsapp Cloud API <i class="fab fa-whatsapp text-success"></i></h2>
+                            
+                            <p class="text-muted mb-4" style="line-height: 1.6;">
+                                Our platform leverages the official WhatsApp Cloud API to provide businesses with a powerful communication solution. 
+                                This integration allows you to connect with customers seamlessly through WhatsApp, the world's most popular messaging app.
+                            </p>
+                            
+                            <div class="d-flex flex-wrap gap-3 mt-4">
+                                <div class="d-flex align-items-center me-3 mb-2">
+                                    <i class="fas fa-shield-alt text-success me-2"></i>
+                                    <span>Meta Verified</span>
+                                </div>
+                                <div class="d-flex align-items-center me-3 mb-2">
+                                    <i class="fas fa-lock text-success me-2"></i>
+                                    <span>Secure & Compliant</span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-globe text-success me-2"></i>
+                                    <span>Global Reach</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -635,15 +885,15 @@ $appName = getAppSettings('name');
                                 <p class="text-muted subscription-period">Monthly Subscription</p>
                                 <button class="btn  btn-success w-100">Book Demo</button>
                                 <hr>
-                                <ul class="list-unstyled " style="font-size:1rem">
-                                    <li >✅ 1000 Contacts</li>
-                                    <li>✅ 50 Campaigns Per Month</li>
-                                    <li>✅ 100 Bot Replies</li>
-                                    <li>✅ 10 Team Members/Agents</li>
-                                    <li>✅ 10 Bot Flows</li>
-                                    <li>✅ 100 Contact Custom Fields</li>
-                                    <li>✅ AI Chat Bot</li>
-                                    <li>✅ API and Webhook Access</li>
+                                <ul class="list-unstyled " style="font-size:0.85em">
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success "> 1000</strong> <p>Contacts</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">50 </strong><p>Campaigns Per Month</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">100 </strong><p>Bot Replies</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i><strong class="text-success "> 10 </strong><p>Team Members/Agents</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">10 </strong><p>Bot Flows</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success ">100 </strong><p>Contact Custom Fields</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> AI <p>Chat Bot</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"> </i> API <p></p>and Webhook Access</li>
                                 </ul>
                             </div>
                             </div>
@@ -668,16 +918,16 @@ $appName = getAppSettings('name');
                                 <p class="text-muted subscription-period">1-Year Subscription</p>
                                 <button class="btn btn-success w-100">Book Demo</button>
                                 <hr>
-                                <ul class="list-unstyled"  style="font-size:1rem">
-                                    <li>✅ Unlimited Contacts</li>
-                                    <li>✅ Unlimited Campaigns Per Month</li>
-                                    <li>✅ Unlimited Bot Replies</li>
-                                    <li>✅ Unlimited Bot Flows</li>
-                                    <li>✅ Unlimited Contact Custom Fields</li>
-                                    <li>✅ Unlimited Team Members/Agents</li>
-                                    <li>✅ AI Chat Bot</li>
-                                    <li>✅ API and Webhook Access</li>
-                                    <li>✅ Live Chat Report</li>
+                                <ul class="list-unstyled"  style="font-size:0.85em">
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong> Contacts</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i> <p><strong class="text-success "> Unlimited</strong>Campaigns Per Month</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong>  Bot Replies</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p> <strong class="text-success "> Unlimited</strong>Bot Flows</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong>  Contact Custom Fields</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i> <p><strong class="text-success "> Unlimited</strong> Team Members/Agents</p></li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i> <p>AI Chat Bot</li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p> API and Webhook Access</li>
+                                    <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p> Live Chat Report</li>
                                 </ul>
                                 </div>
                             </div>
@@ -805,8 +1055,7 @@ $appName = getAppSettings('name');
                                         style="background-color: #F2F4F7; border: none; height: 150px;"></textarea>
                                     <label for="floatingComment" class="text-muted">Comment</label>
                                 </div>
-                                <button type="submit" class="btn btn-success w-100 p-3" 
-                                    style="background: linear-gradient(135deg, #22D571, #00bc51);">
+                                <button type="submit" class="btn btn-success w-100 p-3 contact-submit-btn">
                                     <strong>Submit</strong>
                                 </button>
                             </form>
@@ -1002,6 +1251,113 @@ $appName = getAppSettings('name');
         @if (isLoggedIn())
         {!! getAppSettings('page_footer_code_logged_user_only') !!}
         @endif
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scroll behavior to the entire page
+            document.documentElement.style.scrollBehavior = 'smooth';
+            
+            // Group elements by section for simultaneous animation
+            const sections = document.querySelectorAll('section');
+            
+            sections.forEach((section, sectionIndex) => {
+                // Create a unique class for this section's elements
+                const sectionClass = `section-group-${sectionIndex}`;
+                
+                // Add scroll-fade to section titles
+                
+                
+                // Add scroll-fade to feature cards
+                const features = section.querySelectorAll('.features');
+                features.forEach(feature => {
+                    feature.classList.add('scroll-fade', sectionClass);
+                });
+                
+                // Add scroll-fade to price cards
+                const priceCards = section.querySelectorAll('.price-card');
+                priceCards.forEach(card => {
+                    card.classList.add('scroll-fade', sectionClass);
+                });
+                
+                // Add scroll-fade to FAQ items
+                const faqItems = section.querySelectorAll('.accordion-item');
+                faqItems.forEach(item => {
+                    item.classList.add('scroll-fade', sectionClass);
+                });
+                
+                // Add scroll-fade to contact form elements
+                const formElements = section.querySelectorAll('.form-floating, .contact-submit-btn');
+                formElements.forEach(element => {
+                    element.classList.add('scroll-fade', sectionClass);
+                });
+                
+                // Add scroll-fade to paragraphs and other content
+                const contentElements = section.querySelectorAll('p:not(.scroll-fade), .row > .col-md-5, .row > .col-md-6');
+                contentElements.forEach(element => {
+                    if (!element.closest('.features') && !element.closest('.price-card')) {
+                        element.classList.add('scroll-fade', sectionClass);
+                    }
+                });
+            });
+            
+            // Improved function to check if section is in viewport with threshold
+            function isSectionInViewport(elements) {
+                if (elements.length === 0) return false;
+                
+                // Check if any element in the section is in viewport
+                for (let i = 0; i < elements.length; i++) {
+                    const rect = elements[i].getBoundingClientRect();
+                    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                    // Adjust threshold for smoother triggering
+                    const threshold = windowHeight * 0.75;
+                    
+                    if (rect.top <= threshold && rect.bottom >= 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            
+            // Throttle function to limit how often scroll handler runs
+            function throttle(func, limit) {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    const context = this;
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                };
+            }
+            
+            // Improved function to handle scroll animation with throttling
+            const handleScrollAnimation = throttle(function() {
+                // Get all section groups
+                const sectionCount = sections.length;
+                
+                for (let i = 0; i < sectionCount; i++) {
+                    const sectionElements = document.querySelectorAll(`.section-group-${i}`);
+                    
+                    // If any element in this section group is visible, activate all elements in the group
+                    if (isSectionInViewport(sectionElements)) {
+                        sectionElements.forEach(element => {
+                            element.classList.add('active');
+                        });
+                    }
+                }
+            }, 100); // Throttle to run at most every 100ms
+            
+            // Initial check on page load
+            setTimeout(handleScrollAnimation, 300); // Slight delay for initial load
+            
+            // Check on scroll with passive listener for better performance
+            window.addEventListener('scroll', handleScrollAnimation, { passive: true });
+            
+            // Also check on resize
+            window.addEventListener('resize', handleScrollAnimation, { passive: true });
+        });
+        </script>
     </body>
 
 </html>

@@ -57,7 +57,7 @@ $vendorViewBySuperAdmin = false;
                             <div class="col-6 col-lg-2 mt-2 mt-lg-0">
                                 <div class="text-primary rounded text-center" style="background-color: #e3edf7;">
                                     <span class="position-absolute bg-success text-white pl-1 pr-1 rounded font-weight-bold" style="right:10%;">{{ __tr($totalBotReplies) }}</span>
-                                    <a href="{{ route('vendor.bot_reply.read.list_view') }}" style=" font-size: 50px;"><i class="fas fa-brain gradient-icon-lg-8"></i></a>
+                                    <a href="{{ route('vendor.bot_reply.read.list_view') }}" style=" font-size: 50px;"><i class="fas fa-robot gradient-icon-lg-8"></i></a>
                                     <div class="font-weight-bold text-dark">Bot Reply</div>
                                 </div>
                             </div>
