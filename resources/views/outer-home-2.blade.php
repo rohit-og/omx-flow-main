@@ -535,7 +535,7 @@ $appName = getAppSettings('name');
                                       style="background: linear-gradient(135deg, rgba(34, 213, 113, 0.1), rgba(0, 188, 81, 0.1));">
                                     <i class="fab fa-whatsapp me-2"></i>Official WhatsApp Business Solution
                                 </span>
-                            </div>
+                        </div>
 
                             <!-- Main Heading with Gradient -->
                             <h1 class="display-5 fw-bold mb-3">
@@ -549,15 +549,15 @@ $appName = getAppSettings('name');
                             <!-- Description with Custom Background -->
                             <div class="p-3 rounded-3 mb-3" style="background: rgba(34, 213, 113, 0.05);">
                                 <p class="mb-0 fs-6">
-                                    {{ __tr(
+                            {{ __tr(
                                         'Our  __appName__  is a trusted and efficient platform designed to revolutionize the way businesses connect with their customers. With official verification by Meta our portal ensures secure reliable and compliant communication solutions.',
-                                        [
-                                            '__appName__' => $appName,
-                                        ],
-                                    ) }}
+                                [
+                                    '__appName__' => $appName,
+                                ],
+                            ) }}
                                 </p>
                                 
-                            </div>
+                        </div>
 
                             <!-- CTA Buttons -->
                             <div class="d-flex flex-wrap gap-2 mb-4">
@@ -567,22 +567,22 @@ $appName = getAppSettings('name');
                                 <a href="{{ getAppSettings('whatsapp_demo_link') }}" class="btn btn-outline-success px-4 py-2">
                                     <i class="fas fa-play-circle me-2"></i>Watch Demo Video
                                 </a>
-                            </div>
+                    </div>
 
                             <!-- Stats Section -->
                             <div class="row g-3">
                                 <div class="col-4">
                                     <h4 class="fw-bold text-success mb-0">10K+</h4>
                                     <p class="text-muted small mb-0">Active Users</p>
-                                </div>
+                        </div>
                                 <div class="col-4">
                                     <h4 class="fw-bold text-success mb-0">98%</h4>
                                     <p class="text-muted small mb-0">Satisfaction</p>
-                                </div>
+                    </div>
                                 <div class="col-4">
                                     <h4 class="fw-bold text-success mb-0">24/7</h4>
                                     <p class="text-muted small mb-0">Support</p>
-                                </div>
+                </div>
                             </div>
                         </div>
                     </div>
@@ -798,7 +798,7 @@ $appName = getAppSettings('name');
         <!-- About Us Section - Updated Design -->
         <section style="background-color: #f8f9fa; padding: 60px 0;">
             <div class="container">
-                <div class="row align-items-center">
+            <div class="row align-items-center">
                     <!-- Image column with responsive adjustments -->
                     <div class="col-md-6 mb-4 mb-md-0">
                         <div class="d-flex justify-content-center flex-column align-items-center">
@@ -808,7 +808,7 @@ $appName = getAppSettings('name');
                                 <div class="position-absolute" style="bottom: -20px; right: -20px; width: 80px; height: 80px; 
                                      background: linear-gradient(135deg, rgba(34, 213, 113, 0.1), rgba(0, 188, 81, 0.1)); 
                                      border-radius: 50%; z-index: -1;"></div>
-                            </div>
+                </div>
                             
                             <!-- QR code instructions with responsive width -->
                             <div class="text-center mt-3 p-2" style="background-color: rgba(34, 213, 113, 0.1); border-radius: 8px; width: 100%; max-width: 350px;">
@@ -821,7 +821,7 @@ $appName = getAppSettings('name');
                     </div>
                     
                     <!-- Text column with responsive padding -->
-                    <div class="col-md-6">
+                <div class="col-md-6">
                         <div class="px-2 py-3 p-md-4">
                             <h2 class="fw-bold text-success mb-3">{!! __tr(' __appName__', ['__appName__' => $appName]) !!}</h2>
                             <h3 class="fw-bold text-muted mb-3">is based on</h3>
@@ -836,7 +836,7 @@ $appName = getAppSettings('name');
                                 <div class="d-flex align-items-center me-3 mb-2">
                                     <i class="fas fa-shield-alt text-success me-2"></i>
                                     <span>Meta Verified</span>
-                                </div>
+                </div>
                                 <div class="d-flex align-items-center me-3 mb-2">
                                     <i class="fas fa-lock text-success me-2"></i>
                                     <span>Secure & Compliant</span>
@@ -1182,16 +1182,16 @@ $appName = getAppSettings('name');
             }
 
             // Function to update prices
-            function updatePrices(period) {
-                const cards = document.querySelectorAll('.price-card');
-                
+function updatePrices(period) {
+        const cards = document.querySelectorAll('.price-card');
+            
                 cards.forEach((card, index) => {
                     const planType = index === 0 ? 'premium' : 'ultimate';
                     const prices = priceConfig[period][planType];
-                    
-                    const amountElement = card.querySelector('.amount');
-                    const originalPriceElement = card.querySelector('.original-price');
-                    const subscriptionPeriodElement = card.querySelector('.subscription-period');
+            
+                const amountElement = card.querySelector('.amount');
+                const originalPriceElement = card.querySelector('.original-price');
+                const subscriptionPeriodElement = card.querySelector('.subscription-period');
 
                     // Update the prices
                     amountElement.textContent = `₹${formatPrice(prices.price)}`;
@@ -1199,7 +1199,7 @@ $appName = getAppSettings('name');
                     
                     // Update subscription period text
                     const periodText = period.charAt(0).toUpperCase() + period.slice(1);
-                    subscriptionPeriodElement.textContent = `${periodText} Subscription`;
+                subscriptionPeriodElement.textContent = `${periodText} Subscription`;
                 });
             }
 
@@ -1228,18 +1228,18 @@ $appName = getAppSettings('name');
         });
  
 
-        function setActive(selectedBtn) {
-            // Remove active class from all buttons
-            document.querySelectorAll(".btn-toggle").forEach(btn => {
-                btn.classList.remove("active");
-            });
-    
-            // Add active class to the selected button
-            selectedBtn.classList.add("active");
-    
-            // Update the displayed selected plan
-            document.getElementById("selectedPlan").innerText = selectedBtn.getAttribute("data-value").charAt(0).toUpperCase() + selectedBtn.getAttribute("data-value").slice(1);
-        }
+                        function setActive(selectedBtn) {
+                    // Remove active class from all buttons
+                    document.querySelectorAll(".btn-toggle").forEach(btn => {
+                        btn.classList.remove("active");
+                    });
+            
+                    // Add active class to the selected button
+                    selectedBtn.classList.add("active");
+            
+                    // Update the displayed selected plan
+                    document.getElementById("selectedPlan").innerText = selectedBtn.getAttribute("data-value").charAt(0).toUpperCase() + selectedBtn.getAttribute("data-value").slice(1);
+                }
         </script>
         {!! __yesset([
         'dist/js/common-vendorlibs.js',

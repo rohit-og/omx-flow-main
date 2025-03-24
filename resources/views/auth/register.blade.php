@@ -290,8 +290,8 @@
 
     // Set canvas to full window size
     function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
     }
     
     window.addEventListener('resize', resizeCanvas);
@@ -299,10 +299,10 @@
 
     // Particles class with enhanced animation
     class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.size = Math.random() * 2 + 1;
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
             this.speedX = (Math.random() - 0.5) * 2;
             this.speedY = (Math.random() - 0.5) * 2;
             this.brightness = Math.random() * 50 + 50;
@@ -310,12 +310,12 @@
             this.angle = Math.random() * 360;
             this.angleSpeed = Math.random() * 0.5 + 0.1;
             this.waveAmplitude = Math.random() * 20 + 10;
-        }
+      }
 
-        draw() {
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.closePath();
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
             // Create a gradient effect for each particle
             const gradient = ctx.createRadialGradient(
                 this.x, this.y, 0,
@@ -324,10 +324,10 @@
             gradient.addColorStop(0, `rgba(0, ${this.brightness + 150}, ${this.brightness + 300}, 1)`);
             gradient.addColorStop(1, `rgba(0, ${this.brightness + 150}, ${this.brightness + 300}, 0)`);
             ctx.fillStyle = gradient;
-            ctx.fill();
-        }
+        ctx.fill();
+      }
 
-        update() {
+      update() {
             // Wave motion
             this.angle += this.angleSpeed;
             this.x += Math.sin(this.angle * Math.PI / 180) * 0.5;
@@ -341,7 +341,7 @@
 
             // Pulse size
             this.size = (Math.sin(this.angle * 0.05) + 2) * 1.5;
-        }
+      }
     }
 
     // Initialize particles
@@ -349,16 +349,16 @@
     let particlesArray = [];
 
     function init() {
-        particlesArray = [];
-        for (let i = 0; i < numberOfParticles; i++) {
-            particlesArray.push(new Particle());
-        }
+      particlesArray = [];
+      for (let i = 0; i < numberOfParticles; i++) {
+        particlesArray.push(new Particle());
+      }
     }
 
     // Connect particles with enhanced lines
     function connect() {
-        for (let a = 0; a < particlesArray.length; a++) {
-            for (let b = a; b < particlesArray.length; b++) {
+      for (let a = 0; a < particlesArray.length; a++) {
+        for (let b = a; b < particlesArray.length; b++) {
                 const dx = particlesArray[a].x - particlesArray[b].x;
                 const dy = particlesArray[a].y - particlesArray[b].y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
@@ -374,29 +374,29 @@
                     
                     ctx.strokeStyle = gradient;
                     ctx.lineWidth = opacity * 2;
-                    ctx.beginPath();
-                    ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
-                    ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
-                    ctx.stroke();
-                }
-            }
+            ctx.beginPath();
+            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+            ctx.stroke();
+          }
         }
+      }
     }
 
     // Animation loop
     function animate() {
-        requestAnimationFrame(animate);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
+      requestAnimationFrame(animate);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
         particlesArray.forEach(particle => {
             particle.update();
             particle.draw();
         });
-        connect();
+      connect();
     }
 
     init();
     animate();
-</script>
+  </script>
 </div>
 @endsection
