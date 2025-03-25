@@ -320,6 +320,61 @@
     .status-badge i {
         font-size: 12px;
     }
+
+    /* Card Styling */
+    .dashboard-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-content {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #2D3748;
+        margin-bottom: 10px;
+    }
+
+    .card-value {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1A202C;
+        margin-bottom: 5px;
+    }
+
+    .card-change {
+        font-size: 14px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        color: #48BB78;
+    }
+
+    .card-change.negative {
+        color: #F56565;
+    }
+
+    .card-icon {
+        font-size: 40px;
+        color: rgba(5, 185, 95, 0.69);
+    }
 </style>
 <div class="container-fluid">
     <div class="row">
@@ -407,74 +462,46 @@
                             <h4 class="text-uppercase ls-1 mb-1 font-weight-bold">{{  __tr('Annual') }}</h4>
                         </div>
                     </div>
-                </div>
-            <div class="card-body">
+         <div class="card-body">
                 <div class="col-12 mb-5 mb-xl-5">
             <div x-cloak x-data="{totalVendors:{{ $totalVendors }},totalActiveVendors:{{ $totalActiveVendors }},totalCampaigns:{{ $totalCampaigns }},messagesInQueue:{{ $messagesInQueue }},totalContacts:{{ $totalContacts }},totalMessagesProcessed:{{ $totalMessagesProcessed }} }">
                 <div class="row">
                     <div class="col-lg-4 mt-1">
-                        <div class="card users-card" onclick="window.location.href='{{ route('central.vendors') }}'">
-                            <div class="card-body">
-                                <div class="card-content">
-                                    <div class="row">
-                                        <div class="col font-weight-bold h2 text-uppercase text-secondary"> 
-                                            <i class="fas fa-user stats-icon"></i> {{ __tr('Users') }}
-                                        </div>
-                                    </div>
-                                    <div class="row pl-2">
-                                        <div class="col">
-                                            <span class="font-weight-bold h1" style="font-size: 40px;"
-                                                x-text="__Utils.formatAsLocaleNumber(totalVendors)"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                               
+                        <div class="dashboard-card">
+                            <div class="card-content">
+                                
+                                <div class="card-title"> <i class="fas fa-user stats-icon"></i> {{ __tr('Total Users') }}</div>
+                                <div class="card-value" x-text="__Utils.formatAsLocaleNumber(totalVendors)"></div>
+                                
                             </div>
+                            <i class="fas fa-chart-bar card-icon"></i>
                         </div>
                     </div>
                     <div class="col-lg-4 mt-1">
-                        <div class="card active-users-card" onclick="window.location.href='{{ route('central.vendors', ['filter' => 'active']) }}'">
-                            <div class="card-body">
-                                <div class="card-content">
-                                    <div class="row">
-                                        <div class="col font-weight-bold h2 text-uppercase text-secondary"> 
-                                            <i class="fas fa-user-check stats-icon"></i> {{ __tr('Active Users') }}
-                                        </div>
-                                    </div>
-                                    <div class="row pl-2">
-                                        <div class="col">
-                                            <span class="font-weight-bold h1" style="font-size: 40px;"
-                                                x-text="__Utils.formatAsLocaleNumber(totalActiveVendors)"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="dashboard-card">
+                            <div class="card-content">
+                            
+                                <div class="card-title"><i class="fas fa-user-check stats-icon"></i> {{ __tr('Active Users') }}</div>
+                                <div class="card-value" x-text="__Utils.formatAsLocaleNumber(totalActiveVendors)"></div>
                                 
                             </div>
+                            <i class="fas fa-chart-bar card-icon"></i>
                         </div>
                     </div>
                     <div class="col-lg-4 mt-1">
-                        <div class="card contacts-card" onclick="window.location.href='{{ route('central.vendors', ['filter' => 'contacts']) }}'">
-                            <div class="card-body">
-                                <div class="card-content">
-                                    <div class="row">
-                                        <div class="col font-weight-bold h2 text-uppercase text-secondary"> 
-                                            <i class="fas fa-users stats-icon"></i> {{ __tr('Contacts') }}
-                                        </div>
-                                    </div>
-                                    <div class="row pl-2">
-                                        <div class="col">
-                                            <span class="font-weight-bold h1" style="font-size: 40px;"
-                                                x-text="__Utils.formatAsLocaleNumber(totalContacts)"></span>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="dashboard-card">
+                            <div class="card-content">
+                                
+                                <div class="card-title"><i class="fas fa-users stats-icon"></i> {{ __tr('Contacts') }}</div>
+                                <div class="card-value" x-text="__Utils.formatAsLocaleNumber(totalContacts)"></div>
                                 
                             </div>
+                            <i class="fas fa-chart-bar card-icon"></i>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+         </div>
                     <!-- Chart -->
                     <div class="chart">
                         <canvas id="lwNewVendorRegistrationGraph" class="chart-canvas" height="300"></canvas>
