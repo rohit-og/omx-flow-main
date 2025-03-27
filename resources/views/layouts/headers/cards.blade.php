@@ -6,6 +6,7 @@ $vendorViewBySuperAdmin = false;
 <div class="header pb-5 pt-2 pt-md-7">
     <div class="container-fluid">
     </div>
+    
 </div>
 {{-- show.dropdown.result --}}
 @elseif(hasVendorAccess() or hasVendorUserAccess() or $vendorViewBySuperAdmin )
@@ -102,11 +103,40 @@ $vendorViewBySuperAdmin = false;
                     @endif
                     </div>
                     <div class="col-6">
-                        <div class="mb-2"><a href="{{ route('vendor.whatsapp_service.templates.read.new_view') }}"><div class="font-weight-bold text-center text-white p-1" style=" background: linear-gradient(90deg,  #9eefe6, #2dbcab); border: 1px solid #9DA1A5; border-radius: 50vh;">Create New Template</div></a></div>
-                        <div class="mb-2"><a href="{{ route('vendor.campaign.new.view') }}"><div class="font-weight-bold text-center text-white p-1" style="background: linear-gradient(45deg, #F19946, #E34F95); border: 1px solid #9DA1A5; border-radius: 50vh;">Create New Campaign</div></a></div>
-                        <div class="mb-2"><a href="{{ route('vendor.contact.read.list_view') }}"><div class="font-weight-bold text-center text-white p-1" style="background: linear-gradient(135deg, #1765C9, #55BFF0); border: 1px solid #9DA1A5; border-radius: 50vh;">Create New Contact</div></a></div>
-                        <div class="mb-2"><a href="{{ route('vendor.user.read.list_view') }}"><div class="font-weight-bold text-center text-white p-1" style="background: linear-gradient(135deg, #c4c4c4, #6C757D); border: 1px solid #9DA1A5; border-radius: 50vh;">Create New Agent</div></a></div>
-                        <div class="mb-2"><a href="{{ route('vendor.bot_reply.read.list_view') }}"><div class="font-weight-bold text-center text-white p-1" style="background: linear-gradient(135deg, #b5d1ff, #0866FF); border: 1px solid #9DA1A5; border-radius: 50vh;">Create New Chatbot</div></a></div>
+                        <a href="{{ route('vendor.whatsapp_service.templates.read.new_view') }}" class="action-link template-link">
+                            <div class="action-link-content">
+                                <i class="fa fa-layer-group action-link-icon"></i>
+                                Create New Template
+                            </div>
+                        </a>
+                        
+                        <a href="{{ route('vendor.campaign.new.view') }}" class="action-link campaign-link">
+                            <div class="action-link-content">
+                                <i class="fa fa-rocket action-link-icon"></i>
+                                Create New Campaign
+                            </div>
+                        </a>
+                        
+                        <a href="{{ route('vendor.contact.read.list_view') }}" class="action-link contact-link">
+                            <div class="action-link-content">
+                                <i class="fa fa-users action-link-icon"></i>
+                                Create New Contact
+                            </div>
+                        </a>
+                        
+                        <a href="{{ route('vendor.user.read.list_view') }}" class="action-link agent-link">
+                            <div class="action-link-content">
+                                <i class="fa fa-user-tie action-link-icon"></i>
+                                Create New Agent
+                            </div>
+                        </a>
+                        
+                        <a href="{{ route('vendor.bot_reply.read.list_view') }}" class="action-link chatbot-link">
+                            <div class="action-link-content">
+                                <i class="fas fa-robot action-link-icon"></i>
+                                Create New Chatbot
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -196,4 +226,212 @@ $vendorViewBySuperAdmin = false;
         new Chart(ctx, config);
     });
 </script>
+<style>
+    /* Action Link Styling */
+    .action-link {
+        display: block;
+        margin-bottom: 12px;
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 1;
+    }
+    
+    .action-link:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+    
+    .action-link-content {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        font-weight: 600;
+        color: white;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .action-link-icon {
+        margin-right: 10px;
+        font-size: 18px;
+    }
+    
+    /* Individual Link Styles */
+    .template-link {
+        background-color: #2dbcab;
+    }
+    
+    .template-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, #9eefe6, #2dbcab);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+    }
+    
+    .template-link:hover::before {
+        opacity: 1;
+    }
+    
+    .campaign-link {
+        background-color: #E34F95;
+    }
+    
+    .campaign-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, #F19946, #E34F95);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+    }
+    
+    .campaign-link:hover::before {
+        opacity: 1;
+    }
+    
+    .contact-link {
+        background-color: #1765C9;
+    }
+    
+    .contact-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #1765C9, #55BFF0);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+    }
+    
+    .contact-link:hover::before {
+        opacity: 1;
+    }
+    
+    .agent-link {
+        background-color: #6C757D;
+    }
+    
+    .agent-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #c4c4c4, #6C757D);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+    }
+    
+    .agent-link:hover::before {
+        opacity: 1;
+    }
+    
+    .chatbot-link {
+        background-color: #0866FF;
+    }
+    
+    .chatbot-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, #b5d1ff, #0866FF);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: -1;
+    }
+    
+    .chatbot-link:hover::before {
+        opacity: 1;
+    }
+    
+    /* Static icon colors instead of gradients */
+    .gradient-icon-lg-1, .gradient-icon-1 {
+        font-size: 25px !important;
+        color: #1771E6;
+        display: inline-block;
+    }
+    
+    .gradient-icon-lg-2, .gradient-icon-2 {
+        font-size: 25px !important;
+        color: #2dbcab;
+        display: inline-block;
+    }
+    
+    .gradient-icon-lg-3, .gradient-icon-3 {
+        font-size: 25px !important;
+        color: #8D5DEA;
+        display: inline-block;
+    }
+    
+    .gradient-icon-lg-4, .gradient-icon-4 {
+        font-size: 25px !important;
+        color: #E34F95;
+        display: inline-block;
+    }
+    
+    .gradient-icon-lg-5, .gradient-icon-5 {
+        font-size: 25px !important;
+        color: #1765C9;
+        display: inline-block;
+    }
+    
+    .gradient-icon-lg-6, .gradient-icon-6 {
+        font-size: 25px !important;
+        color: #021C42;
+        display: inline-block;
+    }
+    
+    .gradient-icon-lg-7, .gradient-icon-7 {
+        font-size: 25px !important;
+        color: #6C757D;
+        display: inline-block;
+    }
+    
+    .gradient-icon-lg-8, .gradient-icon-8 {
+        font-size: 25px !important;
+        color: #0866FF;
+        display: inline-block;
+    }
+    
+    .gradient-icon-lg-9, .gradient-icon-9 {
+        font-size: 25px !important;
+        color: #22D571;
+        display: inline-block;
+    }
+    
+    .gradient-icon-lg-10, .gradient-icon-10 {
+        font-size: 25px !important;
+        color: #A136E6;
+        display: inline-block;
+    }
+    
+    /* Larger icons */
+    .gradient-icon-lg-1, .gradient-icon-lg-2, .gradient-icon-lg-3, 
+    .gradient-icon-lg-4, .gradient-icon-lg-5, .gradient-icon-lg-6, 
+    .gradient-icon-lg-7, .gradient-icon-lg-8, .gradient-icon-lg-9, 
+    .gradient-icon-lg-10 {
+        font-size: 50px !important;
+    }
+</style>
 @endif
