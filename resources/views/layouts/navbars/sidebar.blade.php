@@ -242,7 +242,7 @@
                
                 <li class="nav-item">
                     <a class="nav-link" href="#lwSubscriptionSubMenu" data-toggle="collapse" role="button"
-                        aria-expanded="true" aria-controls="lwSubscriptionSubMenu">
+                        aria-expanded="false" aria-controls="lwSubscriptionSubMenu">
                         <i class="fa fa-wallet icon-wallet"></i>
                         <span class="nav-link-text">{{ __tr('User Plans') }}</span>
                     </a>
@@ -264,7 +264,7 @@
                 
                 <li class="nav-item  ">
                     <a class="nav-link"  href="#lwusermenu" data-toggle="collapse" role="button"
-                    aria-expanded="true" aria-controls="lwusermenu"">
+                    aria-expanded="false" aria-controls="lwusermenu"">
                         <i class="fas fa-users icon-users"></i> {{ __tr('Users') }}
                     </a>
                     <div class="collapse show lw-expandable-nav" id="lwusermenu">
