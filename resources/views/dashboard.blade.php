@@ -66,9 +66,9 @@
         font-size: 28px !important;
         margin-bottom: 15px;
         background: linear-gradient(135deg, #22D571, #14A84E);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: inline-block;
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+        display: inline-block; 
         filter: drop-shadow(0 2px 4px rgba(34, 213, 113, 0.2));
         transition: all 0.3s ease;
     }
@@ -224,8 +224,8 @@
     .fresh-users-title i {
         font-size: 24px;
         background: linear-gradient(135deg, #22D571, #14A84E);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
     }
 
     .fresh-users-btn {
@@ -375,6 +375,120 @@
         font-size: 40px;
         color: rgba(5, 185, 95, 0.69);
     }
+
+    /* Modern Card Styling based on reference image */
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card-content {
+        flex: 1;
+    }
+    
+    .stat-card-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: #2D3748;
+        margin-bottom: 5px;
+        line-height: 1;
+    }
+    
+    .stat-card-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #718096;
+        margin: 0;
+    }
+    
+    .stat-card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+    }
+    
+    .stat-card-icon i {
+        font-size: 24px;
+        color: white;
+    }
+    
+    .stat-card-bg {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        transform: translate(30%, -30%);
+        z-index: 0;
+        opacity: 0.1;
+    }
+    
+    /* Color variations */
+    .stat-card-green .stat-card-icon {
+        background-color: #22D571;
+    }
+    
+    .stat-card-green .stat-card-bg {
+        background-color: #22D571;
+    }
+    
+    .stat-card-blue .stat-card-icon {
+        background-color: #1771E6;
+    }
+    
+    .stat-card-blue .stat-card-bg {
+        background-color: #1771E6;
+    }
+    
+    .stat-card-purple .stat-card-icon {
+        background-color: #8D5DEA;
+    }
+    
+    .stat-card-purple .stat-card-bg {
+        background-color: #8D5DEA;
+    }
+    
+    .stat-card-orange .stat-card-icon {
+        background-color: #F19946;
+    }
+    
+    .stat-card-orange .stat-card-bg {
+        background-color: #F19946;
+    }
+    
+    .stat-card-pink .stat-card-icon {
+        background-color: #E34F95;
+    }
+    
+    .stat-card-pink .stat-card-bg {
+        background-color: #E34F95;
+    }
+    
+    .stat-card-gray .stat-card-icon {
+        background-color: #6C757D;
+    }
+    
+    .stat-card-gray .stat-card-bg {
+        background-color: #6C757D;
+    }
 </style>
 <div class="container-fluid">
     <div class="row">
@@ -393,64 +507,7 @@
             @endif
         </div>
     </div>
-    <div class="col-12 mb-5 mb-xl-5">
-            <div x-cloak x-data="{totalVendors:{{ $totalVendors }},totalActiveVendors:{{ $totalActiveVendors }},totalCampaigns:{{ $totalCampaigns }},messagesInQueue:{{ $messagesInQueue }},totalContacts:{{ $totalContacts }},totalMessagesProcessed:{{ $totalMessagesProcessed }} }">
-                <div class="row ">
-                    <div class="col-lg-4 mt-1">
-                        <div class="card2">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col font-weight-bold h2 text-uppercase text-secondary"> 
-                                        <i class="fas fa-rocket stats-icon-secondary"></i> {{ __tr('Overall Campaigns') }}
-                                    </div>
-                                </div>
-                                <div class="row pl-2">
-                                    <div class="col">
-                                        <span class="font-weight-bold h1" style="font-size: 40px;"
-                                            x-text="__Utils.formatAsLocaleNumber(totalCampaigns)"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mt-1">
-                        <div class="card2">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col font-weight-bold h2 text-uppercase text-secondary"> 
-                                        <i class="fas fa-hourglass-half stats-icon-secondary"></i> {{ __tr('Messages In-Process') }}
-                                    </div>
-                                </div>
-                                <div class="row pl-2">
-                                    <div class="col">
-                                        <span class="font-weight-bold h1" style="font-size: 40px;"
-                                            x-text="__Utils.formatAsLocaleNumber(messagesInQueue)"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 mt-1">
-                        <div class="card2">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col font-weight-bold h2 text-uppercase text-secondary"> 
-                                        <i class="fas fa-clipboard-check stats-icon-secondary"></i> {{ __tr('Processed Messages') }}
-                                    </div>
-                                </div>
-                                <div class="row pl-2">
-                                    <div class="col">
-                                        <span class="font-weight-bold h1" style="font-size: 40px;"
-                                            x-text="__Utils.formatAsLocaleNumber(totalMessagesProcessed)"></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        
-    </div>
+    
     <div class="">
 
         <div class="col  mb-5 mb-xl-0">
@@ -460,43 +517,87 @@
                         <div class="col">
                             <h2 class="mb-0 font-weight-bold text-uppercase" style="color: #0861F2;">{{  __tr('User Onboarding Analytics') }}</h2>
                             <h4 class="text-uppercase ls-1 mb-1 font-weight-bold">{{  __tr('Annual') }}</h4>
-                        </div>
                     </div>
-         <div class="card-body">
+                </div>
+                <div class="card-body">
                 <div class="col-12 mb-5 mb-xl-5">
             <div x-cloak x-data="{totalVendors:{{ $totalVendors }},totalActiveVendors:{{ $totalActiveVendors }},totalCampaigns:{{ $totalCampaigns }},messagesInQueue:{{ $messagesInQueue }},totalContacts:{{ $totalContacts }},totalMessagesProcessed:{{ $totalMessagesProcessed }} }">
-                <div class="row">
-                    <div class="col-lg-4 mt-1">
-                        <div class="dashboard-card">
-                            <div class="card-content">
-                                
-                                <div class="card-title"> <i class="fas fa-user stats-icon"></i> {{ __tr('Total Users') }}</div>
-                                <div class="card-value" x-text="__Utils.formatAsLocaleNumber(totalVendors)"></div>
-                                
+                        <div class="row">
+                    <div class="col-lg-4 mt-3">
+                        <div class="stat-card stat-card-blue">
+                            <div class="stat-card-bg"></div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-users"></i>
                             </div>
-                            <i class="fas fa-chart-bar card-icon"></i>
+                            <div class="stat-card-content">
+                                <div class="stat-card-value" x-text="__Utils.formatAsLocaleNumber(totalVendors)"></div>
+                                <div class="stat-card-title">{{ __tr('Total Users') }}</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 mt-1">
-                        <div class="dashboard-card">
-                            <div class="card-content">
-                            
-                                <div class="card-title"><i class="fas fa-user-check stats-icon"></i> {{ __tr('Active Users') }}</div>
-                                <div class="card-value" x-text="__Utils.formatAsLocaleNumber(totalActiveVendors)"></div>
-                                
+                    
+                    <div class="col-lg-4 mt-3">
+                        <div class="stat-card stat-card-green">
+                            <div class="stat-card-bg"></div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-user-check"></i>
                             </div>
-                            <i class="fas fa-chart-bar card-icon"></i>
+                            <div class="stat-card-content">
+                                <div class="stat-card-value" x-text="__Utils.formatAsLocaleNumber(totalActiveVendors)"></div>
+                                <div class="stat-card-title">{{ __tr('Active Users') }}</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 mt-1">
-                        <div class="dashboard-card">
-                            <div class="card-content">
-                                
-                                <div class="card-title"><i class="fas fa-users stats-icon"></i> {{ __tr('Contacts') }}</div>
-                                <div class="card-value" x-text="__Utils.formatAsLocaleNumber(totalContacts)"></div>
-                                
+                    
+                    <div class="col-lg-4 mt-3">
+                        <div class="stat-card stat-card-purple">
+                            <div class="stat-card-bg"></div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-address-book"></i>
                             </div>
-                            <i class="fas fa-chart-bar card-icon"></i>
+                            <div class="stat-card-content">
+                                <div class="stat-card-value" x-text="__Utils.formatAsLocaleNumber(totalContacts)"></div>
+                                <div class="stat-card-title">{{ __tr('Contacts') }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 mt-3">
+                        <div class="stat-card stat-card-orange">
+                            <div class="stat-card-bg"></div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-rocket"></i>
+                </div>
+                            <div class="stat-card-content">
+                                <div class="stat-card-value" x-text="__Utils.formatAsLocaleNumber(totalCampaigns)"></div>
+                                <div class="stat-card-title">{{ __tr('Overall Campaigns') }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 mt-3">
+                        <div class="stat-card stat-card-pink">
+                            <div class="stat-card-bg"></div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                                    </div>
+                            <div class="stat-card-content">
+                                <div class="stat-card-value" x-text="__Utils.formatAsLocaleNumber(messagesInQueue)"></div>
+                                <div class="stat-card-title">{{ __tr('Messages In-Process') }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4 mt-3">
+                        <div class="stat-card stat-card-gray">
+                            <div class="stat-card-bg"></div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                                    </div>
+                            <div class="stat-card-content">
+                                <div class="stat-card-value" x-text="__Utils.formatAsLocaleNumber(totalMessagesProcessed)"></div>
+                                <div class="stat-card-title">{{ __tr('Processed Messages') }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -505,10 +606,10 @@
                     <!-- Chart -->
                     <div class="chart">
                         <canvas id="lwNewVendorRegistrationGraph" class="chart-canvas" height="300"></canvas>
-                    </div>
                 </div>
             </div>
         </div>
+    </div>
         
     <div class="row mt-2">
         <div class="col-xl-12 mb-5 mb-xl-0">
@@ -571,8 +672,8 @@
 @endpush
 @push('appScripts')
 <script>
-(function($) {
-    'use strict';
+        (function($) {
+        'use strict';
     var ctx = document.getElementById("lwNewVendorRegistrationGraph").getContext("2d");
     
     // Create gradient fill for the chart
@@ -586,29 +687,29 @@
     
     new Chart(ctx, {
         type: "line",
-        data: {
+      data: {
             labels: months,
-            datasets: [{
-                label: "{{ __tr('New users') }}",
-                tension: 0.4,
+        datasets: [{
+          label: "{{ __tr('New users') }}",
+          tension: 0.4,
                 borderWidth: 3,
                 pointRadius: 4,
                 pointBackgroundColor: "#22D571",
                 borderColor: "#22D571",
                 backgroundColor: gradientFill,
-                fill: true,
+          fill: true,
                 data: userData,
                 pointHoverRadius: 6,
                 pointHoverBorderWidth: 2
             }]
-        },
-        options: {
+      },
+      options: {
             locale: window.appConfig.locale,
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    display: false,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
                 },
                 tooltip: {
                     backgroundColor: "rgba(255, 255, 255, 0.8)",
@@ -619,44 +720,44 @@
                     padding: 10,
                     boxPadding: 5,
                     usePointStyle: true
-                }
-            },
-            interaction: {
-                intersect: false,
-                mode: 'index',
-            },
-            scales: {
-                y: {
-                    grid: {
-                        drawBorder: false,
-                        display: true,
-                        drawOnChartArea: true,
-                        drawTicks: false,
+          }
+        },
+        interaction: {
+          intersect: false,
+          mode: 'index',
+        },
+        scales: {
+          y: {
+            grid: {
+              drawBorder: false,
+              display: true,
+              drawOnChartArea: true,
+              drawTicks: false,
                         borderDash: [5, 5],
                         color: "rgba(0, 0, 0, 0.05)"
-                    },
-                    ticks: {
-                        display: true,
-                        padding: 10,
-                        color: '#000'
-                    }
-                },
-                x: {
-                    grid: {
-                        drawBorder: false,
-                        display: false,
-                        drawOnChartArea: false,
-                        drawTicks: false,
-                        borderDash: [5, 5]
-                    },
-                    ticks: {
-                        display: true,
-                        color: '#000',
-                        padding: 20
-                    }
-                },
             },
+            ticks: {
+              display: true,
+              padding: 10,
+              color: '#000'
+            }
+          },
+          x: {
+            grid: {
+              drawBorder: false,
+              display: false,
+              drawOnChartArea: false,
+              drawTicks: false,
+              borderDash: [5, 5]
+            },
+            ticks: {
+              display: true,
+              color: '#000',
+              padding: 20
+            }
+          },
         },
+      },
     });
 })(jQuery);
 
@@ -683,5 +784,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-</script>
+  </script>
 @endpush
