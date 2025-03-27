@@ -1,109 +1,143 @@
 <style>
+    /* Modern Sidebar Styling */
     #sidenav-main {
         background-color: #ffffff !important;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
     }
-    .rounded-icon {
-        background-color: #E2E5E9;
-        width: 24px;
-        height: 24px; 
-        border-radius: 50%; 
-        display: inline-flex; 
-        align-items: center; 
-        justify-content: center; 
-        font-size: 12px !important;
+    
+    .navbar-vertical .navbar-nav .nav-link {
+        padding: 12px 20px;
+        color: #5c6b7a;
+        font-weight: 500;
+        font-size: 14px;
+        border-radius: 8px;
+        margin: 4px 12px;
+        transition: all 0.2s ease;
     }
-    .gradient-icon-1 {
-        font-size: 25px !important;
-        background: linear-gradient(135deg, #41C6B5, #1771E6); 
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
+    
+    .navbar-vertical .navbar-nav .nav-link:hover {
+        background-color: #f5f7fa;
+        color: #3a4a5c;
     }
-    .gradient-icon-2 {
-        font-size: 25px !important;
-        background: linear-gradient(90deg,  #9eefe6, #2dbcab);
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
-    }
-    .gradient-icon-3 {
-        font-size: 25px !important;
-        background: linear-gradient(135deg, #D32E9A, #8D5DEA);
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
-    }
-    .gradient-icon-4 {
-        font-size: 25px !important;
-        background: linear-gradient(45deg, #F19946, #E34F95);
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
-    }
-    .gradient-icon-5 {
-        font-size: 25px !important;
-        background: linear-gradient(135deg, #1765C9, #55BFF0);
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
-    }
-    .gradient-icon-6 {
-        font-size: 25px !important;
-        background: linear-gradient(135deg, #707d8e, #021C42);
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
-    }
-    .gradient-icon-7 {
-        font-size: 25px !important;
-        background: linear-gradient(135deg, #c4c4c4, #6C757D);
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
-    }
-    .gradient-icon-8 {
-        font-size: 25px !important;
-        background: linear-gradient(135deg, #b5d1ff, #0866FF);
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
-    }
-    .gradient-icon-9 {
-        font-size: 25px !important;
-        background: linear-gradient(135deg, #22D571, #21d3c7);
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
-    }
-    .gradient-icon-10 {
-        font-size: 25px !important;
-        background: linear-gradient(45deg, #A136E6, #5eb4ff);
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        display: inline-block; 
-    }
-    .nav-link {
+    
+    .navbar-vertical .navbar-nav .nav-link.active {
+        background-color: #f0f5ff;
+        color: #1771E6;
         font-weight: 600;
     }
-    a.nav-link:hover {
-        background-color: #F6F9FC;
+    
+    .navbar-vertical .navbar-nav .nav-link i, 
+    .navbar-vertical .navbar-nav .nav-link .fa,
+    .navbar-vertical .navbar-nav .nav-link .fas {
+        font-size: 18px;
+        width: 24px;
+        margin-right: 10px;
+        text-align: center;
+        vertical-align: middle;
     }
-    .bg-primary-light {
+    
+    /* Icon colors */
+    .icon-dashboard {
+        color: #1771E6;
     }
+    
+    .icon-users {
+        color: #22D571;
+    }
+    
+    .icon-wallet {
+        color: #8D5DEA;
+    }
+    
+    .icon-pages {
+        color: #E34F95;
+    }
+    
+    .icon-globe {
+        color: #1765C9;
+    }
+    
+    .icon-settings {
+        color: #6C757D;
+    }
+    
+    .icon-facebook {
+        color: #0866FF;
+    }
+    
+    .icon-tools {
+        color: #6C757D;
+    }
+    
+    .icon-qrcode {
+        color: #8D5DEA;
+    }
+    
+    /* Submenu styling */
+    .lw-expandable-nav {
+        padding-left: 15px;
+        margin-top: 5px;
+    }
+    
+    .nav-link-ul {
+        font-size: 13px !important;
+        padding: 8px 15px 8px 35px !important;
+        position: relative;
+    }
+    
     .nav-link-ul::before {
         content: '';
         position: absolute;
+        left: 20px;
+        top: 50%;
         transform: translateY(-50%);
-        width: 8px; 
-        height: 1px;
-        background-color: #000000; 
-        transition: width 0.3s ease;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color: #c0c6cc;
     }
-
+    
+    
     .nav-link-ul:hover::before {
-        width: 15px;
+        background-color: #1771E6;
     }
+    
+    .nav-link-ul.active {
+        color: #1771E6 !important;
+        font-weight: 600;
+    }
+   
+    .nav-link-ul.active::before {
+        background-color: #1771E6;
+    }
+    
+    /* Dropdown indicators */
+    .nav-link[data-toggle="collapse"]::after {
+        content: '';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        right: 20px;
+        transition: transform 0.2s ease;
+        
+    }
+    
+    .nav-link[data-toggle="collapse"][aria-expanded="true"]::after {
+        transform: rotate(90deg);
+    }
+    
+    /* Section dividers */
+    .sidebar-section-divider {
+        height: 1px;
+        background-color: #edf0f5;
+        margin: 15px 20px;
+    }
+    
+    /* Active submenu background */
+   
 </style>
+
+<!-- Update the icon classes in the navbar -->
 <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light lw-sidebar-container" id="sidenav-main">
     <div class="container-fluid">
         <span>
@@ -173,14 +207,14 @@
                 @if (hasCentralAccess())
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('central.console') }}" href="{{ route('central.console') }}">
-                        <i class="fa fa-chart-line gradient-icon-1"></i> {{ __tr('Dashboard') }}
+                        <i class="fa fa-chart-line icon-dashboard"></i> {{ __tr('Dashboard') }}
                     </a>
                 </li>
                
                 <li class="nav-item">
                     <a class="nav-link" href="#lwSubscriptionSubMenu" data-toggle="collapse" role="button"
                         aria-expanded="true" aria-controls="lwSubscriptionSubMenu">
-                        <i class="fa fa-wallet text-dark gradient-icon-3"></i>
+                        <i class="fa fa-wallet icon-wallet"></i>
                         <span class="nav-link-text">{{ __tr('User Plans') }}</span>
                     </a>
                     <div class="collapse show lw-expandable-nav" id="lwSubscriptionSubMenu">
@@ -199,28 +233,39 @@
                     </div>
                 </li>
                 
-                <li class="nav-item {{ markAsActiveLink('central.vendors') }}">
-                    <a class="nav-link" href="{{ route('central.vendors') }}">
-                        <i class="fas fa-users gradient-icon-2"></i> {{ __tr('Users') }}
+                <li class="nav-item  ">
+                    <a class="nav-link"  href="#lwusermenu" data-toggle="collapse" role="button"
+                    aria-expanded="true" aria-controls="lwusermenu"">
+                        <i class="fas fa-users icon-users"></i> {{ __tr('Users') }}
                     </a>
+                    <div class="collapse show lw-expandable-nav" id="lwusermenu">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item {{ markAsActiveLink('central.vendors') }}">
+                                <a class="bg-primary-light nav-link nav-link-ul" href="{{ route('central.vendors') }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('List') }}
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
                 </li>
                 
                 <li class="nav-item ">
                     <a class="nav-link {{ markAsActiveLink('page.list') }}" href="{{ route('page.list') }}">
-                        <i class="fas fa-copy gradient-icon-4"></i> {{ __tr('Pages') }}
+                        <i class="fas fa-copy icon-pages"></i> {{ __tr('Pages') }}
                     </a>
                 </li>
                 
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('manage.translations.languages') }}" href="{{ route('manage.translations.languages') }}">
-                        <i class="fas fa-globe gradient-icon-5"></i> {{ __tr('Languages') }}
+                        <i class="fas fa-globe icon-globe"></i> {{ __tr('Languages') }}
                     </a>
                 </li>
                 
                 <li class="nav-item {{ request('pageType') == 'other' ? 'active' : '' }}">
                     <a class="bg-primary-light nav-link nav-link-footer"
                         href="{{ route('manage.configuration.read', ['pageType' => 'other']) }}">
-                        <i class="fa fa-cogs gradient-icon-6" style="color: #6C757D !important;"></i>
+                        <i class="fa fa-cogs icon-settings"></i>
                         {!! __tr('Setup') !!}
                     </a>
                 </li>
@@ -228,7 +273,7 @@
                 <li class="nav-item {{ request('pageType') == 'whatsapp-onboarding' ? 'active' : '' }}">
                     <a class="bg-primary-light nav-link nav-link-footer"
                         href="{{ route('manage.configuration.read', ['pageType' => 'whatsapp-onboarding']) }}">
-                        <i class="fab fa-facebook gradient-icon-8"></i>
+                        <i class="fab fa-facebook icon-facebook"></i>
                         {!! __tr('Embedded Signup') !!}
                     </a>
                 </li>
@@ -236,7 +281,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#configurationMenu" data-toggle="collapse" role="button"
                         aria-expanded="true" aria-controls="configurationMenu">
-                        <i class="fa fa-tools text-dark gradient-icon-7"></i>
+                        <i class="fa fa-tools icon-tools"></i>
                         <span class="nav-link-text">{{ __tr('Settings') }}</span>
                     </a>
 
@@ -304,7 +349,7 @@
                 @if (hasVendorAccess() or hasVendorUserAccess())
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.console') }}" href="{{ route('vendor.console') }}">
-                        <i class="fa fa-chart-line gradient-icon-1"></i>
+                        <i class="fa fa-chart-line icon-dashboard"></i>
                         {{ __tr('Dashboard') }}
                     </a>
                 </li>
@@ -400,7 +445,7 @@
                 @endif
                 <li class="nav-item">
                     <a class="nav-link" href="#" data-toggle="modal" data-target="#lwScanMeDialog">
-                        <i class="fa fa-qrcode text-dark gradient-icon-3"></i>
+                        <i class="fa fa-qrcode icon-qrcode"></i>
                         {{ __tr('QR Code') }}
                     </a>
                 </li>
