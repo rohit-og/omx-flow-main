@@ -73,6 +73,35 @@
         color: #8D5DEA;
     }
     
+    /* Vendor icon colors */
+    .icon-chat {
+        color: #22D571;
+    }
+    
+    .icon-templates {
+        color: #2dbcab;
+    }
+    
+    .icon-contacts {
+        color: #E34F95;
+    }
+    
+    .icon-campaigns {
+        color: #FF9500;
+    }
+    
+    .icon-automation {
+        color: #A136E6;
+    }
+    
+    .icon-agents {
+        color: #6C757D;
+    }
+    
+    .icon-plan {
+        color: #8D5DEA;
+    }
+    
     /* Submenu styling */
     .lw-expandable-nav {
         padding-left: 15px;
@@ -356,7 +385,8 @@
                  @if (hasVendorAccess('messaging'))
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.chat_message.contact.view') }}" href="{{ route('vendor.chat_message.contact.view') }}">
-                        <span x-cloak x-show="unreadMessagesCount" class="badge badge-success rounded-pill ml--2" x-text="unreadMessagesCount"></span><i class="fa fa-comments mr-2 gradient-icon-9"></i> <span class="ml--2">{{ __tr('Live Chat') }}</span>
+                        <span x-cloak x-show="unreadMessagesCount" class="badge badge-success rounded-pill ml--2" x-text="unreadMessagesCount"></span>
+                        <i class="fa fa-comments icon-chat"></i> <span class="ml--2">{{ __tr('Live Chat') }}</span>
                     </a>
                 </li>
                 @endif
@@ -364,7 +394,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.whatsapp_service.templates.read.list_view') }}"
                         href="{{ route('vendor.whatsapp_service.templates.read.list_view') }}">
-                        <i class="fa fa-layer-group gradient-icon-2"></i>
+                        <i class="fa fa-layer-group icon-templates"></i>
                         {{ __tr('Templates') }}
                     </a>
                 </li>
@@ -373,7 +403,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.campaign.read.list_view') }}"
                         href="{{ route('vendor.campaign.read.list_view') }}">
-                        <i class="fa fa-rocket gradient-icon-4"></i>
+                        <i class="fa fa-rocket "></i>
                         {{ __tr('Campaigns') }}
                     </a>
                 </li>
@@ -382,7 +412,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#vendorContactSubmenuNav" data-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="vendorContactSubmenuNav">
-                        <i class="fa fa-users text-dark gradient-icon-5"></i>
+                        <i class="fa fa-users "></i>
                         <span class="">{{ __tr('Contacts') }}</span>
                     </a>
                 <div class="collapse lw-expandable-nav" id="vendorContactSubmenuNav">
@@ -413,7 +443,7 @@
                  <li class="nav-item">
                     <a class="nav-link" href="#vendorAutomationSubmenuNav" data-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="vendorAutomationSubmenuNav">
-                        <i class="fas fa-robot text-dark gradient-icon-8"></i>
+                        <i class="fas fa-robot "></i>
                         <span class="">{{ __tr('Chatbot') }}</span>
                     </a>
                 <div class="collapse lw-expandable-nav" id="vendorAutomationSubmenuNav">
@@ -438,7 +468,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.user.read.list_view') }}"
                         href="{{ route('vendor.user.read.list_view') }}">
-                        <i class="fa fa-user-tie gradient-icon-7"></i>
+                        <i class="fa fa-user-tie icon-agents"></i>
                         {{ __tr('Agents') }}
                     </a>
                 </li>
@@ -453,14 +483,14 @@
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('subscription.read.show') }}"
                         href="{{ route('subscription.read.show') }}">
-                        <i class="fa fa-wallet gradient-icon-10"></i>
+                        <i class="fa fa-wallet icon-plan"></i>
                         {{ __tr('My Plan') }}
                     </a>
                 </li>
                 <li class="nav-item">
                         <a class="nav-link @if(isWhatsAppBusinessAccountReady()) collapsed @else text-warning @endif" href="#vendorSettingsNav" data-toggle="collapse" role="button"
                             aria-expanded="@php echo !isWhatsAppBusinessAccountReady() ? 'true' : 'false'; @endphp" aria-controls="vendorSettingsNav">
-                            <i class="fa fa-cog gradient-icon-6"></i>
+                            <i class="fa fa-cog "></i>
                             <span class="">{{ __tr('Setup') }}</span>
                         </a>
                     <div class="collapse @if(!isWhatsAppBusinessAccountReady()) show @endif lw-expandable-nav" id="vendorSettingsNav">
