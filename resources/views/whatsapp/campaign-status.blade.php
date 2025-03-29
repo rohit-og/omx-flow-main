@@ -13,6 +13,30 @@ $isAllContacts = Arr::get($campaignData, 'is_all_contacts');
 $messageLog = $campaign->messageLog;
 $queueMessages = $campaign->queueMessages;
 $campaignUid=$campaign->_uid;
+$totalContacts = (int) Arr::get($campaignData, 'total_contacts');
+$totalRead = $messageLog->where('status', 'read')->count();
+$totalDelivered = $messageLog->where('status', 'delivered')->count();
+$totalFailed = $queueMessages->where('status', 2)->count() + $messageLog->where('status', 'failed')->count();
+$totalAccepted = $messageLog->where('status', 'accepted')->count();
+$totalProcessing = $queueMessages->where('status', 3)->count();
+$totalWaiting = $queueMessages->where('status', 1)->count();
+$totalSent = $messageLog->where('status', 'sent')->count();
+$totalProcessed = $totalSent + $totalRead + $totalDelivered + $totalAccepted + $totalFailed + $totalProcessing;
+
+// Calculate percentages only if there are contacts
+$totalReadInPercent = $totalContacts > 0 ? round(($totalRead / $totalContacts) * 100, 2) . '%' : '0%';
+$totalDeliveredInPercent = $totalContacts > 0 ? round((($totalDelivered + $totalRead) / $totalContacts) * 100, 2) . '%' : '0%';
+$totalFailedInPercent = $totalContacts > 0 ? round(($totalFailed / $totalContacts) * 100, 2) . '%' : '0%';
+$totalAcceptedInPercent = $totalContacts > 0 ? round(($totalAccepted / $totalContacts) * 100, 2) . '%' : '0%';
+$totalProcessingInPercent = $totalContacts > 0 ? round(($totalProcessing / $totalContacts) * 100, 2) . '%' : '0%';
+$totalWaitingInPercent = $totalContacts > 0 ? round(($totalWaiting / $totalContacts) * 100, 2) . '%' : '0%';
+$totalSentInPercent = $totalContacts > 0 ? round(($totalSent / $totalContacts) * 100, 2) . '%' : '0%';
+
+// Calculate the total percentage of processed messages
+$totalProcessedInPercent = $totalContacts > 0 ? round(($totalProcessed / $totalContacts) * 100, 2) . '%' : '0%';
+
+// Ensure we don't count delivered messages twice
+$totalDeliveredCount = $totalDelivered + $totalRead;
 @endphp
 
 <div class="container-fluid mt-lg--6 lw-campaign-window-{{ $campaign->_uid }}" x-cloak x-data="initialRequiredData">
@@ -76,8 +100,8 @@ $campaignUid=$campaign->_uid;
         <div class="col-12">
             <div class="row mb-4">
                 {{-- total contacts --}}
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card card-stats h-100">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -113,19 +137,41 @@ $campaignUid=$campaign->_uid;
                     </div>
                 </div>
                 {{-- /total contacts --}}
-                {{-- delivered to --}}
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                {{-- sent messages --}}
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card card-stats h-100">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">{{ __tr('Total Delivered') }}
-                                    </h5>
-                                    <span class="h2 font-weight-bold mb-0" x-text="totalDeliveredInPercent"></span>
+                                    <h5 class="card-title text-uppercase text-muted mb-0">{{ __tr('Total Single Tick Delivered') }}</h5>
+                                    <span class="h2 font-weight-bold mb-0" x-text="totalSentInPercent"></span>
                                 </div>
                                 <div class="col-auto">
                                     <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
-                                        <i class="fas fa-check"></i>
+                                    <i class="fas fa-check"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="mt-3 mb-0 text-muted text-sm">
+                                <span class="text-nowrap" x-text="__Utils.formatAsLocaleNumber(totalSent)"></span>
+                                <span class="text-nowrap">{{ __tr('Messages') }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {{-- /sent messages --}}
+                {{-- delivered to --}}
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card card-stats h-100">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">{{ __tr('Total Double Tick Delivered') }}</h5>
+                                    <span class="h2 font-weight-bold mb-0" x-text="totalDeliveredInPercent"></span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-success text-white rounded-circle shadow">
+                                    <i class="fas fa-check-double"></i>
                                     </div>
                                 </div>
                             </div>
@@ -138,8 +184,8 @@ $campaignUid=$campaign->_uid;
                 </div>
                 {{-- /delivered to --}}
                 {{-- read by --}}
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card card-stats h-100">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
@@ -147,7 +193,7 @@ $campaignUid=$campaign->_uid;
                                     <span class="h2 font-weight-bold mb-0" x-text="totalReadInPercent"></span>
                                 </div>
                                 <div class="col-auto">
-                                    <div class="icon icon-shape bg-success text-white rounded-circle shadow">
+                                    <div class="icon icon-shape bg-info text-white rounded-circle shadow">
                                         <i class="fas fa-check-double"></i>
                                     </div>
                                 </div>
@@ -160,14 +206,60 @@ $campaignUid=$campaign->_uid;
                     </div>
                 </div>
                 {{-- /read by --}}
-                {{-- failed --}}
-                <div class="col-xl-3 col-lg-4 col-md-6">
-                    <div class="card card-stats mb-4 mb-xl-0">
+                {{-- processing messages --}}
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card card-stats h-100">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col">
-                                    <h5 class="card-title text-uppercase text-muted mb-0">{{ __tr('Total Failed') }}
-                                    </h5>
+                                    <h5 class="card-title text-uppercase text-muted mb-0">{{ __tr('Processing') }}</h5>
+                                    <span class="h2 font-weight-bold mb-0" x-text="totalProcessingInPercent"></span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-primary text-white rounded-circle shadow">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="mt-3 mb-0 text-muted text-sm">
+                                <span class="text-nowrap" x-text="__Utils.formatAsLocaleNumber(totalProcessing)"></span>
+                                <span class="text-nowrap">{{ __tr('Messages') }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {{-- /processing messages --}}
+                
+                {{-- accepted messages --}}
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card card-stats h-100">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">{{ __tr('Total Meta Accepted') }}</h5>
+                                    <span class="h2 font-weight-bold mb-0" x-text="totalAcceptedInPercent"></span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-warning text-white rounded-circle shadow">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="mt-3 mb-0 text-muted text-sm">
+                                <span class="text-nowrap" x-text="__Utils.formatAsLocaleNumber(totalAccepted)"></span>
+                                <span class="text-nowrap">{{ __tr('Messages') }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {{-- /accepted messages --}}
+                {{-- failed --}}
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card card-stats h-100">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">{{ __tr('Total Failed') }}</h5>
                                     <span class="h2 font-weight-bold mb-0" x-text="__Utils.formatAsLocaleNumber(totalFailedInPercent)"></span>
                                 </div>
                                 <div class="col-auto">
@@ -180,12 +272,34 @@ $campaignUid=$campaign->_uid;
                                 <span class="text-nowrap" x-text="__Utils.formatAsLocaleNumber(totalFailed)"></span>
                                 <span class="text-nowrap">{{ __tr('Contacts') }}</span>
                             </p>
-                            <a href="{{ route('vendor.campaign.failed.messages.report.write',['campaignUid' => $campaignUid ] 
-                            ) }}" data-method="post" class="btn btn-dark btn-sm mt-2"><i class="fa fa-download "></i> {{  __tr('Report') }}</a>
                         </div>
                     </div>
                 </div>
                 {{-- /failed --}}
+                
+                {{-- total processed messages --}}
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card card-stats h-100">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">{{ __tr('Overall Message Status') }}</h5>
+                                    <span class="h2 font-weight-bold mb-0" x-text="totalProcessedInPercent"></span>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="icon icon-shape bg-info text-white rounded-circle shadow">
+                                        <i class="fas fa-tasks"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="mt-3 mb-0 text-muted text-sm">
+                                <span class="text-nowrap" x-text="__Utils.formatAsLocaleNumber(totalProcessed)"></span>
+                                <span class="text-nowrap">{{ __tr('Messages') }}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {{-- /total processed messages --}}
             </div>
             {{-- message log --}}
               <!--start of tabs-->
@@ -244,32 +358,32 @@ $campaignUid=$campaign->_uid;
         </div>
     </div>
 </div>
-@php
-$totalContacts = (int) Arr::get($campaignData, 'total_contacts');
-$totalRead = $messageLog->where('status', 'read')->count();
-$totalReadInPercent = round($totalRead / $totalContacts * 100, 2) . '%';
-$totalDelivered = $messageLog->where('status', 'delivered')->count();
-$totalDeliveredInPercent = round(($totalDelivered + $totalRead) / $totalContacts * 100, 2) . '%';
-$totalFailed = $queueMessages->where('status', 2)->count() + $messageLog->where('status', 'failed')->count();
-$totalFailedInPercent = round($totalFailed / $totalContacts * 100, 2) . '%';
-@endphp
 <script>
     (function() {
         'use strict';
         document.addEventListener('alpine:init', () => {
             Alpine.data('initialRequiredData', () => ({
-                totalContacts:'{{ __tr($totalContacts)  }}',
-                totalDeliveredInPercent:'{{ __tr($totalDeliveredInPercent) }}',
-                totalDelivered:'{{ __tr($totalDelivered + $totalRead) }}',
-                totalRead:'{{ __tr($totalRead) }}',
-                totalReadInPercent:'{{ __tr($totalReadInPercent) }}',
-                totalFailed:'{{ __tr($totalFailed) }}',
-                totalFailedInPercent:'{{ __tr($totalFailedInPercent) }}',
-                executedCount:{{ $messageLog->count() ?? 0 }},
-                inQueuedCount:{{ $queueMessages->where('status', 1)->count() ?? 0 }},
-                statusText:'{{ $statusText }}',
-                campaignStatus:'{{ $campaignStatus }}',
-                queueFailedCount:{{ $queueFailedCount }},
+                totalContacts: '{{ __tr($totalContacts) }}',
+                totalDeliveredInPercent: '{{ __tr($totalDeliveredInPercent) }}',
+                totalDelivered: '{{ __tr($totalDeliveredCount) }}',
+                totalRead: '{{ __tr($totalRead) }}',
+                totalReadInPercent: '{{ __tr($totalReadInPercent) }}',
+                totalFailed: '{{ __tr($totalFailed) }}',
+                totalFailedInPercent: '{{ __tr($totalFailedInPercent) }}',
+                totalAccepted: '{{ __tr($totalAccepted) }}',
+                totalAcceptedInPercent: '{{ __tr($totalAcceptedInPercent) }}',
+                totalProcessing: '{{ __tr($totalProcessing) }}',
+                totalProcessingInPercent: '{{ __tr($totalProcessingInPercent) }}',
+                totalWaiting: '{{ __tr($totalWaiting) }}',
+                totalWaitingInPercent: '{{ __tr($totalWaitingInPercent) }}',
+                executedCount: {{ $messageLog->count() ?? 0 }},
+                inQueuedCount: {{ $queueMessages->where('status', 1)->count() ?? 0 }},
+                statusText: '{{ $statusText }}',
+                campaignStatus: '{{ $campaignStatus }}',
+                queueFailedCount: {{ $queueFailedCount }},
+                totalSent: '{{ __tr($totalSent) }}',
+                totalSentInPercent: '{{ __tr($totalSentInPercent) }}',
+                totalProcessedInPercent: '{{ __tr($totalProcessedInPercent) }}',
             }));
         });
     })();

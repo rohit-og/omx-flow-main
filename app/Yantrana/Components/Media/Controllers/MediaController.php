@@ -181,4 +181,21 @@ class MediaController extends BaseController
             ], [], [], true);
         }
     }
+
+    /**
+     * Upload WhatsApp QR Code
+     *
+     * @param object $request
+     * @return json object
+     *---------------------------------------------------------------- */
+    public function uploadWhatsAppQR(Request $request)
+    {
+        $inputData = $request->all();
+
+        $processReaction = $this->mediaEngine->processUploadMedia($inputData, 'whatsapp_qr');
+
+        return __processResponse($processReaction, [
+            'message' => __tr('WhatsApp QR Code uploaded successfully.'),
+        ]);
+    }
 }

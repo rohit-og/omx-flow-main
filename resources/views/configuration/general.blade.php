@@ -84,12 +84,35 @@
             <small class="help-text">{{  __tr('It will be used to add link for Book Demo Button in Homepage ') }}</small>
         </div>
         <!-- /WhatsApp Demo Link -->
-          <!-- upload hero image -->
-          <div class="form-group">
+          <!-- Hero Image Upload -->
+          <div class="form-group col-lg-6 px-0">
                 <label for="lwUploadHeroImage"><?= __tr('Hero Image') ?></label>
-                <input type="file" data-lw-plugin="lwUploader" data-label-idle="{{ __tr('Select New Hero Image') }}" data-instant-upload="true" data-action="<?= route('media.upload_hero_image') ?>" data-callback="afterUploadedFile" id="lwUploadHeroImage" data-default-image-url="<?= getAppSettings('hero_image') ?>">
+                <input type="file" 
+                    data-lw-plugin="lwUploader" 
+                    data-label-idle="{{ __tr('Select New Hero Image') }}" 
+                    data-instant-upload="true" 
+                    data-action="<?= route('media.upload_hero_image') ?>" 
+                    data-callback="afterUploadedFile" 
+                    id="lwUploadHeroImage" 
+                    data-default-image-url="<?= getAppSettings('hero_image') ?>">
+                <small class="form-text text-muted">{{ __tr('Recommended size: 1200x1200 pixels') }}</small>
             </div>
-             <!-- /upload hero image -->
+             <!-- /Hero Image Upload -->
+
+             <!-- WhatsApp QR Code Upload -->
+             <div class="form-group col-lg-6 px-0">
+                 <label for="lwUploadWhatsAppQR"><?= __tr('WhatsApp QR Code') ?></label>
+                 <input type="file" 
+                     data-lw-plugin="lwUploader" 
+                     data-label-idle="{{ __tr('Select WhatsApp QR Code') }}" 
+                     data-instant-upload="true" 
+                     data-action="<?= route('media.upload_whatsapp_qr') ?>" 
+                     data-callback="afterUploadedFile" 
+                     id="lwUploadWhatsAppQR" 
+                     data-default-image-url="<?= getAppSettings('whatsapp_qr_image') ?>">
+                 <small class="form-text text-muted">{{ __tr('Upload your WhatsApp QR code image for easy scanning') }}</small>
+             </div>
+             <!-- /WhatsApp QR Code Upload -->
     </fieldset>
 
     <fieldset>

@@ -439,4 +439,77 @@ class MediaEngine extends BaseMediaEngine implements MediaEngineInterface
             ]);
         }
     }
+
+    /**
+     * Process Upload WhatsApp QR Code
+     *
+     * @param array $inputData
+     * @return array
+     *---------------------------------------------------------------- */
+    public function processUploadWhatsAppQR($inputData)
+    {
+        try {
+            // Check if file is valid
+            if (!isset($inputData['filepond']) || empty($inputData['filepond'])) {
+                return $this->engineErrorResponse([
+                    'message' => __tr('Invalid file uploaded.')
+                ]);
+            }
+
+            $file = $inputData['filepond'];
+            
+            // Validate file size (1MB limit for QR codes)
+            if ($file->getSize() > 1048576) {
+                return $this->engineErrorResponse([
+                    'message' => __tr('QR code image size should not exceed 1MB.')
+                ]);
+            }
+
+            // Validate file type
+            $allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!in_array($file->getMimeType(), $allowedTypes)) {
+                return $this->engineErrorResponse([
+                    'message' => __tr('Only PNG and JPEG images are allowed for QR code.')
+                ]);
+            }
+
+            // Get the current QR code path from the configuration
+            $currentQRPath = getAppSettings('whatsapp_qr_image');
+
+            // Delete the previous QR code if it exists
+            if ($currentQRPath && file_exists(public_path($currentQRPath))) {
+                unlink(public_path($currentQRPath));
+            }
+
+            $fileName = 'whatsapp-qr-' . getVendorUid() . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $path = 'media/whatsapp-qr/';
+            $fullPath = public_path($path);
+            
+            // Ensure directory exists
+            if (!file_exists($fullPath)) {
+                mkdir($fullPath, 0777, true);
+            }
+
+            // Store file
+            if ($file->move($fullPath, $fileName)) {
+                // Update vendor settings with new QR code path
+                updateVendorSettings('whatsapp_qr_image', $path . $fileName);
+
+                return $this->engineSuccessResponse([
+                    'path' => getMediaUrl($path . $fileName),
+                    'fileName' => $fileName,
+                    'message' => __tr('WhatsApp QR code uploaded successfully.')
+                ]);
+            }
+
+            return $this->engineErrorResponse([
+                'message' => __tr('Something went wrong while uploading WhatsApp QR code.')
+            ]);
+
+        } catch (\Exception $e) {
+            return $this->engineErrorResponse([
+                'message' => $e->getMessage()
+            ]);
+        }
+    }
 }
