@@ -836,7 +836,7 @@ $appName = getAppSettings('name');
                                 <div class="d-flex align-items-center me-3 mb-2">
                                     <i class="fas fa-shield-alt text-success me-2"></i>
                                     <span>Meta Verified</span>
-                </div>
+                                </div>
                                 <div class="d-flex align-items-center me-3 mb-2">
                                     <i class="fas fa-lock text-success me-2"></i>
                                     <span>Secure & Compliant</span>
