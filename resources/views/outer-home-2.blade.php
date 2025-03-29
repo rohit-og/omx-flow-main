@@ -489,9 +489,7 @@ $appName = getAppSettings('name');
                             <li class="nav-item"><a class="nav-link me-lg-3"
                                     href="{{ route('user.contact.form') }}">{{ __tr('Contact') }}</a></li>
                             <!-- /Contact -->
-                             <!-- pages -->
-                            @include('layouts.navbars.navs.pages-menu-partial')    
-                            <!-- /pages -->
+                            
                                <!-- /pages -->
                             @if (!isLoggedIn())
                             <!-- Register -->
@@ -506,7 +504,7 @@ $appName = getAppSettings('name');
                             @endif
                             <!-- Dashboard -->
                             @if (isLoggedIn())
-                            <li class="nav-item"><a class="nav-link me-lg-3 btn btn-primary text-white fw-bold "
+                            <li class="nav-item"><a class="nav-link me-lg-3 btn btn-success text-white fw-bold "
                                     href="{{ route('central.console') }}">{{ __tr('Dashboard') }}</a></li>
                             @endif
                             <!-- /Dashboard -->
@@ -558,10 +556,10 @@ $appName = getAppSettings('name');
 
                             <!-- CTA Buttons -->
                             <div class="d-flex flex-wrap gap-2 mb-4">
-                                <a href="{{ getAppSettings('demo_video_link') }}" class="btn px-4 py-2 btnn">
+                                <a href="{{ getAppSettings('whatsapp_demo_link') }}" class="btn px-4 py-2 btnn" target="_blank">
                                     <i class="fas fa-rocket me-2"></i>Book Live Demo
                                 </a>
-                                <a href="{{ getAppSettings('whatsapp_demo_link') }}" class="btn btn-outline-success px-4 py-2">
+                                <a href="{{ getAppSettings('demo_video_link') }}" class="btn btn-outline-success px-4 py-2"  target="_blank">
                                     <i class="fas fa-play-circle me-2"></i>Watch Demo Video
                                 </a>
                     </div>
@@ -880,7 +878,7 @@ $appName = getAppSettings('name');
                                 <h3 class="text-primary amount">₹15,000.00</h3>
                                 <p class="text-muted original-price"><del>₹20,999</del></p>
                                 <p class="text-muted subscription-period">Monthly Subscription</p>
-                                <button class="btn  btn-success w-100">Book Demo</button>
+                                <a a href="{{ getAppSettings('whatsapp_demo_link') }}" target="_blank" class="btn  btn-success w-100">Book Demo</a>
                                 <hr>
                                 <ul class="list-unstyled " style="font-size:0.85em">
                                     <li class='d-flex'> <i class="fas fa-check-circle  fs-4 me-2"></i> <strong class="text-success "> 1000</strong> <p>Contacts</p></li>
@@ -913,7 +911,7 @@ $appName = getAppSettings('name');
                                 <h3 class="text-primary amount">₹20,000.00</h3>
                                 <p class="text-muted original-price"><del>₹24,999.00</del></p>
                                 <p class="text-muted subscription-period">1-Year Subscription</p>
-                                <button class="btn btn-success w-100">Book Demo</button>
+                                <a href="{{ getAppSettings('whatsapp_demo_link') }}" target="_blank" class="btn btn-success w-100">Book Demo</a>
                                 <hr>
                                 <ul class="list-unstyled"  style="font-size:0.85em">
                                     <li class='d-flex'> <i class="fas fa-check-circle text-success fs-4 me-2"></i><p><strong class="text-success "> Unlimited</strong> Contacts</p></li>
@@ -1117,6 +1115,9 @@ $appName = getAppSettings('name');
                 <div class="copyright-text text-center pb-3">
                     <p> &copy;{{ getAppSettings('name') }} {{ __tr(date('Y')) }}.
                         {{ __tr('All Rights Reserved.') }}</p>
+                        <div> <!-- pages -->
+                         @include('layouts.navbars.navs.pages-menu-partial')    
+                            <!-- /pages --></div>
                 </div>
             </div>
         </footer>

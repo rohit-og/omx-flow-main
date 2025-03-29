@@ -408,6 +408,31 @@
                     </a>
                 </li>
                 @endif
+                @if (hasVendorAccess('manage_flows'))
+                <li class="nav-item">
+                    <a class="nav-link" href="#vendorFlowSubmenuNav" data-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="vendorFlowSubmenuNav">
+                        <i class="fas fa-sitemap gradient-icon-10"></i>
+                        <span class="">{{ __tr('Flows') }}</span>
+                    </a>
+                    <div class="collapse lw-expandable-nav" id="vendorFlowSubmenuNav">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.flow.read.list_view') }}"
+                                    href="{{ route('vendor.flow.read.list_view') }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('All Flows') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.flow.write.create') }}"
+                                    href="{{ route('vendor.flow.write.create') }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Create Flow') }}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
                 @if (hasVendorAccess('manage_contacts'))
                 <li class="nav-item">
                     <a class="nav-link" href="#vendorContactSubmenuNav" data-toggle="collapse" role="button"
