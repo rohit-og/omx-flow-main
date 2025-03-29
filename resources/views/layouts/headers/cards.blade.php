@@ -365,66 +365,8 @@ $vendorViewBySuperAdmin = false;
         opacity: 1;
     }
     
-    /* Static icon colors instead of gradients */
-    .gradient-icon-lg-1, .gradient-icon-1 {
-        font-size: 25px !important;
-        color: #1771E6;
-        display: inline-block;
-    }
-    
-    .gradient-icon-lg-2, .gradient-icon-2 {
-        font-size: 25px !important;
-        color: #2dbcab;
-        display: inline-block;
-    }
-    
-    .gradient-icon-lg-3, .gradient-icon-3 {
-        font-size: 25px !important;
-        color: #8D5DEA;
-        display: inline-block;
-    }
-    
-    .gradient-icon-lg-4, .gradient-icon-4 {
-        font-size: 25px !important;
-        color: #E34F95;
-        display: inline-block;
-    }
-    
-    .gradient-icon-lg-5, .gradient-icon-5 {
-        font-size: 25px !important;
-        color: #1765C9;
-        display: inline-block;
-    }
-    
-    .gradient-icon-lg-6, .gradient-icon-6 {
-        font-size: 25px !important;
-        color: #021C42;
-        display: inline-block;
-    }
-    
-    .gradient-icon-lg-7, .gradient-icon-7 {
-        font-size: 25px !important;
-        color: #6C757D;
-        display: inline-block;
-    }
-    
-    .gradient-icon-lg-8, .gradient-icon-8 {
-        font-size: 25px !important;
-        color: #0866FF;
-        display: inline-block;
-    }
-    
-    .gradient-icon-lg-9, .gradient-icon-9 {
-        font-size: 25px !important;
-        color: #22D571;
-        display: inline-block;
-    }
-    
-    .gradient-icon-lg-10, .gradient-icon-10 {
-        font-size: 25px !important;
-        color: #A136E6;
-        display: inline-block;
-    }
+
+   
     
     /* Larger icons */
     .gradient-icon-lg-1, .gradient-icon-lg-2, .gradient-icon-lg-3, 

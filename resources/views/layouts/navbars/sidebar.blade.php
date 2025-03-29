@@ -7,7 +7,7 @@
     
     .navbar-vertical .navbar-nav .nav-link {
         padding: 12px 20px;
-        color: #5c6b7a;
+        color:black;
         font-weight: 500;
         font-size: 14px;
         border-radius: 8px;
@@ -69,10 +69,7 @@
         color: #6C757D;
     }
     
-    .icon-qrcode {
-        color: #8D5DEA;
-    }
-    
+   
     /* Vendor icon colors */
     .icon-chat {
         color: #22D571;
@@ -167,7 +164,7 @@
 </style>
 
 <!-- Update the icon classes in the navbar -->
-<nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light lw-sidebar-container" id="sidenav-main">
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md text-dark lw-sidebar-container" id="sidenav-main">
     <div class="container-fluid">
         <span>
             <!-- Toggler -->
@@ -386,7 +383,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.chat_message.contact.view') }}" href="{{ route('vendor.chat_message.contact.view') }}">
                         <span x-cloak x-show="unreadMessagesCount" class="badge badge-success rounded-pill ml--2" x-text="unreadMessagesCount"></span>
-                        <i class="fa fa-comments icon-chat"></i> <span class="ml--2">{{ __tr('Live Chat') }}</span>
+                        <i class="fa fa-comments icon-chat "></i> <span class="ml--2">{{ __tr('Live Chat') }}</span>
                     </a>
                 </li>
                 @endif
@@ -403,7 +400,7 @@
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.campaign.read.list_view') }}"
                         href="{{ route('vendor.campaign.read.list_view') }}">
-                        <i class="fa fa-rocket "></i>
+                        <i class="fa fa-rocket icon-campaigns "></i>
                         {{ __tr('Campaigns') }}
                     </a>
                 </li>
