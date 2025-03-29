@@ -358,10 +358,7 @@ $appName = getAppSettings('name');
             transition: all 0.3s ease;
         }
         
-        .price-card:hover .go-corner {
-            transform: scale(1.1) rotate(-5deg);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
+        
         
         .price-card .card-title {
             transition: all 0.3s ease;
