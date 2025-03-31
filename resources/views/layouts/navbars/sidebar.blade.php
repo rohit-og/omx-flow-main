@@ -42,7 +42,7 @@
     }
     
     .icon-users {
-        color: #22D571;
+        color:rgb(213, 34, 132);
     }
     
     .icon-wallet {
@@ -79,12 +79,12 @@
         color: #2dbcab;
     }
     
-    .icon-contacts {
-        color: #E34F95;
+   
+    .icon-chatbot{
+        color: #A136E6;
     }
-    
     .icon-campaigns {
-        color: #FF9500;
+        color: #2b4d87;
     }
     
     .icon-automation {
@@ -170,7 +170,7 @@
             <!-- Toggler -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main"
         aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <i class="fas fa-bars"></i>
     </button>
     <!-- Brand -->
     <a class="navbar-brand pt-0 d-none d-sm-inline" href="{{ url('/') }}">
@@ -455,7 +455,7 @@
                  <li class="nav-item">
                     <a class="nav-link" href="#vendorAutomationSubmenuNav" data-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="vendorAutomationSubmenuNav">
-                        <i class="fas fa-robot icon-pages "></i>
+                        <i class="fas fa-robot icon-chatbot "></i>
                         <span class="">{{ __tr('Chatbot') }}</span>
                     </a>
                 <div class="collapse lw-expandable-nav" id="vendorAutomationSubmenuNav">

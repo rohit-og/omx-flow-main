@@ -22,18 +22,17 @@ $vendorViewBySuperAdmin = false;
                                 <div class="col-md-8">
                                     <h1 class="text-white mb-3 font-weight-bold" style="font-size: 2rem;">Welcome, {{ getUserAuthInfo('profile.first_name') }}!</h1>
                                     <p class="text-white mb-4 opacity-80" style="font-size: 1.1rem; max-width: 600px;">Manage your WhatsApp business communications, create campaigns, and engage with your customers all in one place.</p>
-                                    <div class="d-flex flex-wrap">
-                                        
-                                    </div>
+                                    
                                 </div>
-                                <div class="col-md-4 d-none d-md-block">
-                                <a href="{{ route('subscription.read.show') }}" class="btn btn-light font-weight-bold mr-3 mb-2 mb-md-0" style="padding: 10px 20px; border-radius: 8px; transition: all 0.3s ease;">
+                                <div class="d-flex flex-wrap">
+                                    <a href="{{ route('subscription.read.show') }}" class="btn btn-light font-weight-bold mr-3  mb-md-0" style="padding: 10px 20px; border-radius: 8px; transition: all 0.3s ease;">
                                             <i class="fas fa-crown mr-2"></i> View Plan
                                         </a>
-                                        <a href="<?= route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) ?>" class="btn btn-outline-light font-weight-bold" style="padding: 10px 20px; border-radius: 8px; transition: all 0.3s ease;">
+                                        <a href="<?= route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) ?>" class="btn btn-outline-light font-weight-bold ">
                                             <i class="fas fa-cog mr-2"></i> API Setup
-                                        </a>
-                                </div>
+                                        </a>    
+                                    </div>
+                                
                             </div>
                         </div>
                         <!-- Decorative elements -->
@@ -45,110 +44,7 @@ $vendorViewBySuperAdmin = false;
         </div>
     </div>
 </div>
-     <!-- features section  -->
-    <div class="container-fluid mt-4">
-        <div class="row features-row">
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-comments"></i>
-                        <span x-cloak x-show="unreadMessagesCount" class="feature-counter" x-text="unreadMessagesCount">{{ __tr('Live Chat') }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Live Chat</h3>
-                        <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
-                        <a href="{{ route('vendor.chat_message.contact.view') }}" class="feature-button">
-                            Go To Unified Team Inbox
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon template-icon">
-                        <i class="fa fa-layer-group"></i>
-                        <span class="feature-counter">{{ __tr($totalTemplates) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Template</h3>
-                        <p class="feature-description">Create and manage pre-approved message templates for consistent and compliant WhatsApp business messaging.</p>
-                        <a href="{{ route('vendor.whatsapp_service.templates.read.new_view') }}" class="feature-button template-button">
-                            Create New Template
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon campaign-icon">
-                        <i class="fa fa-rocket"></i>
-                        <span class="feature-counter">{{ __tr($totalCampaigns) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Campaign</h3>
-                        <p class="feature-description">Launch targeted messaging campaigns to engage your audience with personalized content at scale.</p>
-                        <a href="{{ route('vendor.campaign.new.view') }}" class="feature-button campaign-button">
-                            Create New Campaign
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon contact-icon">
-                        <i class="fa fa-users"></i>
-                        <span class="feature-counter">{{ __tr($totalContacts) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Contacts</h3>
-                        <p class="feature-description">Organize and manage your customer database with custom fields, tags, and segmentation for targeted messaging.</p>
-                        <a href="{{ route('vendor.contact.read.list_view') }}" class="feature-button contact-button">
-                            Create New Contact
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon bot-icon">
-                        <i class="fas fa-robot"></i>
-                        <span class="feature-counter">{{ __tr($totalBotReplies) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Bot Reply</h3>
-                        <p class="feature-description">Set up automated responses to handle common inquiries and provide 24/7 customer support through WhatsApp.</p>
-                        <a href="{{ route('vendor.bot_reply.read.list_view') }}" class="feature-button bot-button">
-                            Create New Chatbot
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="feature-card">
-                    <div class="feature-icon agent-icon">
-                        <i class="fa fa-user-tie"></i>
-                        <span class="feature-counter">{{ __tr($activeTeamMembers) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Agents</h3>
-                        <p class="feature-description">Manage your support team with role-based access control and monitor agent performance for better service.</p>
-                        <a href="{{ route('vendor.user.read.list_view') }}" class="feature-button agent-button">
-                            Create New Agent
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        <!--feature section end  -->
+    
 
 
 <div class="container-fluid ">
@@ -201,7 +97,7 @@ $vendorViewBySuperAdmin = false;
     <div class="row d-flex align-items-stretch">
         <div class="col-12 mb-5 mb-xl-5">
               
-                        <div class="row">
+            <div class="row">
                     <div class="col-lg-4 mt-3">
                         <div class="stat-card stat-card-blue">
                             <div class="stat-card-bg"></div>
@@ -232,12 +128,7 @@ $vendorViewBySuperAdmin = false;
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    
-                    
-                    
-                    
+                    </div>                    
                     <div class="col-lg-4 mt-3">
                         <div class="stat-card stat-card-pink">
                             <div class="stat-card-bg"></div>
@@ -254,11 +145,116 @@ $vendorViewBySuperAdmin = false;
                         </div>
                     </div>
                     
-                    
+            </div>        
 
-                </div>
+        </div>
     </div>
 </div>
+ <!-- features section  -->
+ <div class="container-fluid ">
+        <div class="row features-row">
+            <div class="col-md-4 col-sm-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                        <span x-cloak x-show="unreadMessagesCount" class="feature-counter" x-text="unreadMessagesCount">{{ __tr('Live Chat') }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Live Chat</h3>
+                        <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
+                        <a href="{{ route('vendor.chat_message.contact.view') }}" class="feature-button">
+                            Go To Unified Team Inbox
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6">
+                <div class="feature-card">
+                    <div class="feature-icon template-icon">
+                        <i class="fa fa-layer-group"></i>
+                        <span class="feature-counter">{{ __tr($totalTemplates) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Template</h3>
+                        <p class="feature-description">Create and manage pre-approved message templates for consistent and compliant WhatsApp business messaging.</p>
+                        <a href="{{ route('vendor.whatsapp_service.templates.read.new_view') }}" class="feature-button template-button">
+                            Create New Template
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 col-sm-6">
+                <div class="feature-card">
+                    <div class="feature-icon campaign-icon">
+                        <i class="fa fa-rocket"></i>
+                        <span class="feature-counter">{{ __tr($totalCampaigns) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Campaign</h3>
+                        <p class="feature-description">Launch targeted messaging campaigns to engage your audience with personalized content at scale.</p>
+                        <a href="{{ route('vendor.campaign.new.view') }}" class="feature-button campaign-button">
+                            Create New Campaign
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="feature-card">
+                    <div class="feature-icon contact-icon">
+                        <i class="fa fa-users"></i>
+                        <span class="feature-counter">{{ __tr($totalContacts) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Contacts</h3>
+                        <p class="feature-description">Organize and manage your customer database with custom fields, tags, and segmentation for targeted messaging.</p>
+                        <a href="{{ route('vendor.contact.read.list_view') }}" class="feature-button contact-button">
+                            Create New Contact
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="feature-card">
+                    <div class="feature-icon bot-icon">
+                        <i class="fas fa-robot"></i>
+                        <span class="feature-counter">{{ __tr($totalBotReplies) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Bot Reply</h3>
+                        <p class="feature-description">Set up automated responses to handle common inquiries and provide 24/7 customer support through WhatsApp.</p>
+                        <a href="{{ route('vendor.bot_reply.read.list_view') }}" class="feature-button bot-button">
+                            Create New Chatbot
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="feature-card">
+                    <div class="feature-icon agent-icon">
+                        <i class="fa fa-user-tie"></i>
+                        <span class="feature-counter">{{ __tr($activeTeamMembers) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Agents</h3>
+                        <p class="feature-description">Manage your support team with role-based access control and monitor agent performance for better service.</p>
+                        <a href="{{ route('vendor.user.read.list_view') }}" class="feature-button agent-button">
+                            Create New Agent
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!--feature section end  -->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -330,7 +326,6 @@ $vendorViewBySuperAdmin = false;
         position: relative;
         overflow: hidden;
         transition: all 0.3s ease;
-        margin-bottom: 20px;
         display: flex;
         align-items: center;
     }
@@ -435,11 +430,11 @@ $vendorViewBySuperAdmin = false;
     
     /* Campaign - Orange */
     .campaign-icon {
-        background-color: rgba(255, 149, 0, 0.1);
+        background-color: rgba(4, 0, 255, 0.1);
     }
     
     .campaign-icon i {
-        color: #FF9500;
+        color: #2b4d87;
     }
     
     /* Contact - Pink */
@@ -517,11 +512,11 @@ $vendorViewBySuperAdmin = false;
     
     /* Campaign button - Orange */
     .campaign-button {
-        background-color: #FF9500;
+        background-color:rgb(31, 57, 104);
     }
     
     .campaign-button:hover {
-        background-color: #e68600;
+        background-color: #172b4d;
     }
     
     /* Contact button - Pink */
@@ -669,7 +664,7 @@ $vendorViewBySuperAdmin = false;
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(45deg, #F19946, #E34F95);
+        background: linear-gradient(45deg,rgb(21, 24, 65),rgb(36, 14, 61));
         opacity: 0;
         transition: opacity 0.3s ease;
         z-index: -1;
@@ -786,7 +781,7 @@ $vendorViewBySuperAdmin = false;
     }
     
     .campaign-icon .feature-counter {
-        background: linear-gradient(135deg, #FF9500, #e68600);
+        background: linear-gradient(135deg,rgb(48, 38, 109),rgb(56, 8, 112));
     }
     
     .contact-icon .feature-counter {
