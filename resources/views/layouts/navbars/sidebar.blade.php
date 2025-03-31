@@ -50,7 +50,7 @@
     }
     
     .icon-pages {
-        color: #E34F95;
+        color:rgb(231, 217, 18);
     }
     
     .icon-globe {
