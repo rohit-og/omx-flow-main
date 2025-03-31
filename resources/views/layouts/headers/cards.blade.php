@@ -13,82 +13,171 @@ $vendorViewBySuperAdmin = false;
 <div class="header">
     <div class="container-fluid">
         <div class="header-body">
-            <!-- Card stats -->
-            <div class="row pb-0 pt-3 pt-lg-6 d-flex align-items-stretch mt-4 ">
-                <div class="col-12 col-xl-3 ">
-                    <div class="card text-center" style="background: linear-gradient(135deg, #41C6B5, #1771E6); box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);">
-                        <div class="card-body">
-                	        <div class="h1 font-weight-bold gridient-icon-1">{{ __tr('Welcome __userFullName__ !!', [ '__userFullName__' => getUserAuthInfo('profile.first_name') ]) }}</div>
-                	        <a href="{{ route('subscription.read.show') }}" class="btn bg-white font-weight-bold mt-2 text-dark">View plan</a>
-                	        <a href="<?= route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) ?>" class="btn bg-white font-weight-bold mt-2 text-dark">API Setup</a>
-            	        </div>
-            	    </div>
-        	    </div>
-        	    <div class="col-12 col-xl-9 mt-2 mt-xl-0">
-        	        <div class="card h-100">
-                        <div class="card-body row d-flex align-items-center">
-                            <div class="col-6 col-lg-2 mt-2 mt-lg-0">
-                                <div class="text-primary rounded text-center" style="background-color: #e3edf7;">
-                                    <span x-cloak x-show="unreadMessagesCount" class="position-absolute bg-success text-white pl-1 pr-1 rounded font-weight-bold" x-text="unreadMessagesCount" style="right:10%;"></span>
-                                    <a href="{{ route('vendor.chat_message.contact.view') }}" style=" font-size: 50px;"><i class="fas fa-comments gradient-icon-lg-9"></i></a>
-                                    <div class="font-weight-bold text-dark">Live Chat</div>
+            <!-- Welcome card -->
+            <div class="row pb-0 pt-3 pt-lg-6 d-flex align-items-stretch mt-4">
+                <div class="col-12">
+                    <div class="welcome-card" style="background: linear-gradient(135deg, #41C6B5, #1771E6); border-radius: 16px; box-shadow: 0 10px 30px rgba(23, 113, 230, 0.15); overflow: hidden; position: relative;">
+                        <div class="card-body p-4 p-md-5">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h1 class="text-white mb-3 font-weight-bold" style="font-size: 2rem;">Welcome, {{ getUserAuthInfo('profile.first_name') }}!</h1>
+                                    <p class="text-white mb-4 opacity-80" style="font-size: 1.1rem; max-width: 600px;">Manage your WhatsApp business communications, create campaigns, and engage with your customers all in one place.</p>
+                                    <div class="d-flex flex-wrap">
+                                        
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-6 col-lg-2 mt-2 mt-lg-0">
-                                <div class="text-primary rounded text-center" style="background-color: #e3edf7;">
-                                    <span class="position-absolute bg-success text-white pl-1 pr-1 rounded font-weight-bold" style="right:10%;">{{ __tr($totalTemplates) }}</span>
-                                    <a href="{{ route('vendor.whatsapp_service.templates.read.list_view') }}" style=" font-size: 50px;"><i class="fa fa-layer-group gradient-icon-lg-2"></i></a>
-                                    <div class="font-weight-bold text-dark">Template</div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2 mt-2 mt-lg-0">
-                                <div class="text-primary rounded text-center" style="background-color: #e3edf7;">
-                                    <span class="position-absolute bg-success text-white pl-1 pr-1 rounded font-weight-bold" style="right:10%;">{{ __tr($totalCampaigns) }}</span>
-                                    <a href="{{ route('vendor.campaign.read.list_view') }}" style=" font-size: 50px;"><i class="fa fa-rocket gradient-icon-lg-4"></i></a>
-                                    <div class="font-weight-bold text-dark">Campaign</div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2 mt-2 mt-lg-0">
-                                <div class="text-primary rounded text-center" style="background-color: #e3edf7;">
-                                    <span class="position-absolute bg-success text-white pl-1 pr-1 rounded font-weight-bold" style="right:10%;">{{ __tr($totalContacts) }}</span>
-                                    <a href="{{ route('vendor.contact.read.list_view') }}" style=" font-size: 50px;"><i class="fa fa-users gradient-icon-lg-5"></i></a>
-                                    <div class="font-weight-bold text-dark">Contacts</div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2 mt-2 mt-lg-0">
-                                <div class="text-primary rounded text-center" style="background-color: #e3edf7;">
-                                    <span class="position-absolute bg-success text-white pl-1 pr-1 rounded font-weight-bold" style="right:10%;">{{ __tr($totalBotReplies) }}</span>
-                                    <a href="{{ route('vendor.bot_reply.read.list_view') }}" style=" font-size: 50px;"><i class="fas fa-robot gradient-icon-lg-8"></i></a>
-                                    <div class="font-weight-bold text-dark">Bot Reply</div>
-                                </div>
-                            </div>
-                            <div class="col-6 col-lg-2 mt-2 mt-lg-0">
-                                <div class="text-primary rounded text-center" style="background-color: #e3edf7;">
-                                    <span class="position-absolute bg-success text-white pl-1 pr-1 rounded font-weight-bold" style="right:10%;">{{ __tr($activeTeamMembers) }}</span>
-                                    <a href="{{ route('vendor.user.read.list_view') }}" style=" font-size: 50px;"><i class="fa fa-user-tie gradient-icon-lg-7"></i></a>
-                                    <div class="font-weight-bold text-dark">Agents</div>
+                                <div class="col-md-4 d-none d-md-block">
+                                <a href="{{ route('subscription.read.show') }}" class="btn btn-light font-weight-bold mr-3 mb-2 mb-md-0" style="padding: 10px 20px; border-radius: 8px; transition: all 0.3s ease;">
+                                            <i class="fas fa-crown mr-2"></i> View Plan
+                                        </a>
+                                        <a href="<?= route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) ?>" class="btn btn-outline-light font-weight-bold" style="padding: 10px 20px; border-radius: 8px; transition: all 0.3s ease;">
+                                            <i class="fas fa-cog mr-2"></i> API Setup
+                                        </a>
                                 </div>
                             </div>
                         </div>
+                        <!-- Decorative elements -->
+                        <div class="welcome-shape-1" style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255, 255, 255, 0.1);"></div>
+                        <div class="welcome-shape-2" style="position: absolute; bottom: -80px; left: -80px; width: 250px; height: 250px; border-radius: 50%; background: rgba(255, 255, 255, 0.1);"></div>
                     </div>
-        	    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<div class="container-fluid">
-    <div class="row mt-4 d-flex align-items-stretch">
-        <div class="col-xl-5">
-            <div class="card h-100">
-                <div class="card-body">
-                        <canvas id="donutChart" width="400" height="400" style="max-height:250px;"></canvas>
+     <!-- features section  -->
+    <div class="container-fluid mt-4">
+        <div class="row features-row">
+            <div class="col-md-4 col-sm-6">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                        <span x-cloak x-show="unreadMessagesCount" class="feature-counter" x-text="unreadMessagesCount">{{ __tr('Live Chat') }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Live Chat</h3>
+                        <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
+                        <a href="{{ route('vendor.chat_message.contact.view') }}" class="feature-button">
+                            Go To Unified Team Inbox
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon template-icon">
+                        <i class="fa fa-layer-group"></i>
+                        <span class="feature-counter">{{ __tr($totalTemplates) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Template</h3>
+                        <p class="feature-description">Create and manage pre-approved message templates for consistent and compliant WhatsApp business messaging.</p>
+                        <a href="{{ route('vendor.whatsapp_service.templates.read.new_view') }}" class="feature-button template-button">
+                            Create New Template
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon campaign-icon">
+                        <i class="fa fa-rocket"></i>
+                        <span class="feature-counter">{{ __tr($totalCampaigns) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Campaign</h3>
+                        <p class="feature-description">Launch targeted messaging campaigns to engage your audience with personalized content at scale.</p>
+                        <a href="{{ route('vendor.campaign.new.view') }}" class="feature-button campaign-button">
+                            Create New Campaign
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon contact-icon">
+                        <i class="fa fa-users"></i>
+                        <span class="feature-counter">{{ __tr($totalContacts) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Contacts</h3>
+                        <p class="feature-description">Organize and manage your customer database with custom fields, tags, and segmentation for targeted messaging.</p>
+                        <a href="{{ route('vendor.contact.read.list_view') }}" class="feature-button contact-button">
+                            Create New Contact
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon bot-icon">
+                        <i class="fas fa-robot"></i>
+                        <span class="feature-counter">{{ __tr($totalBotReplies) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Bot Reply</h3>
+                        <p class="feature-description">Set up automated responses to handle common inquiries and provide 24/7 customer support through WhatsApp.</p>
+                        <a href="{{ route('vendor.bot_reply.read.list_view') }}" class="feature-button bot-button">
+                            Create New Chatbot
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card">
+                    <div class="feature-icon agent-icon">
+                        <i class="fa fa-user-tie"></i>
+                        <span class="feature-counter">{{ __tr($activeTeamMembers) }}</span>
+                    </div>
+                    <div class="feature-content">
+                        <h3 class="feature-title">Agents</h3>
+                        <p class="feature-description">Manage your support team with role-based access control and monitor agent performance for better service.</p>
+                        <a href="{{ route('vendor.user.read.list_view') }}" class="feature-button agent-button">
+                            Create New Agent
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-7 d-flex align-items-center mt-4 mt-xl-0">
-            <div class="card h-100 w-100">
-                <div class="card-body row">
-                    <div class="col-6">
+    </div>
+        <!--feature section end  -->
+
+
+<div class="container-fluid ">
+    <div class="row  mt-4 d-flex align-items-stretch">
+        <div class="col-xl-6 ">
+            <div class="card h-100" style="border-radius: 16px; border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);">
+                <div class="card-body">
+                    <div style="position: relative;">
+                        <canvas id="donutChart" width="400" height="400" style="max-height:250px;"></canvas>
+                    </div>
+                    <div class="chart-legend mt-4 d-flex justify-content-center">
+                        <div class="d-flex flex-wrap justify-content-center">
+                            <div class="legend-item d-flex align-items-center mr-4 mb-2">
+                                <div class="legend-color" style="width: 12px; height: 12px; border-radius: 50%; background-color: #22D571; margin-right: 8px;"></div>
+                                <span class="legend-label">Sent Messages</span>
+                            </div>
+                            <div class="legend-item d-flex align-items-center mr-4 mb-2">
+                                <div class="legend-color" style="width: 12px; height: 12px; border-radius: 50%; background-color: #FFD166; margin-right: 8px;"></div>
+                                <span class="legend-label">Pending Messages</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-6 d-flex align-items-center mt-4 mt-xl-0">
+            <div class="card h-100 w-100" style="border-radius: 16px; border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);">
+                <div class="card-body ">
+                    <div class="">
                     @if (!empty(getVendorSettings('whatsapp_phone_numbers')))
                     @foreach (getVendorSettings('whatsapp_phone_numbers') as $whatsappPhoneNumber)
                         <div class="text-center">
@@ -102,42 +191,7 @@ $vendorViewBySuperAdmin = false;
                     @endforeach
                     @endif
                     </div>
-                    <div class="col-6">
-                        <a href="{{ route('vendor.whatsapp_service.templates.read.new_view') }}" class="action-link template-link">
-                            <div class="action-link-content">
-                                <i class="fa fa-layer-group action-link-icon"></i>
-                                Create New Template
-                            </div>
-                        </a>
-                        
-                        <a href="{{ route('vendor.campaign.new.view') }}" class="action-link campaign-link">
-                            <div class="action-link-content">
-                                <i class="fa fa-rocket action-link-icon"></i>
-                                Create New Campaign
-                            </div>
-                        </a>
-                        
-                        <a href="{{ route('vendor.contact.read.list_view') }}" class="action-link contact-link">
-                            <div class="action-link-content">
-                                <i class="fa fa-users action-link-icon"></i>
-                                Create New Contact
-                            </div>
-                        </a>
-                        
-                        <a href="{{ route('vendor.user.read.list_view') }}" class="action-link agent-link">
-                            <div class="action-link-content">
-                                <i class="fa fa-user-tie action-link-icon"></i>
-                                Create New Agent
-                            </div>
-                        </a>
-                        
-                        <a href="{{ route('vendor.bot_reply.read.list_view') }}" class="action-link chatbot-link">
-                            <div class="action-link-content">
-                                <i class="fas fa-robot action-link-icon"></i>
-                                Create New Chatbot
-                            </div>
-                        </a>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -145,36 +199,64 @@ $vendorViewBySuperAdmin = false;
 </div>
 <div class="container-fluid p-3 mt-2">
     <div class="row d-flex align-items-stretch">
-        <div class="col-md-4">
-            <div class="card h-100">
-                <div class="card-body d-flex justify-content-between">
-                    <div style="font-size:20px;">
-                        Total<br><span class="font-weight-bold text-primary" style="font-size:30px;">{{ __tr($totalMessagesProcessed + $messagesInQueue) }}</span><span class="font-weight-bold text-primary"> Messages</span>
+        <div class="col-12 mb-5 mb-xl-5">
+              
+                        <div class="row">
+                    <div class="col-lg-4 mt-3">
+                        <div class="stat-card stat-card-blue">
+                            <div class="stat-card-bg"></div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-paper-plane"></i>
+                            </div>
+                            <div class="stat-card-content">
+                                <div style="font-size:20px;">
+                                  Total<br>
+                                    <span class="font-weight-bold text-primary" style="font-size:30px;">{{ __tr($totalMessagesProcessed + $messagesInQueue) }}</span>
+                                     <span class="font-weight-bold text-primary"> Messages</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="m-3"><i class="fas fa-clipboard-check gradient-icon-lg-8" style="font-size:50px; opacity: 0.5;"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mt-2 mt-md-0">
-            <div class="card h-100">
-                <div class="card-body d-flex justify-content-between">
-                    <div style="font-size:20px;">
-                        Sent<br><span class="font-weight-bold text-success" style="font-size:30px;">{{ __tr($totalMessagesProcessed) }}</span><span class="font-weight-bold text-success"> Messages</span>
+                    
+                    <div class="col-lg-4 mt-3">
+                        <div class="stat-card stat-card-green">
+                            <div class="stat-card-bg"></div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <div class="stat-card-content">
+                            <div style="font-size:20px;">
+                                    Sent<br>
+                                    <span class="font-weight-bold text-success" style="font-size:30px;">{{ __tr($totalMessagesProcessed) }}</span>
+                                    <span class="font-weight-bold text-success"> Messages</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="m-3"><i class="fas fa-paper-plane gradient-icon-lg-9" style="font-size:50px; opacity: 0.5;"></i></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4 mt-2 mt-md-0">
-            <div class="card h-100">
-                <div class="card-body d-flex justify-content-between">
-                    <div style="font-size:20px;">
-                        Pending<br><span class="font-weight-bold text-muted" style="font-size:30px;">{{ __tr($messagesInQueue) }}</span><span class="font-weight-bold text-muted"> Messages</span>
+                    
+                    
+                    
+                    
+                    
+                    <div class="col-lg-4 mt-3">
+                        <div class="stat-card stat-card-pink">
+                            <div class="stat-card-bg"></div>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                                    </div>
+                            <div class="stat-card-content">
+                                <div style="font-size:20px;">
+                                     Pending<br>
+                                     <span class="font-weight-bold text-muted" style="font-size:30px;">{{ __tr($messagesInQueue) }}</span>
+                                    <span class="font-weight-bold text-muted"> Messages</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="m-3"><i class="fas fa-hourglass-half gradient-icon-lg-7" style="font-size:50px; opacity: 0.5;"></i></div>
+                    
+                    
+
                 </div>
-            </div>
-        </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -182,20 +264,28 @@ $vendorViewBySuperAdmin = false;
     document.addEventListener("DOMContentLoaded", function () {
         // Get the chart canvas
         const ctx = document.getElementById('donutChart').getContext('2d');
-
-        // Create a linear gradient for the chart
-        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, "#0861F2");
-        gradient.addColorStop(1, "#4C9FFD");
-
+        
+        // Calculate percentages
+        const sentMessages = {{ $totalMessagesProcessed }};
+        const pendingMessages = {{ $messagesInQueue }};
+        const total = sentMessages + pendingMessages;
+        
+        let sentPercentage = 0;
+        let pendingPercentage = 0;
+        
+        if (total > 0) {
+            sentPercentage = Math.round((sentMessages / total) * 100);
+            pendingPercentage = Math.round((pendingMessages / total) * 100);
+        }
+        
         // Data for the chart
         const data = {
             labels: ['Sent Messages', 'Pending Messages'],
             datasets: [{
-                data: [ {{ $totalMessagesProcessed }} , {{ $messagesInQueue }} ], // Replace with your dynamic values
-                backgroundColor: [gradient, '#e3edf7'], // Gradient + static color
-                hoverBackgroundColor: [gradient, '#d9e6f2'], // Hover effects
-                borderWidth: 1,
+                data: [sentPercentage, pendingPercentage],
+                backgroundColor: ['#22D571', '#FFD166'],
+                hoverBackgroundColor: ['#1ebe64', '#f5c759'],
+                borderWidth: 0,
             }]
         };
 
@@ -205,10 +295,11 @@ $vendorViewBySuperAdmin = false;
             data: data,
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
+                cutout: '70%',
                 plugins: {
                     legend: {
-                        display: true,
-                        position: 'bottom',
+                        display: false
                     },
                     tooltip: {
                         callbacks: {
@@ -218,7 +309,10 @@ $vendorViewBySuperAdmin = false;
                         }
                     }
                 },
-                cutout: '70%', // Inner radius for the donut
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
             }
         };
 
@@ -227,6 +321,289 @@ $vendorViewBySuperAdmin = false;
     });
 </script>
 <style>
+    /* Modern Card Styling based on reference image */
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        padding: 24px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .stat-card-content {
+        flex: 1;
+    }
+    
+    .stat-card-value {
+        font-size: 36px;
+        font-weight: 700;
+        color: #2D3748;
+        margin-bottom: 5px;
+        line-height: 1;
+    }
+    
+    .stat-card-title {
+        font-size: 14px;
+        font-weight: 500;
+        color: #718096;
+        margin: 0;
+    }
+    
+    .stat-card-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 20px;
+    }
+    
+    .stat-card-icon i {
+        font-size: 24px;
+        color: white;
+    }
+    
+    .stat-card-bg {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        transform: translate(30%, -30%);
+        z-index: 0;
+        opacity: 0.1;
+    }
+    /* Base feature card styling */
+    .feature-card {
+        background: white;
+        border-radius: 12px;
+        border: 1px solid #e9ecef;
+        padding: 25px;
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        margin-bottom: 20px;
+        
+    }
+    
+    .feature-card:hover {
+        
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        border-color: #d1d9e6;
+    }
+    
+    /* Icon base styling */
+    .feature-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+        background-color: rgba(34, 213, 113, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    
+    .feature-icon i {
+        font-size: 24px;
+        color: #22D571;
+    }
+    
+    /* Template - Teal */
+    .template-icon {
+        background-color: rgba(190, 235, 229, 0.1);
+    }
+    
+    .template-icon i {
+        color: #2dbcab;
+    }
+    
+    /* Campaign - Orange */
+    .campaign-icon {
+        background-color: rgba(255, 149, 0, 0.1);
+    }
+    
+    .campaign-icon i {
+        color: #FF9500;
+    }
+    
+    /* Contact - Pink */
+    .contact-icon {
+        background-color: rgba(227, 79, 149, 0.1);
+    }
+    
+    .contact-icon i {
+        color: #E34F95;
+    }
+    
+    /* Bot - Purple */
+    .bot-icon {
+        background-color: rgba(141, 93, 234, 0.1);
+    }
+    
+    .bot-icon i {
+        color: #8D5DEA;
+    }
+    
+    .agent-icon i{
+        color:  #5a6268;
+    }
+    .agent-icon{
+        background-color:rgba(90, 98, 104, 0.12);
+    }
+    .feature-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .feature-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2D3748;
+        margin-bottom: 10px;
+    }
+    
+    .feature-description {
+        font-size: 14px;
+        color: #718096;
+        margin-bottom: 20px;
+        flex: 1;
+    }
+    /* Button styling */
+    .feature-button {
+        display: inline-flex;
+        align-items: center;
+        padding: 8px 16px;
+        background-color: #22D571;
+        color: white;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        align-self: flex-start;
+    }
+    
+    .feature-button:hover {
+        background-color: #1eb863;
+        color: white;
+        text-decoration: none;
+        transform: translateX(5px);
+    }
+    
+    .template-button {
+        background-color: #2dbcab;
+    }
+    
+    .template-button:hover {
+        background-color: rgb(37, 165, 150);
+    }
+    
+    /* Campaign button - Orange */
+    .campaign-button {
+        background-color: #FF9500;
+    }
+    
+    .campaign-button:hover {
+        background-color: #e68600;
+    }
+    
+    /* Contact button - Pink */
+    .contact-button {
+        background-color: #E34F95;
+    }
+    
+    .contact-button:hover {
+        background-color: #d13884;
+    }
+    .bot-button {
+        background-color: #8D5DEA;
+    }
+    
+    .bot-button:hover {
+        background-color: #7a4dd0;
+    }
+    
+    /* Agent button - Gray */
+    .agent-button {
+        background-color: #6C757D;
+    }
+    
+    .agent-button:hover {
+        background-color: #5a6268;
+    }
+    
+    .feature-button i {
+        transition: transform 0.2s ease;
+    }
+    
+    .feature-button:hover i {
+        transform: translateX(3px);
+    }
+    /* Color variations */
+    .stat-card-green .stat-card-icon {
+        background-color: #22D571;
+    }
+    
+    .stat-card-green .stat-card-bg {
+        background-color: #22D571;
+    }
+    
+    .stat-card-blue .stat-card-icon {
+        background-color: #1771E6;
+    }
+    
+    .stat-card-blue .stat-card-bg {
+        background-color: #1771E6;
+    }
+    
+    .stat-card-purple .stat-card-icon {
+        background-color: #8D5DEA;
+    }
+    
+    .stat-card-purple .stat-card-bg {
+        background-color: #8D5DEA;
+    }
+    
+    .stat-card-orange .stat-card-icon {
+        background-color: #F19946;
+    }
+    
+    .stat-card-orange .stat-card-bg {
+        background-color: #F19946;
+    }
+    
+    .stat-card-pink .stat-card-icon {
+        background-color: #E34F95;
+    }
+    
+    .stat-card-pink .stat-card-bg {
+        background-color: #E34F95;
+    }
+    
+    .stat-card-gray .stat-card-icon {
+        background-color: #6C757D;
+    }
+    
+    .stat-card-gray .stat-card-bg {
+        background-color: #6C757D;
+    }
     /* Action Link Styling */
     .action-link {
         display: block;
@@ -374,6 +751,131 @@ $vendorViewBySuperAdmin = false;
     .gradient-icon-lg-7, .gradient-icon-lg-8, .gradient-icon-lg-9, 
     .gradient-icon-lg-10 {
         font-size: 50px !important;
+    }
+    
+    /* Feature card counter badge styling */
+    .feature-counter {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        background: linear-gradient(135deg, #22D571, #1eb863);
+        color: white;
+        border-radius: 20px;
+        padding: 2px 6px;
+        font-size: 11px;
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        min-width: 22px;
+        text-align: center;
+        z-index: 2;
+        border: 2px solid white;
+        transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover .feature-counter {
+        transform: scale(1.1);
+    }
+    
+    /* Color variations for different feature types */
+    .feature-icon .feature-counter {
+        background: linear-gradient(135deg, #1771E6, #1461c7);
+    }
+    
+    .template-icon .feature-counter {
+        background: linear-gradient(135deg, #2dbcab, rgb(37, 165, 150));
+    }
+    
+    .campaign-icon .feature-counter {
+        background: linear-gradient(135deg, #FF9500, #e68600);
+    }
+    
+    .contact-icon .feature-counter {
+        background: linear-gradient(135deg, #E34F95, #d13884);
+    }
+    
+    .bot-icon .feature-counter {
+        background: linear-gradient(135deg, #8D5DEA, #7a4dd0);
+    }
+    
+    .agent-icon .feature-counter {
+        background: linear-gradient(135deg, #6C757D, #5a6268);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .feature-counter {
+            font-size: 10px;
+            padding: 1px 5px;
+            min-width: 20px;
+            top: -8px;
+            right: -8px;
+            border-width: 1.5px;
+        }
+        
+        .feature-icon {
+            width: 45px;
+            height: 45px;
+        }
+        
+        .feature-icon i {
+            font-size: 20px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .feature-counter {
+            font-size: 9px;
+            padding: 1px 4px;
+            min-width: 18px;
+            top: -6px;
+            right: -6px;
+            border-width: 1px;
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 15px;
+        }
+        
+        .feature-icon i {
+            font-size: 18px;
+        }
+        
+        .feature-title {
+            font-size: 16px;
+        }
+        
+        .feature-description {
+            font-size: 13px;
+        }
+    }
+    
+    /* Add row gap to features section */
+    .features-row {
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 24px;
+        margin-right: -12px;
+        margin-left: -12px;
+    }
+    
+    .features-row > [class*="col-"] {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .features-row {
+            row-gap: 20px;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .features-row {
+            row-gap: 16px;
+        }
     }
 </style>
 @endif
