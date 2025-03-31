@@ -260,20 +260,10 @@
                 </li>
                 
                 <li class="nav-item  ">
-                    <a class="nav-link"  href="#lwusermenu" data-toggle="collapse" role="button"
-                    aria-expanded="false" aria-controls="lwusermenu"">
+                    <a class="nav-link"  href="{{ route('central.vendors') }}" >
                         <i class="fas fa-users icon-users"></i> {{ __tr('Users') }}
                     </a>
-                    <div class="collapse show lw-expandable-nav" id="lwusermenu">
-                        <ul class="nav nav-sm flex-column">
-                            <li class="nav-item {{ markAsActiveLink('central.vendors') }}">
-                                <a class="bg-primary-light nav-link nav-link-ul" href="{{ route('central.vendors') }}">
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('List') }}
-                                </a>
-                            </li>
-                            
-                        </ul>
-                    </div>
+                    
                 </li>
                 
                 <li class="nav-item ">
@@ -434,7 +424,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#vendorContactSubmenuNav" data-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="vendorContactSubmenuNav">
-                        <i class="fa fa-users "></i>
+                        <i class="fa fa-users icon-users "></i>
                         <span class="">{{ __tr('Contacts') }}</span>
                     </a>
                 <div class="collapse lw-expandable-nav" id="vendorContactSubmenuNav">
@@ -465,7 +455,7 @@
                  <li class="nav-item">
                     <a class="nav-link" href="#vendorAutomationSubmenuNav" data-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="vendorAutomationSubmenuNav">
-                        <i class="fas fa-robot "></i>
+                        <i class="fas fa-robot icon-pages "></i>
                         <span class="">{{ __tr('Chatbot') }}</span>
                     </a>
                 <div class="collapse lw-expandable-nav" id="vendorAutomationSubmenuNav">
@@ -512,7 +502,7 @@
                 <li class="nav-item">
                         <a class="nav-link @if(isWhatsAppBusinessAccountReady()) collapsed @else text-warning @endif" href="#vendorSettingsNav" data-toggle="collapse" role="button"
                             aria-expanded="@php echo !isWhatsAppBusinessAccountReady() ? 'true' : 'false'; @endphp" aria-controls="vendorSettingsNav">
-                            <i class="fa fa-cog "></i>
+                            <i class="fa fa-cog icon-settings"></i>
                             <span class="">{{ __tr('Setup') }}</span>
                         </a>
                     <div class="collapse @if(!isWhatsAppBusinessAccountReady()) show @endif lw-expandable-nav" id="vendorSettingsNav">
