@@ -406,16 +406,11 @@
                         <ul class="nav nav-sm flex-column">
                             <li class="nav-item">
                                 <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.flow.read.list_view') }}"
-                                    href="{{ route('vendor.flow.read.list_view') }}">
+                                    href="{{ route('whatsapp-flows.index') }}">
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('All Flows') }}
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.flow.write.create') }}"
-                                    href="{{ route('vendor.flow.write.create') }}">
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Create Flow') }}
-                                </a>
-                            </li>
+                            
                         </ul>
                     </div>
                 </li>

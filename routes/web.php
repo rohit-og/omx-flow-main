@@ -23,7 +23,8 @@ use App\Yantrana\Components\Configuration\Controllers\ConfigurationController;
 use App\Yantrana\Components\Subscription\Controllers\ManualSubscriptionController;
 use App\Yantrana\Components\WhatsAppService\Controllers\WhatsAppServiceController;
 use App\Yantrana\Components\WhatsAppService\Controllers\WhatsAppTemplateController;
-use App\Yantrana\Components\Flow\Controllers\FlowController;
+use App\Yantrana\Components\Flow\Controllers\WhatsAppFlowController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -728,85 +729,11 @@ Route::middleware([
                 });
                  // Move these routes out of the WhatsApp templates section and create a new group
                 Route::prefix('/flows')->group(function () {
-                    // Main listing
-                    Route::get('/', [
-                        FlowController::class,
-                        'showFlowView'
-                    ])->name('vendor.flow.read.list_view');
-
-                    // Create/Store
-                    Route::get('/create', [
-                        FlowController::class,
-                        'createFlow'
-                    ])->name('vendor.flow.write.create');
-
-                    Route::post('/store', [
-                        FlowController::class,
-                        'storeFlow'
-                    ])->name('vendor.flow.write.store.process');
-
-                    // Delete Flow
-                    Route::post('/{id}/delete', [
-                        FlowController::class,
-                        'deleteFlow'
-                    ])->name('vendor.flow.write.delete');
-
-                    // Preview
-                    Route::get('/{id}/preview', [
-                        FlowController::class,
-                        'previewFlow'
-                    ])->name('vendor.flow.read.preview');
-
-                    // Builder/Editor
-                    Route::get('/{id}/builder', [
-                        FlowController::class,
-                        'flowBuilderView'
-                    ])->name('vendor.flow.builder.read.view');
-
-                    // Publish
-                    Route::post('/{id}/publish', [
-                        FlowController::class,
-                        'publishFlow'
-                    ])->name('vendor.flow.write.publish');
-
-                    // Start Flow
-                    Route::post('/start', [
-                        FlowController::class,
-                        'startFlow'
-                    ])->name('vendor.flow.write.start');
-
-                    // Screen operations
-                    Route::post('/{flowIdOrUid}/screens', [
-                        FlowController::class,
-                        'processScreenAdd'
-                    ])->name('vendor.flow.screen.write.create');
-
-                    Route::get('/screens/{screenIdOrUid}', [
-                        FlowController::class,
-                        'getScreenData'
-                    ])->name('vendor.flow.screen.read.data');
-
-                    // Button operations
-                    Route::post('/{flowIdOrUid}/screens/{screenIdOrUid}/buttons', [
-                        FlowController::class,
-                        'processButtonAdd'
-                    ])->name('vendor.flow.button.write.create');
-
-                    // Add new WhatsApp sync routes
-                    Route::post('{id}/sync-whatsapp', [
-                        'as' => 'vendor.flow.write.sync_whatsapp',
-                        'uses' => 'App\Yantrana\Components\Flow\Controllers\FlowController@processWhatsAppSync'
-                    ]);
-
-                    Route::get('{id}/whatsapp-status', [
-                        'as' => 'vendor.flow.read.whatsapp_status',
-                        'uses' => 'App\Yantrana\Components\Flow\Controllers\FlowController@checkWhatsAppSyncStatus'
-                    ]);
-
-                    Route::post('sync-from-manager', [
-                        'as' => 'vendor.flow.write.sync_from_manager',
-                        'uses' => 'App\Yantrana\Components\Flow\Controllers\FlowController@syncWhatsAppManagerFlows'
-                    ]);
+                    // WhatsApp Flows routes
+                    Route::get('/whatsapp-flows', [WhatsAppFlowController::class, 'index'])->name('whatsapp-flows.index');
+                    Route::get('/whatsapp-flows/{id}', [WhatsAppFlowController::class, 'show'])->name('whatsapp-flows.show');
+                    Route::post('/whatsapp-flows/refresh', [WhatsAppFlowController::class, 'refresh'])->name('whatsapp-flows.refresh');
+                    Route::get('/whatsapp-flows/{id}/edit', [WhatsAppFlowController::class, 'edit'])->name('whatsapp-flows.edit');
                 });
             });
 
