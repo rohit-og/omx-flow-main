@@ -15,40 +15,40 @@
             </button>
         </div>
         <div class="col-xl-12">
-            {{-- DATATABLE --}}
-            <x-lw.datatable id="lwManageVendorsTable" :url="route('central.vendors.read.list')" data-page-length="100">
-                <th data-template="#titleExtendedButtons" data-orderable="true" data-name="title">
-                    <?= __tr('User') ?>
-                </th>
-                <th data-template="#lwQuickActionButtons" data-orderable="true" data-name="title">
-                    <?= __tr('Quick Actions') ?>
-                </th>
-                <th data-orderable="true" data-name="fullName">
-                    <?= __tr('Admin Name') ?>
-                </th>
-                <th data-orderable="true" data-name="username">
-                    <?= __tr('username') ?>
-                </th>
-                <th data-orderable="true" data-name="email">
-                    <?= __tr('email') ?>
-                </th>
-                <th data-orderable="true" data-name="status">
-                    <?= __tr('status') ?>
-                </th>
-                <th data-orderable="true" data-name="mobile_number">
-                    <?= __tr('Mobile Number') ?>
-                </th>
-                <th data-orderable="true" data-name="user_status">
-                    <?= __tr('Admin Status') ?>
-                </th>
-                <th data-orderable="true" data-name="created_at">
-                    <?= __tr('Created On') ?>
-                </th>
-                <th data-template="#actionButtons" name="null">
-                    <?= __tr('Action') ?>
-                </th>
-            </x-lw.datatable>
-            {{-- DATATABLE --}}
+            <div class="table-container">
+                <x-lw.datatable id="lwManageVendorsTable" :url="route('central.vendors.read.list')" data-page-length="100">
+                    <th data-template="#titleExtendedButtons" data-orderable="true" data-name="title">
+                        <?= __tr('User') ?>
+                    </th>
+                    <th data-template="#lwQuickActionButtons" data-orderable="true" data-name="title">
+                        <?= __tr('Quick Actions') ?>
+                    </th>
+                    <th data-orderable="true" data-name="fullName">
+                        <?= __tr('Admin Name') ?>
+                    </th>
+                    <th data-orderable="true" data-name="username">
+                        <?= __tr('username') ?>
+                    </th>
+                    <th data-orderable="true" data-name="email">
+                        <?= __tr('email') ?>
+                    </th>
+                    <th data-orderable="true" data-name="status">
+                        <?= __tr('status') ?>
+                    </th>
+                    <th data-orderable="true" data-name="mobile_number">
+                        <?= __tr('Mobile Number') ?>
+                    </th>
+                    <th data-orderable="true" data-name="user_status">
+                        <?= __tr('Admin Status') ?>
+                    </th>
+                    <th data-orderable="true" data-name="created_at">
+                        <?= __tr('Created On') ?>
+                    </th>
+                    <th data-template="#actionButtons" name="null">
+                        <?= __tr('Action') ?>
+                    </th>
+                </x-lw.datatable>
+            </div>
         </div>
     </div>
     <script type="text/template" id="titleExtendedButtons">
@@ -365,3 +365,247 @@
 
 </div>
 @endsection
+
+<style>
+/* Modern Card and Table Styling */
+
+.table-container {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    margin: 20px 0;
+}
+
+.table-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+#lwManageVendorsTable {
+    width: 100%;
+    margin: 0;
+}
+
+#lwManageVendorsTable thead th {
+    font-weight: 600;
+    color: #718096;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    padding: 16px 25px;
+    background: #f8f9ff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+#lwManageVendorsTable tbody tr {
+    transition: all 0.2s ease;
+}
+
+#lwManageVendorsTable tbody tr:hover {
+    background-color: rgba(34, 213, 113, 0.02);
+}
+
+#lwManageVendorsTable tbody td {
+    padding: 16px 25px;
+    color:rgb(0, 0, 0);
+    font-weight: 500;
+    vertical-align: middle;
+}
+
+/* Status Badge Styling */
+.status-badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-active {
+    background: rgba(34, 213, 113, 0.1);
+    color: #22D571;
+}
+
+.status-inactive {
+    background: rgba(255, 71, 87, 0.1);
+    color: #FF4757;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-neural-action {
+    background: rgba(34, 213, 113, 0.1);
+    border: none;
+    color: #22D571;
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-neural-action:hover {
+    background: rgba(34, 213, 113, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-neural-danger {
+    background: rgba(255, 71, 87, 0.1);
+    color: #FF4757;
+}
+
+.btn-neural-danger:hover {
+    background: rgba(255, 71, 87, 0.2);
+}
+
+/* Search and Length Menu Styling */
+.dataTables_wrapper .dataTables_filter input {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #22D571;
+    box-shadow: 0 0 0 3px rgba(34, 213, 113, 0.1);
+    outline: none;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    padding: 8px 16px;
+    font-size: 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Pagination Styling */
+.dataTables_paginate {
+    margin-top: 20px;
+    padding: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.paginate_button {
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    color: #2D3748;
+    font-weight: 600;
+    margin: 0 4px;
+    transition: all 0.3s ease;
+}
+
+.paginate_button:hover,
+.paginate_button.current {
+    background:rgb(103, 134, 238);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 213, 113, 0.2);
+}
+
+/* Add New User Button Styling */
+.btn-primary {
+    background: linear-gradient(135deg, #22D571, #14A84E);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 14px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(34, 213, 113, 0.2);
+}
+
+/* Modal Styling */
+.modal-content {
+    border: none;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 25px 30px;
+}
+
+.modal-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2D3748;
+}
+
+.input-group-alternative {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.input-group-alternative:focus-within {
+    border-color: #22D571;
+    box-shadow: 0 0 0 3px rgba(34, 213, 113, 0.1);
+}
+
+.input-group-text {
+    background: transparent;
+    border: none;
+    color: #718096;
+}
+
+.form-control {
+    border: none;
+    padding: 12px;
+    font-size: 14px;
+}
+
+.form-control:focus {
+    box-shadow: none;
+}
+
+/* Loading Animation */
+.table-loading {
+    position: relative;
+}
+
+.table-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(34, 213, 113, 0.1), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+</style>
