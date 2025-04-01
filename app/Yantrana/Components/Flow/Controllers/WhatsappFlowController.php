@@ -13,8 +13,7 @@ class WhatsappFlowController extends BaseController
     protected $baseUrl;
     protected $wabaId;
     protected $accessToken;
-
- 
+    protected $defaultFlowJson;
 
     public function __construct()
     {
@@ -24,6 +23,36 @@ class WhatsappFlowController extends BaseController
 
         $this->wabaId = "543180505542014";
         $this->accessToken = "EAAFlfxGYFccBOZCJeRfNp5AkzDPMJLZASFPNGWz9gBMkwfNbJTAJj192Th43mFed0p1MFcOisaVYWZBfLCi0TPGc5ASQghQP3ksZCi97OC4p4rhmVV2gkChzZB4MsDYy6J0mfGYcDbgP2xRCnoQzL8XDzuJwwottEQZCnxab0YAoVvZBsZBZAEYgr9BWoGfhZAUMhz6QZDZD";
+        
+        $this->defaultFlowJson = [
+            "version" => "5.0",
+            "screens" => [
+                [
+                    "id" => "WELCOME_SCREEN",
+                    "layout" => [
+                        "type" => "SingleColumnLayout",
+                        "children" => [
+                            [
+                                "type" => "TextHeading",
+                                "text" => "Hello World"
+                            ],
+                            [
+                                "type" => "Footer",
+                                "label" => "Complete",
+                                "on-click-action" => [
+                                    "name" => "complete",
+                                    "payload" => []
+                                ]
+                            ]
+                        ]
+                    ],
+                    "title" => "Welcome",
+                    "terminal" => true,
+                    "success" => true,
+                    "data" => []
+                ]
+            ]
+        ];
     }
 
     /**
@@ -176,6 +205,160 @@ class WhatsappFlowController extends BaseController
             
             return redirect()->route('whatsapp-flows.index')
                 ->with('error', 'An error occurred: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Show the form for creating a new WhatsApp flow.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        return view('whatsapp-flows.create', [
+            'defaultFlowJson' => json_encode($this->defaultFlowJson, JSON_PRETTY_PRINT)
+        ]);
+    }
+
+    /**
+     * Create a new WhatsApp flow.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function createFlow(Request $request)
+    {
+        try {
+            // Validate request
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'categories' => 'required|array|min:1',
+                'categories.*' => 'required|string|in:SIGN_UP,SIGN_IN,APPOINTMENT_BOOKING,LEAD_GENERATION,CONTACT_US,CUSTOMER_SUPPORT,SURVEY,OTHER',
+                'flow_json' => 'required|string',
+                'publish' => 'boolean'
+            ]);
+
+            // Use provided flow_json or default
+            $flowJson = $request->filled('flow_json') ? $request->flow_json : json_encode($this->defaultFlowJson);
+
+            // Prepare request data
+            $requestData = [
+                'name' => $validated['name'],
+                'categories' => $validated['categories'],
+                'flow_json' => $flowJson,
+                'publish' => $request->boolean('publish', false)
+            ];
+
+            // Make API request
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$this->accessToken}",
+                'Content-Type' => 'application/json'
+            ])->post(
+                "{$this->baseUrl}/{$this->wabaId}/flows",
+                $requestData
+            );
+
+            if ($response->successful()) {
+                $data = $response->json();
+                
+                // Check for validation errors in the response
+                if (isset($data['validation_errors']) && !empty($data['validation_errors'])) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Flow validation failed',
+                        'validation_errors' => $data['validation_errors']
+                    ], 422);
+                }
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Flow created successfully',
+                    'data' => $data
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create flow',
+                'error' => $response->json()
+            ], $response->status());
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            \Log::error('WhatsApp Flow Creation Error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while creating the flow',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Delete a WhatsApp flow.
+     *
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete($id)
+    {
+        try {
+            // First check if the flow exists and is in DRAFT status
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$this->accessToken}",
+            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}");
+
+            if (!$response->successful()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Flow not found'
+                ], 404);
+            }
+
+            $flow = $response->json();
+            
+            // Check if flow is in DRAFT status
+            if ($flow['status'] !== 'DRAFT') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Only draft flows can be deleted'
+                ], 403);
+            }
+
+            // Delete the flow
+            $deleteResponse = Http::withHeaders([
+                'Authorization' => "Bearer {$this->accessToken}",
+            ])->delete("{$this->baseUrl}/{$this->wabaId}/flows/{$id}");
+
+            if ($deleteResponse->successful()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Flow deleted successfully'
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete flow',
+                'error' => $deleteResponse->json()
+            ], $deleteResponse->status());
+
+        } catch (\Exception $e) {
+            Log::error('WhatsApp Flow Delete Exception', [
+                'id' => $id,
+                'message' => $e->getMessage()
+            ]);
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'An error occurred while deleting the flow',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 } 

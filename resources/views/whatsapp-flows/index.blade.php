@@ -8,6 +8,9 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h2>WhatsApp Flows</h2>
                     <div>
+                        <a href="{{ route('whatsapp-flows.create') }}" class="btn btn-primary me-2">
+                            <i class="fa fa-plus"></i> Create New Flow
+                        </a>
                         <button id="refresh-btn" class="btn btn-outline-primary">
                             <i class="fa fa-refresh"></i> Refresh
                         </button>
@@ -75,6 +78,11 @@
                                                             <a href="{{ route('whatsapp-flows.edit', $flow['id']) }}" class="btn btn-sm btn-outline-secondary">
                                                                 <i class="fa fa-pencil"></i> Edit
                                                             </a>
+                                                            <a href="{{ route('whatsapp-flows.delete', $flow['id']) }}" 
+                                                               class="btn btn-sm btn-outline-danger delete-flow"
+                                                               onclick="return confirm('Are you sure you want to delete the flow \"{{ $flow['name'] }}\"? This action cannot be undone.');">
+                                                                <i class="fa fa-trash"></i> Delete
+                                                            </a>
                                                         @endif
                                                     </div>
                                                 </td>
@@ -108,6 +116,26 @@
         </div>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteFlowModal" tabindex="-1" aria-labelledby="deleteFlowModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteFlowModalLabel">Delete Flow</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the flow "<span id="flowNameToDelete"></span>"?
+                This action cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('scripts')
@@ -116,6 +144,56 @@
         const refreshBtn = document.getElementById('refresh-btn');
         const loadingElement = document.getElementById('loading');
         const flowsContainer = document.getElementById('flows-container');
+        const deleteFlowModal = new bootstrap.Modal(document.getElementById('deleteFlowModal'));
+        let flowIdToDelete = null;
+
+        // Delete flow button click handler
+        document.querySelectorAll('.delete-flow').forEach(button => {
+            button.addEventListener('click', function() {
+                flowIdToDelete = this.dataset.flowId;
+                document.getElementById('flowNameToDelete').textContent = this.dataset.flowName;
+                deleteFlowModal.show();
+            });
+        });
+
+        // Confirm delete button click handler
+        document.getElementById('confirmDelete').addEventListener('click', function() {
+            if (!flowIdToDelete) return;
+
+            // Show loading state
+            const deleteButton = this;
+            const originalText = deleteButton.innerHTML;
+            deleteButton.disabled = true;
+            deleteButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
+
+            // Make delete request
+            fetch(`{{ route('whatsapp-flows.index') }}/${flowIdToDelete}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Close modal and refresh page
+                    deleteFlowModal.hide();
+                    window.location.reload();
+                } else {
+                    alert(data.message || 'Failed to delete flow');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting the flow');
+            })
+            .finally(() => {
+                // Reset button state
+                deleteButton.disabled = false;
+                deleteButton.innerHTML = originalText;
+            });
+        });
 
         if (refreshBtn) {
             refreshBtn.addEventListener('click', function() {

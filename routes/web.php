@@ -730,10 +730,13 @@ Route::middleware([
                  // Move these routes out of the WhatsApp templates section and create a new group
                 Route::prefix('/flows')->group(function () {
                     // WhatsApp Flows routes
-                    Route::get('/whatsapp-flows', [WhatsAppFlowController::class, 'index'])->name('whatsapp-flows.index');
-                    Route::get('/whatsapp-flows/{id}', [WhatsAppFlowController::class, 'show'])->name('whatsapp-flows.show');
-                    Route::post('/whatsapp-flows/refresh', [WhatsAppFlowController::class, 'refresh'])->name('whatsapp-flows.refresh');
-                    Route::get('/whatsapp-flows/{id}/edit', [WhatsAppFlowController::class, 'edit'])->name('whatsapp-flows.edit');
+                    Route::get('/', [WhatsAppFlowController::class, 'index'])->name('whatsapp-flows.index');
+                    Route::get('/create', [WhatsAppFlowController::class, 'create'])->name('whatsapp-flows.create');
+                    Route::post('/create', [WhatsAppFlowController::class, 'createFlow'])->name('whatsapp.flows.create');
+                    Route::get('/{id}', [WhatsAppFlowController::class, 'show'])->name('whatsapp-flows.show');
+                    Route::post('/refresh', [WhatsAppFlowController::class, 'refresh'])->name('whatsapp-flows.refresh');
+                    Route::get('/{id}/edit', [WhatsAppFlowController::class, 'edit'])->name('whatsapp-flows.edit');
+                    Route::delete('/{id}', [WhatsAppFlowController::class, 'delete'])->name('whatsapp-flows.delete');
                 });
             });
 
