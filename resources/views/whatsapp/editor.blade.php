@@ -40,7 +40,24 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
-                    <h4>{{ $flow->name }} <small class="text-muted">({{ ucfirst($flow->status) }})</small></h4>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h4>{{ $flow->name }} 
+                                <small class="text-muted">({{ ucfirst($flow->status) }})</small>
+                            </h4>
+                            <span class="badge bg-{{ $flow->whatsapp_sync_status === 'synced' ? 'success' : 'warning' }}">
+                                WhatsApp: {{ ucfirst($flow->whatsapp_sync_status) }}
+                            </span>
+                        </div>
+                        <div>
+                            @if($flow->whatsapp_sync_status !== 'synced')
+                                <button class="btn btn-sm btn-outline-primary sync-with-whatsapp" 
+                                        data-flow-id="{{ $flow->_id }}">
+                                    <i class="fas fa-sync"></i> Sync with WhatsApp
+                                </button>
+                            @endif
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div id="screenEditor">
@@ -361,6 +378,11 @@ $(document).ready(function() {
         
         const formData = new FormData($form[0]);
         formData.append('flow_id', '{{ $flow->_id }}');
+        formData.append('whatsapp_meta_data', JSON.stringify({
+            screen_type: $('#screenType').val(),
+            language: '{{ $flow->whatsapp_language ?? "en" }}',
+            buttons_count: $('.button-item').length
+        }));
 
         // Log form data for debugging
         const formDataObj = {};
@@ -574,6 +596,36 @@ $(document).ready(function() {
         
         $('#previewContent').html(previewHtml);
     }
+
+    // Add WhatsApp sync functionality
+    $('.sync-with-whatsapp').on('click', function() {
+        const flowId = $(this).data('flow-id');
+        const $btn = $(this);
+        
+        $btn.prop('disabled', true)
+           .html('<i class="fas fa-spinner fa-spin"></i> Syncing...');
+
+        $.ajax({
+            url: '{{ route("vendor.flow.write.sync_whatsapp", ["id" => "__ID__"]) }}'.replace('__ID__', flowId),
+            type: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                if (response.reaction === 1) {
+                    window.__Utils.notification('Flow synced with WhatsApp successfully', 'success');
+                    setTimeout(() => window.location.reload(), 1500);
+                } else {
+                    window.__Utils.notification(response.data.message || 'Sync failed', 'error');
+                    $btn.prop('disabled', false).html('<i class="fas fa-sync"></i> Retry Sync');
+                }
+            },
+            error: function() {
+                window.__Utils.notification('Failed to sync with WhatsApp', 'error');
+                $btn.prop('disabled', false).html('<i class="fas fa-sync"></i> Retry Sync');
+            }
+        });
+    });
 });
 </script>
 @endpush

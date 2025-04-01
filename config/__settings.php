@@ -99,6 +99,11 @@ return [
                 'key' => 'hero_image',
                 'data_type' => 1, 
                 'default' => '',
+            ],
+            'whatsapp_qr_image' => [
+                'key' => 'whatsapp_qr_image',
+                'data_type' => 1, 
+                'default' => '',
             ]
         ],
         'user' => [

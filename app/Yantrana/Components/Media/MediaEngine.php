@@ -459,7 +459,7 @@ class MediaEngine extends BaseMediaEngine implements MediaEngineInterface
             $file = $inputData['filepond'];
             
             // Validate file size (1MB limit for QR codes)
-            if ($file->getSize() > 1048576) {
+            if ($file->getSize() > 1048576) { // 1MB limit
                 return $this->engineErrorResponse([
                     'message' => __tr('QR code image size should not exceed 1MB.')
                 ]);
@@ -492,15 +492,12 @@ class MediaEngine extends BaseMediaEngine implements MediaEngineInterface
 
             // Store file
             if ($file->move($fullPath, $fileName)) {
-                // Update vendor settings with new QR code path
-                updateVendorSettings('whatsapp_qr_image', $path . $fileName);
-
                 return $this->engineSuccessResponse([
                     'path' => getMediaUrl($path . $fileName),
-                    'fileName' => $fileName,
-                    'message' => __tr('WhatsApp QR code uploaded successfully.')
+                    'message' => __tr('QR Image uploaded successfully.')
                 ]);
             }
+            
 
             return $this->engineErrorResponse([
                 'message' => __tr('Something went wrong while uploading WhatsApp QR code.')
@@ -511,5 +508,63 @@ class MediaEngine extends BaseMediaEngine implements MediaEngineInterface
                 'message' => $e->getMessage()
             ]);
         }
+    }
+
+    /**
+     * Process Upload Media
+     *
+     * @param array $inputData
+     * @param string $requestFor
+     * @return array
+     *---------------------------------------------------------------- */
+    public function processUploadMedia($inputData, $requestFor)
+    {
+        // Validate the input data
+        if (!isset($inputData['filepond']) || empty($inputData['filepond'])) {
+            return $this->engineErrorResponse([
+                'message' => __tr('Invalid file uploaded.')
+            ]);
+        }
+
+        $file = $inputData['filepond'];
+
+        // Validate file size (5MB limit for general media)
+        if ($file->getSize() > 5242880) { // 5MB limit
+            return $this->engineErrorResponse([
+                'message' => __tr('File size should not exceed 5MB.')
+            ]);
+        }
+
+        // Validate file type (you can customize this based on your requirements)
+        $allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'video/mp4', 'audio/mpeg'];
+        if (!in_array($file->getMimeType(), $allowedTypes)) {
+            return $this->engineErrorResponse([
+                'message' => __tr('Invalid file type. Only images and videos are allowed.')
+            ]);
+        }
+
+        // Define the upload path based on the requestFor parameter
+        $uploadPath = getPathByKey($requestFor, ['{_uid}' => getVendorUid()]);
+
+        // Ensure the directory exists
+        if (!file_exists(public_path($uploadPath))) {
+            mkdir(public_path($uploadPath), 0777, true);
+        }
+
+        // Generate a unique filename
+        $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
+
+        // Move the file to the specified path
+        if ($file->move(public_path($uploadPath), $fileName)) {
+            return $this->engineSuccessResponse([
+                'path' => getMediaUrl($uploadPath, $fileName),
+                'fileName' => $fileName,
+                'message' => __tr('File uploaded successfully.')
+            ]);
+        }
+
+        return $this->engineErrorResponse([
+            'message' => __tr('Something went wrong while uploading the file.')
+        ]);
     }
 }

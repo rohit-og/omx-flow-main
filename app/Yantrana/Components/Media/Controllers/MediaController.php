@@ -190,12 +190,30 @@ class MediaController extends BaseController
      *---------------------------------------------------------------- */
     public function uploadWhatsAppQR(Request $request)
     {
-        $inputData = $request->all();
+        try {
+            // Validate the request
+            $request->validate([
+                'filepond' => 'required|image|mimes:jpg,jpeg,png|max:5120' // 5MB max
+            ]);
 
-        $processReaction = $this->mediaEngine->processUploadMedia($inputData, 'whatsapp_qr');
+            // Process the upload
+            $processReaction = $this->mediaEngine->processUploadWhatsAppQR($request->all());
 
-        return __processResponse($processReaction, [
-            'message' => __tr('WhatsApp QR Code uploaded successfully.'),
-        ]);
+            // Check if file uploaded successfully
+            if ($processReaction->success()) {
+                // Assuming you want to store the path in configurations
+                $this->configurationEngine->processConfigurationsStore('general', [
+                    'whatsapp_qr_image' => $processReaction['data']['path'],
+                ], true);
+            }
+
+            return $this->processResponse($processReaction, [], [], true, $processReaction->success() ? 200 : 406);
+            
+        } catch (\Exception $e) {
+            return $this->processResponse([
+                'reaction_code' => -1,
+                'message' => $e->getMessage()
+            ], [], [], true);
+        }
     }
 }

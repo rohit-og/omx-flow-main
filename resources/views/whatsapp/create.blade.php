@@ -49,6 +49,29 @@
                             @enderror
                         </div>
 
+                        <div class="form-group mb-3">
+                            <label for="whatsapp_flow_type">{{ __tr('WhatsApp Flow Type') }} <span class="text-danger">*</span></label>
+                            <select class="form-control @error('whatsapp_flow_type') is-invalid @enderror" id="whatsapp_flow_type" name="whatsapp_flow_type" required>
+                                <option value="">{{ __tr('Select Flow Type') }}</option>
+                                <option value="LEAD_GENERATION">{{ __tr('Lead Generation') }}</option>
+                                <option value="CUSTOMER_SUPPORT">{{ __tr('Customer Support') }}</option>
+                                <option value="PROMOTIONAL">{{ __tr('Promotional') }}</option>
+                            </select>
+                            @error('whatsapp_flow_type')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="whatsapp_language">{{ __tr('Primary Language') }}</label>
+                            <select class="form-control @error('whatsapp_language') is-invalid @enderror" id="whatsapp_language" name="whatsapp_language">
+                                <option value="en">English</option>
+                                <option value="es">Spanish</option>
+                                <option value="pt">Portuguese</option>
+                                <!-- Add more languages as needed -->
+                            </select>
+                        </div>
+
                         <button type="submit" class="btn btn-primary" id="submitBtn">
                             {{ __tr('Create Flow') }}
                         </button>
@@ -64,13 +87,17 @@
 <script>
 function afterFlowCreated(response) {
     if (response.reaction == 1) {
-        // Show success notification
-        window.__Utils.notification('Flow created successfully', 'success');
+        // Show success notification with WhatsApp sync status
+        const syncStatus = response.data.flow.whatsapp_sync_status;
+        const message = syncStatus === 'synced' 
+            ? 'Flow created and synced with WhatsApp'
+            : 'Flow created successfully, WhatsApp sync pending';
+            
+        window.__Utils.notification(message, 'success');
         
-        // Redirect after a short delay
         setTimeout(function() {
             window.location.href = '{{ url("/vendor-console/whatsapp/flows") }}/' + response.data.flow._id + '/builder';
-        }, 1000);
+        }, 1500);
     } else {
         window.__Utils.notification(response.data.message || '{{ __tr("Something went wrong") }}', 'error');
         $('#submitBtn').prop('disabled', false);

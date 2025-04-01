@@ -7,9 +7,71 @@ use App\Yantrana\Components\Flow\Interfaces\FlowEngineInterface;
 use App\Yantrana\Components\Flow\Models\Flow;
 use App\Yantrana\Components\Flow\Models\Screen;
 use App\Yantrana\Components\Flow\Models\Button;
+use Illuminate\Support\Facades\Http;
+use Exception;
 
 class FlowEngine extends BaseEngine implements FlowEngineInterface
 {
+    /**
+     * Process WhatsApp Graph API Update
+     * 
+     * @param string $flowId
+     * @param array $flowData
+     * @return array
+     */
+    protected function updateWhatsAppFlow($flowId, $flowData)
+    {
+        try {
+            $whatsappToken = getVendorSettings('whatsapp_access_token');
+            $phoneNumberId = getVendorSettings('whatsapp_phone_number_id');
+            $wabaId = getVendorSettings('whatsapp_business_account_id');
+
+            if (!$whatsappToken || !$phoneNumberId || !$wabaId) {
+                return $this->engineErrorResponse([
+                    'message' => __tr('WhatsApp credentials not configured')
+                ]);
+            }
+
+            // Format flow data for WhatsApp API
+            $flowPayload = [
+                'name' => $flowData['name'],
+                'categories' => ['MARKETING'], // Adjust based on your needs
+                'status' => $flowData['status'] ?? 'DRAFT',
+                'messaging_product' => 'whatsapp',
+                'phone_numbers' => [$phoneNumberId],
+                'business_account_id' => $wabaId
+            ];
+
+            // Make API request to WhatsApp
+            $response = Http::withToken($whatsappToken)
+                ->post("https://graph.facebook.com/v19.0/{$wabaId}/message_flows", $flowPayload);
+
+            if (!$response->successful()) {
+                __logDebug('WhatsApp Flow Update Failed', [
+                    'response' => $response->json(),
+                    'flowId' => $flowId
+                ]);
+                return false;
+            }
+
+            // Store WhatsApp flow ID in your database
+            Flow::where('_id', $flowId)->update([
+                'whatsapp_flow_id' => $response->json()['id'] ?? null,
+                'whatsapp_sync_status' => 'synced',
+                'whatsapp_sync_at' => now()
+            ]);
+
+            return true;
+
+        } catch (Exception $e) {
+            __logDebug('WhatsApp Flow Update Error', [
+                'error' => $e->getMessage(),
+                'flowId' => $flowId
+            ]);
+            return false;
+        }
+    }
+
     /**
      * Process flow store
      *
@@ -27,8 +89,15 @@ class FlowEngine extends BaseEngine implements FlowEngineInterface
             $flow->created_by = getUserID();
             $flow->save();
 
+            // Update on WhatsApp
+            $whatsappUpdate = $this->updateWhatsAppFlow($flow->_id, [
+                'name' => $flow->name,
+                'status' => $flow->status
+            ]);
+
             return $this->engineReaction(1, [
                 'flow' => $flow,
+                'whatsappSynced' => $whatsappUpdate,
                 'message' => __tr('Flow created successfully.')
             ]);
         } catch (\Exception $e) {
@@ -108,8 +177,15 @@ class FlowEngine extends BaseEngine implements FlowEngineInterface
             $flow->published_at = now();
             $flow->save();
 
+            // Update on WhatsApp
+            $whatsappUpdate = $this->updateWhatsAppFlow($flow->_id, [
+                'name' => $flow->name,
+                'status' => $flow->status
+            ]);
+
             return $this->engineReaction(1, [
                 'flow' => $flow,
+                'whatsappSynced' => $whatsappUpdate,
                 'message' => __tr('Flow published successfully.')
             ]);
         } catch (\Exception $e) {

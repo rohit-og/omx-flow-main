@@ -791,6 +791,22 @@ Route::middleware([
                         FlowController::class,
                         'processButtonAdd'
                     ])->name('vendor.flow.button.write.create');
+
+                    // Add new WhatsApp sync routes
+                    Route::post('{id}/sync-whatsapp', [
+                        'as' => 'vendor.flow.write.sync_whatsapp',
+                        'uses' => 'App\Yantrana\Components\Flow\Controllers\FlowController@processWhatsAppSync'
+                    ]);
+
+                    Route::get('{id}/whatsapp-status', [
+                        'as' => 'vendor.flow.read.whatsapp_status',
+                        'uses' => 'App\Yantrana\Components\Flow\Controllers\FlowController@checkWhatsAppSyncStatus'
+                    ]);
+
+                    Route::post('sync-from-manager', [
+                        'as' => 'vendor.flow.write.sync_from_manager',
+                        'uses' => 'App\Yantrana\Components\Flow\Controllers\FlowController@syncWhatsAppManagerFlows'
+                    ]);
                 });
             });
 

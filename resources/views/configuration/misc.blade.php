@@ -3,6 +3,7 @@
 $availableHomePages = [
     'outer-home' => __tr('Home Page 1'),
     'outer-home-2' => __tr('Home Page 2'),
+    'outer-home-3' => __tr('Home Page 3'),
 ];
 @endphp
 <section>
