@@ -585,9 +585,7 @@ $appName = getAppSettings('name');
                             <li class="nav-item"><a class="nav-link me-lg-3"
                                     href="{{ route('user.contact.form') }}">{{ __tr('Contact') }}</a></li>
                             <!-- /Contact -->
-                             <!-- pages -->
-                             @include('layouts.navbars.navs.pages-menu-partial')    
-                            <!-- /pages -->
+                            
                                <!-- /pages -->
                             @if (!isLoggedIn())
                             <!-- Register -->
@@ -1322,6 +1320,9 @@ $appName = getAppSettings('name');
                     {!! getAppSettings('contact_details') !!}
                 </div>
                     <hr>
+                        <ul class="d-flex list-unstyled">
+                        @include('layouts.navbars.navs.pages-menu-partial')
+                        </ul>
                 @endif
                         </div>
                     </div>
