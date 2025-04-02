@@ -13,6 +13,11 @@
     ]),
     'class' => 'col-lg-12'
     ])
+<style>
+    th{
+        background-color:rgb(11, 119, 83) !important;
+    }
+</style>
     <!-- Start of Page Wrapper -->
     <div class="container-fluid">
     

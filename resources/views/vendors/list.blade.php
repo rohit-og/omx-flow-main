@@ -16,34 +16,34 @@
         </div>
         <div class="col-xl-12">
            <x-lw.datatable id="lwManageVendorsTable" :url="route('central.vendors.read.list')" data-page-length="100">
-                <th data-template="#titleExtendedButtons" data-orderable="true" data-name="title">
+                <th data-template="#titleExtendedButtons"  data-orderable="true" data-name="title">
                     <?= __tr('User') ?>
                 </th>
-                <th data-template="#lwQuickActionButtons" data-orderable="true" data-name="title">
+                <th data-template="#lwQuickActionButtons"  data-orderable="true" data-name="title">
                     <?= __tr('Quick Actions') ?>
                 </th>
-                <th data-orderable="true" data-name="fullName">
+                <th data-orderable="true"  data-name="fullName">
                     <?= __tr('Admin Name') ?>
                 </th>
-                <th data-orderable="true" data-name="username">
+                <th data-orderable="true"  data-name="username">
                     <?= __tr('username') ?>
                 </th>
-                <th data-orderable="true" data-name="email">
+                <th data-orderable="true"  data-name="email">
                     <?= __tr('email') ?>
                 </th>
-                <th data-orderable="true" data-name="status">
+                <th data-orderable="true"  data-name="status">
                     <?= __tr('status') ?>
                 </th>
-                <th data-orderable="true" data-name="mobile_number">
+                <th data-orderable="true"  data-name="mobile_number">
                     <?= __tr('Mobile Number') ?>
                 </th>
-                <th data-orderable="true" data-name="user_status">
+                <th data-orderable="true"  data-name="user_status">
                     <?= __tr('Admin Status') ?>
                 </th>
-                <th data-orderable="true" data-name="created_at">
+                <th data-orderable="true"  data-name="created_at">
                     <?= __tr('Created On') ?>
                 </th>
-                <th data-template="#actionButtons" name="null">
+                <th data-template="#actionButtons"  name="null">
                     <?= __tr('Action') ?>
                 </th>
             </x-lw.datatable>
@@ -345,6 +345,11 @@
         </x-lw.form>
         <!--/  EDIT VENDOR FORM -->
     </x-lw.modal>
+<style>
+    th{
+        background-color:rgb(11, 119, 83) !important;
+    }
+</style>
     <!--/ EDIT VENDOR MODAL -->
     @push('footer')
     @endpush

@@ -404,6 +404,11 @@ $groupDescription = $groupUid ? $currentGroup->description : '';
         <!-- /Contact remove template -->
     </div>
 </div>
+<style>
+    th{
+        background-color:rgb(11, 119, 83) !important;
+    }
+</style>
 @push('appScripts')
 <script>
 (function($) {

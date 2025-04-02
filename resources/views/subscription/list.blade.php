@@ -46,4 +46,9 @@
         <a  href ="<%= __Utils.apiURL("{{ route('vendor.dashboard',['vendorIdOrUid'=>'vendorIdOrUid'])}}", {'vendorIdOrUid':__tData._uid}) %>"> <%-__tData.title %> </a>
     <% }  %>
 </script>
+<style>
+    th{
+        background-color:rgb(11, 119, 83) !important;
+    }
+</style>
 @endsection

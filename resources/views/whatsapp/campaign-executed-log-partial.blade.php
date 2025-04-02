@@ -44,3 +44,8 @@
         <%- __tData.status %>
     <% } %>
 </script>
+<style>
+    th{
+        background-color:rgb(11, 119, 83) !important;
+    }
+</style>

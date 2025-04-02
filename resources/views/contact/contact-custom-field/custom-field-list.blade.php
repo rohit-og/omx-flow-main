@@ -121,4 +121,9 @@
         <!-- /CustomField delete template -->
     </div>
 </div>
+<style>
+    th{
+        background-color:rgb(11, 119, 83) !important;
+    }
+</style>
 @endsection()

@@ -138,12 +138,16 @@
 
     .table th {
         font-weight: 600;
-        color: #718096;
+        color: #718096; 
         text-transform: uppercase;
         font-size: 13px;
         letter-spacing: 0.5px;
         padding: 16px 25px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    th{
+        background-color:rgb(11, 119, 83) !important;
     }
 
     .table td {
@@ -647,7 +651,7 @@
                                         <div class="user-avatar">
                                             {{ strtoupper(substr($newVendor->title, 0, 1)) }}
                                         </div>
-                                        <span>{{ $newVendor->title }}</span>
+                                        <span class="text-dark">{{ $newVendor->title }}</span>
                                     </a>
                                 </td>
                                 <td>{{ formatDate($newVendor->created_at) }}</td>
