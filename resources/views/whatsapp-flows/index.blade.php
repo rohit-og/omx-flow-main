@@ -72,7 +72,7 @@
                                                 <td>
                                                     <div class="btn-group" role="group">
                                                         @if($flow['status'] === 'DRAFT')
-                                                            <a href="{{ route('whatsapp-flows.edit', $flow['id']) }}" 
+                                                            <a href="{{ route('whatsapp-flows.edit', ['id' => $flow['id']]) }}" 
                                                                class="btn btn-sm btn-outline-secondary">
                                                                 <i class="fa fa-pencil"></i> Edit
                                                             </a>
@@ -82,12 +82,10 @@
                                                                 <i class="fa fa-trash"></i> Delete
                                                             </button>
                                                         @endif
-                                                        <form action="{{ route('whatsapp-flows.send', $flow['id']) }}" method="GET" style="display: inline;">
-                                                            @csrf
-                                                            <button type="submit" class="btn btn-sm btn-outline-info">
-                                                                <i class="fa fa-paper-plane"></i> Send
-                                                            </button>
-                                                        </form>
+                                                        <a href="{{ route('whatsapp-flows.send', ['id' => $flow['id']]) }}" 
+                                                           class="btn btn-sm btn-outline-info">
+                                                            <i class="fa fa-paper-plane"></i> Send
+                                                        </a>
                                                         <a href="{{ route('whatsapp-flows.preview', ['id' => $flow['id']]) }}" 
                                                            class="btn btn-sm btn-outline-secondary">
                                                             <i class="fa fa-eye"></i> Preview

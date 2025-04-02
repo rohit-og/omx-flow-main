@@ -19,15 +19,15 @@
                         </div>
                     @endif
 
-                    <h4 class="mb-3">{{ $flow['name'] }}</h4>
+                   
                     
                     <div id="previewContainer" class="d-flex justify-content-center">
-                        @if(isset($flow['preview_url']) && $flow['preview_url'])
+                        @if(isset($flow['preview_url']))
                             <div class="preview-wrapper">
                                 <iframe 
                                     src="{{ $flow['preview_url'] }}"
-                                    width="430"
-                                    height="800"
+                                    width="480"
+                                    height="900"
                                     style="border: 1px solid #ddd; border-radius: 8px; background: #fff;"
                                     allow="clipboard-write"
                                 ></iframe>
