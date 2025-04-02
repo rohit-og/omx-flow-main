@@ -18,7 +18,7 @@ class WhatsappFlowController extends BaseController
 
     public function __construct()
     {
-        $this->baseUrl = "https://graph.facebook.com/v20.0";
+        $this->baseUrl = "https://graph.facebook.com";
         // $this->wabaId = getVendorSettings('whatsapp_business_account_id');
         // $this->accessToken = getVendorSettings('whatsapp_access_token');
 
@@ -225,7 +225,7 @@ class WhatsappFlowController extends BaseController
      * Create a new WhatsApp flow.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function createFlow(Request $request)
     {
@@ -236,19 +236,29 @@ class WhatsappFlowController extends BaseController
                 'categories' => 'required|array|min:1',
                 'categories.*' => 'required|string|in:SIGN_UP,SIGN_IN,APPOINTMENT_BOOKING,LEAD_GENERATION,CONTACT_US,CUSTOMER_SUPPORT,SURVEY,OTHER',
                 'flow_json' => 'required|string',
-                'publish' => 'boolean'
+                'publish' => 'nullable|boolean'
             ]);
 
-            // Use provided flow_json or default
-            $flowJson = $request->filled('flow_json') ? $request->flow_json : json_encode($this->defaultFlowJson);
+            // Parse flow_json to ensure it's valid JSON
+            $flowJsonData = json_decode($request->flow_json);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return redirect()->back()
+                    ->with('error', 'Invalid JSON format: ' . json_last_error_msg())
+                    ->withInput();
+            }
 
-            // Prepare request data
+            // Prepare request data - note that we're sending flow_json as a string within JSON
             $requestData = [
                 'name' => $validated['name'],
                 'categories' => $validated['categories'],
-                'flow_json' => $flowJson,
+                'flow_json' => $request->flow_json, // Already a string
                 'publish' => $request->boolean('publish', false)
             ];
+
+            // Log the request data for debugging
+            Log::info('Creating WhatsApp flow', [
+                'requestData' => $requestData
+            ]);
 
             // Make API request
             $response = Http::withHeaders([
@@ -259,18 +269,45 @@ class WhatsappFlowController extends BaseController
                 $requestData
             );
 
+            // Log the response for debugging
+            Log::info('WhatsApp API response', [
+                'status' => $response->status(),
+                'body' => $response->json()
+            ]);
+
+            $responseData = $response->json();
+
             if ($response->successful()) {
+                // Check if there are validation errors in the response
+                if (isset($responseData['validation_errors']) && !empty($responseData['validation_errors'])) {
+                    $errorMessages = [];
+                    foreach ($responseData['validation_errors'] as $error) {
+                        $errorMessages[] = $error['message'] ?? 'Validation error';
+                    }
+                    
+                    return redirect()->back()
+                        ->with('error', 'Flow created with validation warnings: ' . implode(', ', $errorMessages))
+                        ->withInput();
+                }
+                
                 // Redirect to the index page with a success message
-                return redirect()->route('whatsapp-flows.index')->with('status', 'Flow created successfully!');
+                return redirect()->route('whatsapp-flows.index')
+                    ->with('success', 'Flow created successfully!');
             }
 
-            return redirect()->back()->with('error', 'Failed to create flow.')->withInput();
+            // Handle error response
+            $errorMessage = $responseData['error']['message'] ?? 'Unknown error';
+            return redirect()->back()
+                ->with('error', 'Failed to create flow: ' . $errorMessage)
+                ->withInput();
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Creation Error: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'An error occurred while creating the flow.')->withInput();
+            return redirect()->back()
+                ->with('error', 'An error occurred while creating the flow: ' . $e->getMessage())
+                ->withInput();
         }
     }
 
@@ -346,61 +383,46 @@ class WhatsappFlowController extends BaseController
     public function preview($id)
     {
         try {
-            // Log the request details
             Log::info('Attempting to fetch flow preview', [
-                'flow_id' => $id,
-                'waba_id' => $this->wabaId
+                'flow_id' => $id
             ]);
 
-            // Get flow details with preview URL in a single request
+            // Make the API request using the correct endpoint structure
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}", [
-                'fields' => 'id,name,categories,preview,status'
+            ])->get("{$this->baseUrl}/v20.0/{$id}", [
+                'fields' => 'preview.invalidate(false)'
             ]);
 
-            // Log the response for debugging
-            Log::info('Flow response received', [
+            Log::info('API Response', [
                 'status' => $response->status(),
                 'body' => $response->json()
             ]);
 
             if (!$response->successful()) {
                 $errorData = $response->json();
-                Log::error('Flow fetch failed', [
-                    'status' => $response->status(),
+                Log::error('Preview fetch failed', [
                     'error' => $errorData
                 ]);
-                throw new Exception($errorData['error']['message'] ?? 'Flow not found');
+                throw new Exception($errorData['error']['message'] ?? 'Failed to fetch preview');
             }
 
-            $flowData = $response->json();
+            $data = $response->json();
 
-            // Verify we have all required data
-            if (!isset($flowData['name'])) {
-                throw new Exception('Flow data incomplete');
+            if (!isset($data['preview']) || !isset($data['preview']['preview_url'])) {
+                throw new Exception('Preview URL not available');
             }
-
-            if (!isset($flowData['preview'])) {
-                throw new Exception('Preview data not available');
-            }
-
-            // Log successful data preparation
-            Log::info('Successfully prepared preview data', [
-                'flow_name' => $flowData['name'],
-                'has_preview' => isset($flowData['preview'])
-            ]);
 
             return view('whatsapp-flows.preview', [
                 'flow' => [
-                    'id' => $flowData['id'],
-                    'name' => $flowData['name'],
-                    'preview_url' => $flowData['preview']['preview_url'] ?? null
+                    'id' => $id,
+                    'preview_url' => $data['preview']['preview_url'],
+                    'expires_at' => $data['preview']['expires_at'] ?? null
                 ]
             ]);
 
         } catch (\Exception $e) {
-            Log::error('WhatsApp Flow Preview Exception', [
+            Log::error('Preview Exception', [
                 'id' => $id,
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
@@ -501,20 +523,18 @@ class WhatsappFlowController extends BaseController
     public function send(Request $request, $id)
     {
         try {
+            // Validate the request
             $validated = $request->validate([
-                'phone_number' => 'required|string'
+                'phone_number' => 'required|string|regex:/^[0-9]+$/'
             ]);
 
-            // First verify the flow exists
-            $flowResponse = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}");
+            // Log the request for debugging
+            Log::info('Sending WhatsApp flow', [
+                'flow_id' => $id,
+                'phone_number' => $validated['phone_number']
+            ]);
 
-            if (!$flowResponse->successful()) {
-                throw new Exception('Flow not found');
-            }
-
-            // Updated request body structure
+            // Request body as specified
             $requestBody = [
                 "messaging_product" => "whatsapp",
                 "to" => $validated['phone_number'],
@@ -544,8 +564,8 @@ class WhatsappFlowController extends BaseController
                             "flow_action_payload" => [
                                 "screen" => "RECOMMEND",
                                 "data" => [
-                                    // Add any custom key-value pairs if needed
-                                    // "custom_key" => "custom_value"
+                                    // Add custom key-value pairs if needed
+                                    // "key1" => "value1"
                                 ]
                             ]
                         ]
@@ -553,25 +573,45 @@ class WhatsappFlowController extends BaseController
                 ]
             ];
 
-            // Updated URL to use phone number ID instead of WABA ID
+            // Make the API request to send the flow
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$this->accessToken}",
                 'Content-Type' => 'application/json'
-            ])->post("{$this->baseUrl}/{$this->phoneNumberId}/messages", $requestBody);
+            ])->post("{$this->baseUrl}/v20.0/{$this->phoneNumberId}/messages", $requestBody);
+
+            // Log the complete response for debugging
+            Log::info('WhatsApp API response', [
+                'status' => $response->status(),
+                'body' => $response->json()
+            ]);
+
+            $responseData = $response->json();
 
             if (!$response->successful()) {
-                $errorData = $response->json();
-                Log::error('WhatsApp Flow Send API Error', [
-                    'error' => $errorData,
-                    'request_body' => $requestBody,
-                    'phone_number_id' => $this->phoneNumberId
+                return response()->json([
+                    'success' => false,
+                    'error' => $responseData['error']['message'] ?? 'Failed to send flow',
+                    'status_code' => $response->status(),
+                    'response' => $responseData,
+                    'request' => [
+                        'endpoint' => "{$this->baseUrl}/v20.0/{$this->phoneNumberId}/messages",
+                        'method' => 'POST',
+                        'body' => $requestBody
+                    ]
                 ]);
-                throw new Exception($errorData['error']['message'] ?? 'Failed to send flow');
             }
 
             return response()->json([
                 'success' => true,
-                'messages' => $response->json()
+                'message' => 'Flow sent successfully',
+                'status_code' => $response->status(),
+                'response_data' => $responseData,
+                'request' => [
+                    'endpoint' => "{$this->baseUrl}/v20.0/{$this->phoneNumberId}/messages",
+                    'method' => 'POST',
+                    'phone_number' => $validated['phone_number'],
+                    'flow_id' => $id
+                ]
             ]);
 
         } catch (\Exception $e) {
@@ -583,7 +623,10 @@ class WhatsappFlowController extends BaseController
 
             return response()->json([
                 'success' => false,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
+                'exception_type' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
             ], 500);
         }
     }

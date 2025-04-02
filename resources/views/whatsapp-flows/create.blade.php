@@ -4,94 +4,100 @@
 <div class="container py-4 mt-5">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    <h2 class="mb-0">Create WhatsApp Flow</h2>
-                    <a href="{{ route('whatsapp-flows.index') }}" class="btn btn-light">
-                        <i class="fa fa-arrow-left"></i> Back to Flows
-                    </a>
-                </div>
+            <!-- Page Heading -->
+            <h1>Create WhatsApp Flow</h1>
+            <!-- Page Heading -->
+            <hr>
+            
+            <div id="statusNotification" style="display: none;" class="alert" role="alert"></div>
 
-                <div class="card-body">
-                    @if (session('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            {{ session('error') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    @endif
-
-                    <form id="createFlowForm" method="POST" action="{{ route('whatsapp.flows.create') }}">
-                        @csrf
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-4">
-                                    <label for="name" class="form-label fw-bold">Flow Name</label>
-                                    <input type="text" class="form-control form-control-lg @error('name') is-invalid @enderror" 
-                                           id="name" name="name" value="{{ old('name') }}" required
-                                           placeholder="Enter flow name">
-                                    @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-4">
-                                    <label for="categories" class="form-label fw-bold">Categories</label>
-                                    <select class="form-select form-select-lg @error('categories') is-invalid @enderror" 
-                                            id="categories" name="categories[]" multiple required>
-                                        <option value="SIGN_UP">Sign Up</option>
-                                        <option value="SIGN_IN">Sign In</option>
-                                        <option value="APPOINTMENT_BOOKING">Appointment Booking</option>
-                                        <option value="LEAD_GENERATION">Lead Generation</option>
-                                        <option value="CONTACT_US">Contact Us</option>
-                                        <option value="CUSTOMER_SUPPORT">Customer Support</option>
-                                        <option value="SURVEY">Survey</option>
-                                        <option value="OTHER">Other</option>
-                                    </select>
-                                    <div class="form-text">Hold Ctrl/Cmd to select multiple categories</div>
-                                    @error('categories')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="flow_json" class="form-label fw-bold">Flow JSON</label>
-                            <div class="position-relative">
-                                <textarea class="form-control @error('flow_json') is-invalid @enderror" 
-                                          id="flow_json" name="flow_json" rows="15" required>{{ old('flow_json', $defaultFlowJson) }}</textarea>
-                                <button type="button" class="btn btn-outline-primary position-absolute top-0 end-0 m-2" id="formatJson">
-                                    <i class="fa fa-code"></i> Format JSON
-                                </button>
-                            </div>
-                            @error('flow_json')
+            <!-- General setting form -->
+            <form method="POST" action="{{ route('whatsapp.flows.create') }}" id="createFlowForm">
+                @csrf
+                
+                <fieldset>
+                    <legend>General Information</legend>
+                    <div class="row">
+                        <!-- Flow Name -->
+                        <div class="form-group col-md-6">
+                            <label for="name">Flow Name</label>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                   name="name" id="name" value="{{ old('name') }}" required>
+                            @error('name')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">Flow configuration in JSON format</div>
                         </div>
 
-                        <div class="mb-4">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="publish" 
-                                       id="publish" value="1" {{ old('publish') ? 'checked' : '' }}>
-                                <label class="form-check-label" for="publish">
-                                    Publish Flow Immediately
-                                </label>
+                        <!-- Categories - Single select dropdown -->
+                        <div class="form-group col-md-6">
+                            <label for="category">Category</label>
+                            <select class="form-control @error('categories') is-invalid @enderror" 
+                                    id="category" name="categories[]" required>
+                                <option value="">Select a category</option>
+                                <option value="SIGN_UP">Sign Up</option>
+                                <option value="SIGN_IN">Sign In</option>
+                                <option value="APPOINTMENT_BOOKING">Appointment Booking</option>
+                                <option value="LEAD_GENERATION">Lead Generation</option>
+                                <option value="CONTACT_US">Contact Us</option>
+                                <option value="CUSTOMER_SUPPORT">Customer Support</option>
+                                <option value="SURVEY">Survey</option>
+                                <option value="OTHER">Other</option>
+                            </select>
+                            <small class="form-text text-muted">Select a category for your flow</small>
+                            @error('categories')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="mt-4">
+                    <legend>Flow Configuration</legend>
+                    <!-- Flow JSON -->
+                    <div class="form-group">
+                        <label for="flow_json">Flow JSON</label>
+                        <div class="position-relative">
+                            <textarea class="form-control @error('flow_json') is-invalid @enderror" 
+                                    id="flow_json" name="flow_json" rows="12" required>{{ old('flow_json', $defaultFlowJson) }}</textarea>
+                            <div class="mt-2 text-end">
+                                <button type="button" class="btn btn-outline-secondary" id="formatJson">
+                                    <i class="fa fa-code"></i> Format JSON
+                                </button>
+                                <a type="button" class="btn btn-outline-primary" href="https://developers.facebook.com/docs/whatsapp/flows/playground" target="_blank">
+                                    <i class="fa fa-code"></i> Generate Flow JSON
+                                </a>
                             </div>
                         </div>
+                        @error('flow_json')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <small class="form-text text-muted">Flow configuration in JSON format</small>
+                    </div>
 
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="button" class="btn btn-outline-secondary" id="loadTemplate">
-                                <i class="fa fa-file-code-o"></i> Load Template
-                            </button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fa fa-save"></i> Create Flow
-                            </button>
+                    <!-- Publish Setting -->
+                    <div class="form-group mt-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="publish" 
+                                id="publish" value="1" {{ old('publish') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="publish">
+                                Publish Flow Immediately
+                            </label>
                         </div>
-                    </form>
+                    </div>
+                </fieldset>
+
+                <!-- Submit Buttons -->
+                <div class="mt-4">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ route('whatsapp-flows.index') }}" class="btn btn-secondary">
+                            <i class="fa fa-arrow-left"></i> Back to Flows
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">
+                            <i class="fa fa-save"></i> Create Flow
+                        </button>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
@@ -101,9 +107,39 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('createFlowForm');
-    const categoriesSelect = document.getElementById('categories');
+    const categorySelect = document.getElementById('category');
     const flowJsonTextarea = document.getElementById('flow_json');
     const formatJsonBtn = document.getElementById('formatJson');
+    const submitBtn = document.getElementById('submitBtn');
+
+    // Check for flash messages and display them using notification
+    @if(session('error'))
+        showNotification("{{ session('error') }}", 'error');
+    @endif
+
+    @if(session('success'))
+        showNotification("{{ session('success') }}", 'success');
+    @endif
+
+    // Function to show notifications
+    function showNotification(message, type) {
+        const statusNotification = document.getElementById('statusNotification');
+        statusNotification.innerText = message;
+        statusNotification.style.display = 'block';
+        
+        if (type === 'error') {
+            statusNotification.classList.add('alert-danger');
+            statusNotification.classList.remove('alert-success');
+        } else {
+            statusNotification.classList.add('alert-success');
+            statusNotification.classList.remove('alert-danger');
+        }
+
+        // Automatically hide after 5 seconds
+        setTimeout(() => {
+            statusNotification.style.display = 'none';
+        }, 5000);
+    }
 
     // Format JSON button handler
     formatJsonBtn.addEventListener('click', function() {
@@ -111,29 +147,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const jsonObj = JSON.parse(flowJsonTextarea.value);
             flowJsonTextarea.value = JSON.stringify(jsonObj, null, 2);
         } catch (error) {
-            alert('Invalid JSON format. Please check your flow configuration.');
-        }
-    });
-
-    // Load template button handler
-    document.getElementById('loadTemplate').addEventListener('click', function() {
-        try {
-            const defaultJson = @json($defaultFlowJson);
-            flowJsonTextarea.value = JSON.stringify(defaultJson, null, 2);
-        } catch (error) {
-            alert('Error loading template. Please try again.');
+            showNotification('Invalid JSON format. Please check your flow configuration.', 'error');
         }
     });
 
     // Form validation
     form.addEventListener('submit', function(e) {
-        // Validate categories
-        if (categoriesSelect.selectedOptions.length === 0) {
+        submitBtn.disabled = true;
+        
+        // Validate category
+        if (!categorySelect.value) {
             e.preventDefault();
-            categoriesSelect.classList.add('is-invalid');
+            categorySelect.classList.add('is-invalid');
+            submitBtn.disabled = false;
             return;
         }
-        categoriesSelect.classList.remove('is-invalid');
+        categorySelect.classList.remove('is-invalid');
 
         // Validate JSON
         try {
@@ -144,26 +173,54 @@ document.addEventListener('DOMContentLoaded', function() {
         } catch (error) {
             e.preventDefault();
             flowJsonTextarea.classList.add('is-invalid');
-            alert('Invalid JSON format. Please check your flow configuration.');
+            showNotification('Invalid JSON format. Please check your flow configuration.', 'error');
+            submitBtn.disabled = false;
+            return;
         }
+        
+        // Allow form submission if validation passes
     });
 
     // Clear validation on input
-    categoriesSelect.addEventListener('change', function() {
+    categorySelect.addEventListener('change', function() {
         this.classList.remove('is-invalid');
     });
 
     flowJsonTextarea.addEventListener('input', function() {
         this.classList.remove('is-invalid');
     });
-
-    // Initialize Select2 for categories
-    $(categoriesSelect).select2({
-        theme: 'bootstrap-5',
-        width: '100%',
-        placeholder: 'Select categories',
-        allowClear: true
-    });
 });
 </script>
-@endsection 
+@endsection
+
+@push('styles')
+<style>
+    fieldset {
+        border: 0;
+        padding: 0;
+        margin-bottom: 1.5rem;
+    }
+    
+    legend {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #dee2e6;
+        width: 100%;
+        padding-bottom: 0.5rem;
+    }
+    
+    textarea#flow_json {
+        font-family: monospace;
+    }
+    
+    /* Toast notification styles */
+    #statusNotification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 350px;
+    }
+</style>
+@endpush 

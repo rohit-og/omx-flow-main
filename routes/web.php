@@ -732,7 +732,7 @@ Route::middleware([
                     // WhatsApp Flows routes
                     Route::get('/', [WhatsAppFlowController::class, 'index'])->name('whatsapp-flows.index');
                     Route::get('/create', [WhatsAppFlowController::class, 'create'])->name('whatsapp-flows.create');
-                    Route::post('/whatsapp-flows', [WhatsAppFlowController::class, 'createFlow'])->name('whatsapp.flows.create');
+                    Route::post('/', [WhatsAppFlowController::class, 'createFlow'])->name('whatsapp.flows.create');
                     Route::get('/{id}', [WhatsAppFlowController::class, 'show'])->name('whatsapp-flows.show');
                     Route::post('/refresh', [WhatsAppFlowController::class, 'refresh'])->name('whatsapp-flows.refresh');
                     Route::get('/{id}/edit', [WhatsAppFlowController::class, 'edit'])->name('whatsapp-flows.edit');
