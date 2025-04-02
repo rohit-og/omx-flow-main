@@ -1051,14 +1051,14 @@ $appName = getAppSettings('name');
                                 <div class="inner">
                                     <div class="go-corner" href="#">
                                         <div class="go-arrow">
-                                            Premium
+                                        {{ $savedPlan['title'] ?? $plan['title'] }}
                                         </div>
                                     </div>
-                                    <h5 class="card-title text-success">{{ $savedPlan['title'] ?? $plan['title'] }}</h5>
-                                    <div class="price-wrapper text-center mb-4">
+                                  
+                                    <div class="price-wrapper text-center my-4">
                                         <span class="h1 fw-bold text-dark amount">{{ formatAmount($monthlyCharge, true, true) }}</span>
                                         <span class="text-black">/month</span>
-                                        <p class="text-primary mt-2 mb-0 small fw-bold">+ WhatsApp Cloud Messaging Charges</p>
+                                        <p class="text-dark mt-2 mb-0 small fw-bold">+ WhatsApp Cloud Messaging Charges</p>
                                     </div>
                                     <ul class="list-unstyled mb-4" style="font-size:0.85em">
                                         @foreach ($plan['features'] as $featureKey => $featureValue)
@@ -1087,7 +1087,7 @@ $appName = getAppSettings('name');
                                         @endforeach
                                     </ul>
                                     <div class="mt-auto">
-                                        <a href="{{ route('auth.register') }}" class="btn btn-primary w-100 rounded-pill py-2">Choose Plan</a>
+                                        <a href="{{ route('auth.register') }}" class="btn btnn w-100 rounded-lg py-2">Choose Plan</a>
                                     </div>
                                 </div>
                             </div>
