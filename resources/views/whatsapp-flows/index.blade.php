@@ -71,19 +71,25 @@
                                                 </td>
                                                 <td>
                                                     <div class="btn-group" role="group">
-                                                        <a href="{{ route('whatsapp-flows.show', $flow['id']) }}" class="btn btn-sm btn-outline-primary">
-                                                            <i class="fa fa-eye"></i> View
-                                                        </a>
                                                         @if($flow['status'] === 'DRAFT')
-                                                            <a href="{{ route('whatsapp-flows.edit', $flow['id']) }}" class="btn btn-sm btn-outline-secondary">
+                                                            <a href="{{ route('whatsapp-flows.edit', $flow['id']) }}" 
+                                                               class="btn btn-sm btn-outline-secondary">
                                                                 <i class="fa fa-pencil"></i> Edit
                                                             </a>
-                                                            <a href="{{ route('whatsapp-flows.delete', $flow['id']) }}" 
-                                                               class="btn btn-sm btn-outline-danger delete-flow"
-                                                               onclick="return confirm('Are you sure you want to delete the flow \"{{ $flow['name'] }}\"? This action cannot be undone.');">
+                                                            <button class="btn btn-sm btn-outline-danger delete-flow" 
+                                                                    data-id="{{ $flow['id'] }}"
+                                                                    data-name="{{ $flow['name'] }}">
                                                                 <i class="fa fa-trash"></i> Delete
-                                                            </a>
+                                                            </button>
                                                         @endif
+                                                        <a href="{{ route('whatsapp-flows.send', $flow['id']) }}" 
+                                                           class="btn btn-sm btn-outline-info">
+                                                            <i class="fa fa-paper-plane"></i> Send
+                                                        </a>
+                                                        <a href="{{ route('whatsapp-flows.preview', $flow['id']) }}" 
+                                                           class="btn btn-sm btn-outline-secondary">
+                                                            <i class="fa fa-eye"></i> Preview
+                                                        </a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -116,26 +122,6 @@
         </div>
     </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteFlowModal" tabindex="-1" aria-labelledby="deleteFlowModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="deleteFlowModalLabel">Delete Flow</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete the flow "<span id="flowNameToDelete"></span>"?
-                This action cannot be undone.
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" id="confirmDelete">Delete</button>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('scripts')
@@ -144,74 +130,54 @@
         const refreshBtn = document.getElementById('refresh-btn');
         const loadingElement = document.getElementById('loading');
         const flowsContainer = document.getElementById('flows-container');
-        const deleteFlowModal = new bootstrap.Modal(document.getElementById('deleteFlowModal'));
-        let flowIdToDelete = null;
 
-        // Delete flow button click handler
+        // Delete Flow Functionality
         document.querySelectorAll('.delete-flow').forEach(button => {
-            button.addEventListener('click', function() {
-                flowIdToDelete = this.dataset.flowId;
-                document.getElementById('flowNameToDelete').textContent = this.dataset.flowName;
-                deleteFlowModal.show();
-            });
-        });
-
-        // Confirm delete button click handler
-        document.getElementById('confirmDelete').addEventListener('click', function() {
-            if (!flowIdToDelete) return;
-
-            // Show loading state
-            const deleteButton = this;
-            const originalText = deleteButton.innerHTML;
-            deleteButton.disabled = true;
-            deleteButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Deleting...';
-
-            // Make delete request
-            fetch(`{{ route('whatsapp-flows.index') }}/${flowIdToDelete}`, {
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Close modal and refresh page
-                    deleteFlowModal.hide();
-                    window.location.reload();
-                } else {
-                    alert(data.message || 'Failed to delete flow');
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const flowId = this.getAttribute('data-id');
+                const flowName = this.getAttribute('data-name');
+                
+                if (confirm(`Are you sure you want to delete the flow "${flowName}"?`)) {
+                    fetch(`{{ url('/whatsapp-flows') }}/${flowId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json',
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            window.location.reload();
+                        } else {
+                            alert(data.message || 'Failed to delete flow');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while deleting the flow');
+                    });
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while deleting the flow');
-            })
-            .finally(() => {
-                // Reset button state
-                deleteButton.disabled = false;
-                deleteButton.innerHTML = originalText;
             });
         });
 
+        // Refresh Functionality
         if (refreshBtn) {
             refreshBtn.addEventListener('click', function() {
                 loadingElement.classList.remove('d-none');
                 flowsContainer.classList.add('d-none');
 
-                // Ajax request to refresh flows
                 fetch('{{ route("whatsapp-flows.refresh") }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
                         'Accept': 'application/json',
-                    },
+                    }
                 })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Redirect to refresh the page with new data
                         window.location.reload();
                     } else {
                         alert('Error refreshing flows: ' + data.message);
