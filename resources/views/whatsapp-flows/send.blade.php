@@ -16,6 +16,7 @@
                     <h4 class="mb-3">Flow: {{ $flow['name'] }}</h4>
                     
                     <form id="sendFlowForm">
+                        @csrf
                         <div class="mb-3">
                             <label for="phone_number" class="form-label">Phone Number (with country code)</label>
                             <input type="text" class="form-control" id="phone_number" 
@@ -46,27 +47,32 @@ document.getElementById('sendFlowForm').addEventListener('submit', function(e) {
     sendButton.disabled = true;
     sendButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
 
-    fetch('{{ route("whatsapp-flows.send", $flow["id"]) }}', {
+    fetch('/vendor-console/whatsapp/flows/{{ $flow["id"] }}/send', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
             'Accept': 'application/json'
         },
         body: JSON.stringify({ phone_number: phoneNumber })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
-        if (data.messages) {
+        if (data.messages || data.success) {
             alert('Flow sent successfully!');
             window.location.href = '{{ route("whatsapp-flows.index") }}';
         } else {
-            alert('Failed to send flow: ' + (data.error || 'Unknown error'));
+            throw new Error(data.error || 'Failed to send flow');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An error occurred while sending the flow');
+        alert('An error occurred while sending the flow: ' + error.message);
     })
     .finally(() => {
         sendButton.disabled = false;

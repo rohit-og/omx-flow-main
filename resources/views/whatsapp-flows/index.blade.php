@@ -82,11 +82,13 @@
                                                                 <i class="fa fa-trash"></i> Delete
                                                             </button>
                                                         @endif
-                                                        <a href="{{ route('whatsapp-flows.send', $flow['id']) }}" 
-                                                           class="btn btn-sm btn-outline-info">
-                                                            <i class="fa fa-paper-plane"></i> Send
-                                                        </a>
-                                                        <a href="{{ route('whatsapp-flows.preview', $flow['id']) }}" 
+                                                        <form action="{{ route('whatsapp-flows.send', $flow['id']) }}" method="GET" style="display: inline;">
+                                                            @csrf
+                                                            <button type="submit" class="btn btn-sm btn-outline-info">
+                                                                <i class="fa fa-paper-plane"></i> Send
+                                                            </button>
+                                                        </form>
+                                                        <a href="{{ route('whatsapp-flows.preview', ['id' => $flow['id']]) }}" 
                                                            class="btn btn-sm btn-outline-secondary">
                                                             <i class="fa fa-eye"></i> Preview
                                                         </a>

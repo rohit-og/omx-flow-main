@@ -14,6 +14,7 @@ class WhatsappFlowController extends BaseController
     protected $wabaId;
     protected $accessToken;
     protected $defaultFlowJson;
+    protected $phoneNumberID;
 
     public function __construct()
     {
@@ -23,7 +24,7 @@ class WhatsappFlowController extends BaseController
 
         $this->wabaId = "543180505542014";
         $this->accessToken = "EAAFlfxGYFccBOZCJeRfNp5AkzDPMJLZASFPNGWz9gBMkwfNbJTAJj192Th43mFed0p1MFcOisaVYWZBfLCi0TPGc5ASQghQP3ksZCi97OC4p4rhmVV2gkChzZB4MsDYy6J0mfGYcDbgP2xRCnoQzL8XDzuJwwottEQZCnxab0YAoVvZBsZBZAEYgr9BWoGfhZAUMhz6QZDZD";
-        
+        $this->phoneNumberId = "477921225415071";
         $this->defaultFlowJson = [
             "version" => "5.0",
             "screens" => [
@@ -337,32 +338,156 @@ class WhatsappFlowController extends BaseController
     }
 
     /**
-     * Get flow preview URL.
+     * Show the preview page for a flow.
      *
      * @param string $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\View\View
      */
     public function preview($id)
     {
         try {
+            // Log the request details
+            Log::info('Attempting to fetch flow preview', [
+                'flow_id' => $id,
+                'waba_id' => $this->wabaId
+            ]);
+
+            // Get flow details with preview URL in a single request
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$id}?fields=preview.invalidate(false)");
+            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}", [
+                'fields' => 'id,name,categories,preview,status'
+            ]);
 
-            if ($response->successful()) {
-                return response()->json($response->json());
+            // Log the response for debugging
+            Log::info('Flow response received', [
+                'status' => $response->status(),
+                'body' => $response->json()
+            ]);
+
+            if (!$response->successful()) {
+                $errorData = $response->json();
+                Log::error('Flow fetch failed', [
+                    'status' => $response->status(),
+                    'error' => $errorData
+                ]);
+                throw new Exception($errorData['error']['message'] ?? 'Flow not found');
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to get preview URL'
-            ], $response->status());
+            $flowData = $response->json();
+
+            // Verify we have all required data
+            if (!isset($flowData['name'])) {
+                throw new Exception('Flow data incomplete');
+            }
+
+            if (!isset($flowData['preview'])) {
+                throw new Exception('Preview data not available');
+            }
+
+            // Log successful data preparation
+            Log::info('Successfully prepared preview data', [
+                'flow_name' => $flowData['name'],
+                'has_preview' => isset($flowData['preview'])
+            ]);
+
+            return view('whatsapp-flows.preview', [
+                'flow' => [
+                    'id' => $flowData['id'],
+                    'name' => $flowData['name'],
+                    'preview_url' => $flowData['preview']['preview_url'] ?? null
+                ]
+            ]);
+
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Preview Exception', [
                 'id' => $id,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
-            return response()->json(['error' => $e->getMessage()], 500);
+
+            return redirect()->route('whatsapp-flows.index')
+                ->with('error', 'Failed to load preview: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Show the send flow form
+     *
+     * @param string $id
+     * @return \Illuminate\View\View
+     */
+    public function showSendForm($id)
+    {
+        try {
+            // Log the request details for debugging
+            Log::info('Fetching flow details for send form', [
+                'flow_id' => $id
+            ]);
+
+            // Updated endpoint with correct fields parameter
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$this->accessToken}",
+            ])->get("{$this->baseUrl}/{$id}?fields=id,name,categories,preview,status,validation_errors,json_version,data_api_version,endpoint_uri,whatsapp_business_account,application,health_status");
+
+            // Log the response for debugging
+            Log::info('Flow details response', [
+                'status' => $response->status(),
+                'body' => $response->json()
+            ]);
+
+            if ($response->successful()) {
+                $flow = $response->json();
+                
+                // Check if flow can be sent
+                $canSendMessage = $flow['health_status']['can_send_message'] ?? 'BLOCKED';
+                $errors = [];
+                
+                if (isset($flow['health_status']['entities'])) {
+                    foreach ($flow['health_status']['entities'] as $entity) {
+                        if ($entity['entity_type'] === 'FLOW' && isset($entity['errors'])) {
+                            $errors = array_merge($errors, array_map(function($error) {
+                                return $error['error_description'];
+                            }, $entity['errors']));
+                        }
+                    }
+                }
+
+                if ($canSendMessage === 'BLOCKED' && !empty($errors)) {
+                    throw new Exception('Flow cannot be sent: ' . implode(', ', $errors));
+                }
+
+                return view('whatsapp-flows.send', [
+                    'flow' => [
+                        'id' => $flow['id'],
+                        'name' => $flow['name'],
+                        'status' => $flow['status'],
+                        'categories' => $flow['categories'],
+                        'validation_errors' => $flow['validation_errors'],
+                        'can_send_message' => $canSendMessage
+                    ]
+                ]);
+            }
+
+            // If response wasn't successful, get more error details
+            $errorData = $response->json();
+            Log::error('WhatsApp API Error', [
+                'error' => $errorData,
+                'endpoint' => "{$this->baseUrl}/{$id}"
+            ]);
+            
+            $errorMessage = $errorData['error']['message'] ?? 'Unknown error occurred';
+            throw new Exception("API Error: {$errorMessage}");
+
+        } catch (\Exception $e) {
+            Log::error('WhatsApp Flow Send Form Exception', [
+                'id' => $id,
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->route('whatsapp-flows.index')
+                ->with('error', 'Failed to load send form: ' . $e->getMessage());
         }
     }
 
@@ -380,6 +505,16 @@ class WhatsappFlowController extends BaseController
                 'phone_number' => 'required|string'
             ]);
 
+            // First verify the flow exists
+            $flowResponse = Http::withHeaders([
+                'Authorization' => "Bearer {$this->accessToken}",
+            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}");
+
+            if (!$flowResponse->successful()) {
+                throw new Exception('Flow not found');
+            }
+
+            // Updated request body structure
             $requestBody = [
                 "messaging_product" => "whatsapp",
                 "to" => $validated['phone_number'],
@@ -408,25 +543,48 @@ class WhatsappFlowController extends BaseController
                             "mode" => "draft",
                             "flow_action_payload" => [
                                 "screen" => "RECOMMEND",
-                                "data" => []
+                                "data" => [
+                                    // Add any custom key-value pairs if needed
+                                    // "custom_key" => "custom_value"
+                                ]
                             ]
                         ]
                     ]
                 ]
             ];
 
+            // Updated URL to use phone number ID instead of WABA ID
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$this->accessToken}",
                 'Content-Type' => 'application/json'
-            ])->post("{$this->baseUrl}/{$this->wabaId}/messages", $requestBody);
+            ])->post("{$this->baseUrl}/{$this->phoneNumberId}/messages", $requestBody);
 
-            return response()->json($response->json(), $response->status());
+            if (!$response->successful()) {
+                $errorData = $response->json();
+                Log::error('WhatsApp Flow Send API Error', [
+                    'error' => $errorData,
+                    'request_body' => $requestBody,
+                    'phone_number_id' => $this->phoneNumberId
+                ]);
+                throw new Exception($errorData['error']['message'] ?? 'Failed to send flow');
+            }
+
+            return response()->json([
+                'success' => true,
+                'messages' => $response->json()
+            ]);
+
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Send Exception', [
                 'id' => $id,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ]);
-            return response()->json(['error' => $e->getMessage()], 500);
+
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 } 

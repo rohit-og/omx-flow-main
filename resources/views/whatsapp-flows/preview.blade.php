@@ -13,13 +13,30 @@
                 </div>
 
                 <div class="card-body">
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
                     <h4 class="mb-3">{{ $flow['name'] }}</h4>
                     
-                    <div id="previewContainer">
-                        <div class="text-center py-4">
-                            <div class="spinner-border text-primary"></div>
-                            <p class="mt-2">Loading preview...</p>
-                        </div>
+                    <div id="previewContainer" class="d-flex justify-content-center">
+                        @if(isset($flow['preview_url']) && $flow['preview_url'])
+                            <div class="preview-wrapper">
+                                <iframe 
+                                    src="{{ $flow['preview_url'] }}"
+                                    width="430"
+                                    height="800"
+                                    style="border: 1px solid #ddd; border-radius: 8px; background: #fff;"
+                                    allow="clipboard-write"
+                                ></iframe>
+                            </div>
+                        @else
+                            <div class="alert alert-danger">
+                                Preview URL not available. Please try again later.
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -28,30 +45,31 @@
 </div>
 @endsection
 
-@section('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('{{ route("whatsapp-flows.preview", $flow["id"]) }}')
-        .then(response => response.json())
-        .then(data => {
-            if (data.preview?.preview_url) {
-                document.getElementById('previewContainer').innerHTML = `
-                    <iframe src="${data.preview.preview_url}" 
-                            style="width: 100%; height: 800px; border: none;"></iframe>`;
-            } else {
-                document.getElementById('previewContainer').innerHTML = `
-                    <div class="alert alert-danger">
-                        Failed to load preview. Please try again later.
-                    </div>`;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('previewContainer').innerHTML = `
-                <div class="alert alert-danger">
-                    An error occurred while loading the preview.
-                </div>`;
-        });
-});
-</script>
+@section('styles')
+<style>
+.preview-wrapper {
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#previewContainer {
+    min-height: 850px;
+    width: 100%;
+}
+
+iframe {
+    max-width: 100%;
+    height: 800px;
+    border: 1px solid #ddd !important;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+</style>
 @endsection
