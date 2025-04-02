@@ -738,7 +738,8 @@ Route::middleware([
                     Route::get('/{id}/edit', [WhatsAppFlowController::class, 'edit'])->name('whatsapp-flows.edit');
                     Route::delete('/{id}', [WhatsAppFlowController::class, 'delete'])->name('whatsapp-flows.delete');
                     Route::get('/{id}/preview', [WhatsAppFlowController::class, 'preview'])->name('whatsapp-flows.preview');
-                    Route::post('/whatsapp-flows/{id}/send', [WhatsAppFlowController::class, 'send'])->name('whatsapp-flows.send');
+                    Route::get('/{id}/send', [WhatsAppFlowController::class, 'showSendForm'])->name('whatsapp-flows.send');
+                    Route::post('/{id}/send', [WhatsAppFlowController::class, 'send'])->name('whatsapp-flows.send.post');
                 });
             });
 
