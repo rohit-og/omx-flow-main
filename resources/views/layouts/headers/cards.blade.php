@@ -14,7 +14,7 @@ $vendorViewBySuperAdmin = false;
     <div class="container-fluid">
         <div class="header-body">
             <!-- Welcome card -->
-            <div class="row pb-0 pt-3 pt-lg-6 d-flex align-items-stretch mt-4">
+            <div class="row pb-0 pt-3 pt-lg-6 d-flex align-items-stretch mt-5">
                 <div class="col-12">
                     <div class="welcome-card" style="background: linear-gradient(135deg, #41C6B5, #1771E6); border-radius: 16px; box-shadow: 0 10px 30px rgba(23, 113, 230, 0.15); overflow: hidden; position: relative;">
                         <div class="card-body p-4 p-md-5">
@@ -31,7 +31,7 @@ $vendorViewBySuperAdmin = false;
                                         <a href="<?= route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) ?>" class="btn btn-outline-light font-weight-bold ">
                                             <i class="fas fa-cog mr-2"></i> API Setup
                                         </a>    
-                                    </div>
+                            </div>
                                 
                             </div>
                         </div>
@@ -39,7 +39,7 @@ $vendorViewBySuperAdmin = false;
                         <div class="welcome-shape-1" style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255, 255, 255, 0.1);"></div>
                         <div class="welcome-shape-2" style="position: absolute; bottom: -80px; left: -80px; width: 250px; height: 250px; border-radius: 50%; background: rgba(255, 255, 255, 0.1);"></div>
                     </div>
-                </div>
+        	    </div>
             </div>
         </div>
     </div>
@@ -136,7 +136,7 @@ $vendorViewBySuperAdmin = false;
                                 <i class="fas fa-hourglass-half"></i>
                                     </div>
                             <div class="stat-card-content">
-                                <div style="font-size:20px;">
+                    <div style="font-size:20px;">
                                      Pending<br>
                                      <span class="font-weight-bold text-muted" style="font-size:30px;">{{ __tr($messagesInQueue) }}</span>
                                     <span class="font-weight-bold text-muted"> Messages</span>
@@ -224,7 +224,7 @@ $vendorViewBySuperAdmin = false;
                     <div class="feature-icon bot-icon">
                         <i class="fas fa-robot"></i>
                         <span class="feature-counter">{{ __tr($totalBotReplies) }}</span>
-                    </div>
+        </div>
                     <div class="feature-content">
                         <h3 class="feature-title">Bot Reply</h3>
                         <p class="feature-description">Set up automated responses to handle common inquiries and provide 24/7 customer support through WhatsApp.</p>
@@ -240,7 +240,7 @@ $vendorViewBySuperAdmin = false;
                     <div class="feature-icon agent-icon">
                         <i class="fa fa-user-tie"></i>
                         <span class="feature-counter">{{ __tr($activeTeamMembers) }}</span>
-                    </div>
+        </div>
                     <div class="feature-content">
                         <h3 class="feature-title">Agents</h3>
                         <p class="feature-description">Manage your support team with role-based access control and monitor agent performance for better service.</p>
@@ -260,7 +260,7 @@ $vendorViewBySuperAdmin = false;
     document.addEventListener("DOMContentLoaded", function () {
         // Get the chart canvas
         const ctx = document.getElementById('donutChart').getContext('2d');
-        
+
         // Calculate percentages
         const sentMessages = {{ $totalMessagesProcessed }};
         const pendingMessages = {{ $messagesInQueue }};
@@ -273,7 +273,7 @@ $vendorViewBySuperAdmin = false;
             sentPercentage = Math.round((sentMessages / total) * 100);
             pendingPercentage = Math.round((pendingMessages / total) * 100);
         }
-        
+
         // Data for the chart
         const data = {
             labels: ['Sent Messages', 'Pending Messages'],

@@ -1321,7 +1321,9 @@ $appName = getAppSettings('name');
                 </div>
                     <hr>
                         <ul class="d-flex list-unstyled">
-                        @include('layouts.navbars.navs.pages-menu-partial')
+                         <a class="nav-link me-lg-3 text-decoration-none text-dark">
+                            @include('layouts.navbars.navs.pages-menu-partial')
+                         </a>
                         </ul>
                 @endif
                         </div>

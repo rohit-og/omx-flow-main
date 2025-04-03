@@ -2,7 +2,9 @@
 <nav class="navbar navbar-top shadow navbar-expand-md navbar-dark d-lg-flex d-none" id="navbar-main">
     <div class="container-fluid">
         <!-- Brand -->
-        
+        <a class="h1 mb-0 d-none d-lg-inline-block"  style="color: #0861F2;" href="{{ route('home') }}">
+            
+        </a>
         @if(session('loggedByVendor'))
         <a data-method="post" href="{{ route('vendor.user.write.logout_as') }}" class="h4 mb-0 d-none d-lg-inline-block lw-ajax-link-action px-5"><i class="fa fa-arrow-left"></i> {{ __tr('You (__userFullName__) are logged to this user account , click here to go back to your account', [
             '__userFullName__' => session('loggedByVendor.name')
