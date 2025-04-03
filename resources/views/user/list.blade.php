@@ -12,11 +12,6 @@
 'description' => '',
 'class' => 'col-lg-7'
 ])
-<style>
-    th{
-        background-color:rgb(11, 119, 83) !important;
-    }
-</style>
 <div class="container-fluid mt-lg--6">
     <div class="row mt-3">
         <!-- button -->
