@@ -24,6 +24,7 @@ use App\Yantrana\Components\Subscription\Controllers\ManualSubscriptionControlle
 use App\Yantrana\Components\WhatsAppService\Controllers\WhatsAppServiceController;
 use App\Yantrana\Components\WhatsAppService\Controllers\WhatsAppTemplateController;
 use App\Yantrana\Components\Flow\Controllers\WhatsAppFlowController;
+use App\Yantrana\Components\Sheets\Controllers\GoogleSheetScriptController;
 
 
 /*
@@ -736,10 +737,11 @@ Route::middleware([
                     Route::get('/{id}', [WhatsAppFlowController::class, 'show'])->name('whatsapp-flows.show');
                     Route::post('/refresh', [WhatsAppFlowController::class, 'refresh'])->name('whatsapp-flows.refresh');
                     Route::get('/{id}/edit', [WhatsAppFlowController::class, 'edit'])->name('whatsapp-flows.edit');
-                    Route::delete('/{id}', [WhatsAppFlowController::class, 'delete'])->name('whatsapp-flows.delete');
+                    Route::post('/{id}', [WhatsAppFlowController::class, 'delete'])->name('whatsapp-flows.delete');
                     Route::get('/{id}/preview', [WhatsAppFlowController::class, 'preview'])->name('whatsapp-flows.preview');
                     Route::get('/{id}/send', [WhatsAppFlowController::class, 'showSendForm'])->name('whatsapp-flows.send');
                     Route::post('/{id}/send', [WhatsAppFlowController::class, 'send'])->name('whatsapp-flows.send.post');
+                    Route::put('/{id}', [WhatsAppFlowController::class, 'update'])->name('whatsapp-flows.update');
                 });
             });
 
@@ -868,6 +870,12 @@ Route::middleware([
                 VendorSettingsController::class,
                 'updateBasicSettings',
             ])->name('vendor.settings_basic.write.update');
+
+            Route::get('/google-sheet-script', [GoogleSheetScriptController::class, 'index'])
+            ->name('google-sheet-script.index');
+
+            Route::post('/google-sheet-script/generate', [GoogleSheetScriptController::class, 'generateScript'])
+            ->name('google-sheet-script.generate');
 
             Route::post('/disconnect-webhook', [
                 WhatsAppServiceController::class,
@@ -1263,3 +1271,4 @@ Route::post('/razorpay/order-payment-razorpay-webhook', [
     ManualSubscriptionController::class,
     'handleOrderPaymentRazorpayWebhook'
 ])->name('razorpay-webhook');
+
