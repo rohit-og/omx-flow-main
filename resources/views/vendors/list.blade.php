@@ -6,7 +6,11 @@
 'description' => '',
 'class' => 'col-lg-7'
 ])
-
+<style>
+    th{
+        background-color:rgb(11, 119, 83) !important;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-12 mb-3 mt-md--5">
@@ -345,6 +349,7 @@
         </x-lw.form>
         <!--/  EDIT VENDOR FORM -->
     </x-lw.modal>
+
     <!--/ EDIT VENDOR MODAL -->
     @push('footer')
     @endpush
