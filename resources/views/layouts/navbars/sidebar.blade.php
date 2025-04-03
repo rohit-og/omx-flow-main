@@ -116,7 +116,6 @@
     .nav-link-ul::before {
         content: '';
         position: absolute;
-        left: 20px;
         top: 50%;
         transform: translateY(-50%);
         width: 4px;
