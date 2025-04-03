@@ -6,12 +6,12 @@
     }
     
     .navbar-vertical .navbar-nav .nav-link {
-        padding: 12px 20px;
+        padding: 8px 15px;
         color:black;
         font-weight: 500;
-        font-size: 14px;
-        border-radius: 8px;
-        margin: 4px 12px;
+        font-size: 12px;
+        border-radius: 6px;
+        margin: 4px 8px;
         transition: all 0.2s ease;
     }
     
@@ -29,9 +29,9 @@
     .navbar-vertical .navbar-nav .nav-link i, 
     .navbar-vertical .navbar-nav .nav-link .fa,
     .navbar-vertical .navbar-nav .nav-link .fas {
-        font-size: 18px;
-        width: 24px;
-        margin-right: 10px;
+        font-size: 16px;
+        width: 20px;
+        margin-right: 8px;
         text-align: center;
         vertical-align: middle;
     }
@@ -101,24 +101,26 @@
     
     /* Submenu styling */
     .lw-expandable-nav {
-        padding-left: 15px;
+        padding-left: 10px;
         margin-top: 5px;
     }
     
     .nav-link-ul {
-        font-size: 13px !important;
-        padding: 8px 15px 8px 35px !important;
+        font-size: 12px !important;
+        padding: 6px 10px 6px 30px !important;
         position: relative;
     }
-    
+    .navbar-vertical.navbar-expand-md .navbar-nav .nav-link {
+        padding: 10px 10px 10px 10px !important;
+    }
     .nav-link-ul::before {
         content: '';
         position: absolute;
         left: 20px;
         top: 50%;
         transform: translateY(-50%);
-        width: 5px;
-        height: 5px;
+        width: 4px;
+        height: 4px;
         border-radius: 50%;
         background-color: #c0c6cc;
     }

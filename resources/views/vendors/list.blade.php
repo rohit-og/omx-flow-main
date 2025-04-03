@@ -6,7 +6,11 @@
 'description' => '',
 'class' => 'col-lg-7'
 ])
-
+<style>
+    th{
+        background-color:rgb(11, 119, 83) !important;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xl-12 mb-3 mt-md--5">
@@ -16,34 +20,34 @@
         </div>
         <div class="col-xl-12">
            <x-lw.datatable id="lwManageVendorsTable" :url="route('central.vendors.read.list')" data-page-length="100">
-                <th data-template="#titleExtendedButtons"  data-orderable="true" data-name="title">
+                <th data-template="#titleExtendedButtons" data-orderable="true" data-name="title">
                     <?= __tr('User') ?>
                 </th>
-                <th data-template="#lwQuickActionButtons"  data-orderable="true" data-name="title">
+                <th data-template="#lwQuickActionButtons" data-orderable="true" data-name="title">
                     <?= __tr('Quick Actions') ?>
                 </th>
-                <th data-orderable="true"  data-name="fullName">
+                <th data-orderable="true" data-name="fullName">
                     <?= __tr('Admin Name') ?>
                 </th>
-                <th data-orderable="true"  data-name="username">
+                <th data-orderable="true" data-name="username">
                     <?= __tr('username') ?>
                 </th>
-                <th data-orderable="true"  data-name="email">
+                <th data-orderable="true" data-name="email">
                     <?= __tr('email') ?>
                 </th>
-                <th data-orderable="true"  data-name="status">
+                <th data-orderable="true" data-name="status">
                     <?= __tr('status') ?>
                 </th>
-                <th data-orderable="true"  data-name="mobile_number">
+                <th data-orderable="true" data-name="mobile_number">
                     <?= __tr('Mobile Number') ?>
                 </th>
-                <th data-orderable="true"  data-name="user_status">
+                <th data-orderable="true" data-name="user_status">
                     <?= __tr('Admin Status') ?>
                 </th>
-                <th data-orderable="true"  data-name="created_at">
+                <th data-orderable="true" data-name="created_at">
                     <?= __tr('Created On') ?>
                 </th>
-                <th data-template="#actionButtons"  name="null">
+                <th data-template="#actionButtons" name="null">
                     <?= __tr('Action') ?>
                 </th>
             </x-lw.datatable>
@@ -53,20 +57,20 @@
         <a  href ="<%= __Utils.apiURL("{{ route('vendor.dashboard',['vendorIdOrUid'=>'vendorIdOrUid'])}}", {'vendorIdOrUid':__tData._uid}) %>"> <%-__tData.title %> </a> 
     </script>
     <script type="text/template" id="lwQuickActionButtons">
-        <a data-method="post" href="<%= __Utils.apiURL("{{ route('central.vendors.user.write.login_as', [ 'vendorUid']) }}", {'vendorUid': __tData._uid}) %>" class="btn btn-light btn-sm lw-ajax-link-action" data-confirm="#lwLoginAs-template" title="{{ __tr('Login as Vendor Admin') }}"><i class="fa fa-sign-in-alt"></i> {{  __tr('Login') }}</a>
-        <a class="btn btn-primary btn-sm" href ="<%= __Utils.apiURL("{{ route('central.vendor.details',['vendorIdOrUid'=>'vendorIdOrUid'])}}", {'vendorIdOrUid':__tData._uid}) %>"> {{  __tr('Subscription') }} </a>
+        <a data-method="post" href="<%= __Utils.apiURL("{{ route('central.vendors.user.write.login_as', [ 'vendorUid']) }}", {'vendorUid': __tData._uid}) %>" class="btn btn-outline-success btn-sm lw-ajax-link-action" data-confirm="#lwLoginAs-template" title="{{ __tr('Login as Vendor Admin') }}"><i class="fa fa-sign-in-alt"></i> {{  __tr('Login') }}</a>
+        <a class="btn btn-info btn-sm" href ="<%= __Utils.apiURL("{{ route('central.vendor.details',['vendorIdOrUid'=>'vendorIdOrUid'])}}", {'vendorIdOrUid':__tData._uid}) %>"> {{  __tr('Subscription') }} </a>
     </script>
     <script type="text/template" id="actionButtons">
         <!-- EDIT ACTION -->
         <a data-pre-callback="appFuncs.clearContainer" title="{{ __tr('Edit') }}" class="lw-btn btn btn-sm btn-default lw-ajax-link-action" data-response-template="#lwEditVendorBody" href="<%= __Utils.apiURL("{{ route('vendor.read.update.data', ['vendorIdOrUid']) }}", {'vendorIdOrUid': __tData._uid}) %>" data-toggle="modal" data-target="#lwEditVendor"><i class="fa fa-edit"></i> {{ __tr('Edit') }}</a>
         <% if(__tData.status_code != 5 ) { %>
         <!--  DELETE ACTION -->
-        <a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.delete', ['vendorIdOrUid']) }}", {'vendorIdOrUid': __tData._uid}) %>" class="btn btn-warning btn-sm lw-ajax-link-action-via-confirm" data-confirm="#lwSoftDeleteVendor-template" title="{{ __tr('Soft Delete') }}" data-toggle="modal" data-target="#deletePlan" data-callback-params="{{ json_encode(['modalId' => '#lwSoftDeleteVendor-template','datatableId' => '#lwManageVendorsTable']) }}" data-callback="appFuncs.modelSuccessCallback"><i class="fa fa-trash"></i> {{ __tr('Soft Delete') }}</a>
+        <a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.delete', ['vendorIdOrUid']) }}", {'vendorIdOrUid': __tData._uid}) %>" class="btn btn-outline-warning btn-sm lw-ajax-link-action-via-confirm" data-confirm="#lwSoftDeleteVendor-template" title="{{ __tr('Soft Delete') }}" data-toggle="modal" data-target="#deletePlan" data-callback-params="{{ json_encode(['modalId' => '#lwSoftDeleteVendor-template','datatableId' => '#lwManageVendorsTable']) }}" data-callback="appFuncs.modelSuccessCallback"><i class="fa fa-trash"></i> {{ __tr('Soft Delete') }}</a>
         <!--  PASSWORD ACTION -->
         <% } %>
-        <a data-pre-callback="appFuncs.clearContainer" title="{{ __tr('Change Password') }}" class="lw-btn btn btn-sm btn-default lw-ajax-link-action" data-response-template="#lwChangePasswordBody" href="<%= __Utils.apiURL(" {{ route('vendor.change.password.data',['vendorIdOrUid']) }}", {'vendorIdOrUid': __tData.userId}) %>" data-toggle="modal" data-target="#lwChangePasswordAuthor"><i class="fas fa-key"></i> {{ __tr('Change Password') }}</a>
+        <a data-pre-callback="appFuncs.clearContainer" title="{{ __tr('Change Password') }}" class="lw-btn btn btn-sm btn-dark lw-ajax-link-action" data-response-template="#lwChangePasswordBody" href="<%= __Utils.apiURL(" {{ route('vendor.change.password.data',['vendorIdOrUid']) }}", {'vendorIdOrUid': __tData.userId}) %>" data-toggle="modal" data-target="#lwChangePasswordAuthor"><i class="fas fa-key"></i> {{ __tr('Change Password') }}</a>
            <!-- PERMANANT DELTE ACTION -->
-        <a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.permanant.delete', ['vendorIdOrUid']) }}", {'vendorIdOrUid': __tData._uid}) %>" class="btn btn-danger btn-sm lw-ajax-link-action-via-confirm" data-confirm="#lwDeleteVendor-template" title="{{ __tr('Delete') }}" data-toggle="modal" data-target="#deletePlan" data-callback-params="{{ json_encode(['modalId' => '#lwDeleteVendor-template','datatableId' => '#lwManageVendorsTable']) }}" data-callback="appFuncs.modelSuccessCallback"><i class="fa fa-trash"></i> {{ __tr('Delete') }}</a>
+        <a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.permanant.delete', ['vendorIdOrUid']) }}", {'vendorIdOrUid': __tData._uid}) %>" class="btn btn-outline-danger btn-sm lw-ajax-link-action-via-confirm" data-confirm="#lwDeleteVendor-template" title="{{ __tr('Delete') }}" data-toggle="modal" data-target="#deletePlan" data-callback-params="{{ json_encode(['modalId' => '#lwDeleteVendor-template','datatableId' => '#lwManageVendorsTable']) }}" data-callback="appFuncs.modelSuccessCallback"><i class="fa fa-trash"></i> {{ __tr('Delete') }}</a>
            <!--  /PERMANANT DELTE ACTION -->
     </script>
     <script type="text/template" id="lwLoginAs-template">
@@ -345,11 +349,7 @@
         </x-lw.form>
         <!--/  EDIT VENDOR FORM -->
     </x-lw.modal>
-<style>
-    th{
-        background-color:rgb(11, 119, 83) !important;
-    }
-</style>
+
     <!--/ EDIT VENDOR MODAL -->
     @push('footer')
     @endpush

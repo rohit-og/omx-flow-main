@@ -355,8 +355,8 @@ $appName = getAppSettings('name');
                 </div>
             </div>
         </section>
-        <!-- FAQ's section -->
-        <section>
+         <!-- FAQ's section -->
+         <section>
             <div class="container">
                 <div class="text-center">
                     <h1 class="fw-bold"><span class=" text-success">{!! __tr(' __appName__', ['__appName__' => $appName]) !!}</span> FAQ's</h1>
@@ -384,15 +384,15 @@ $appName = getAppSettings('name');
                             <h6 class="text-muted" style="text-align: justify;">{{ __tr('Yes, we prioritize security and use industry-standard encryption to protect your data. All communications through the app are fully compliant with WhatsApp privacy and security policies, ensuring your business and customer data is safe.') }}</h5>
                         </li>
                     </ul>
-                </div>
-            </div>
+                            </div>
+                        </div>
         </section>
         <!-- pricing block -->
         <section id="pricing" style="background-color: #fff">
             <div class="container">
                 <div class="text-center">
                     <h1 class="fw-bold"><span class=" text-success">{!! __tr(' __appName__', ['__appName__' => $appName]) !!}</span> User Plans</h1>
-                </div>
+                    </div>
                 {{-- free plan --}}
                 <div class="row justify-content-center">
                     @php
@@ -508,7 +508,7 @@ $appName = getAppSettings('name');
                     </div>
                     @endforeach
                     {{-- /paid plan --}}
-                </div>
+            </div>
         </section>
         <!-- pricing block -->
         <!-- footer -->

@@ -22,10 +22,5 @@
         <span class="text-muted">{{ __tr('processing ..') }}</span>
     <% } %>
 </script>
-<style>
-    th{
-        background-color:rgb(11, 119, 83) !important;
-    }
-</style>
             <!-- / status -->
 {{-- /datatable queue log--}}

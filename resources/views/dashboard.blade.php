@@ -525,7 +525,7 @@
                 </div>
                 <div class="card-body">
                 <div class="col-12 mb-5 mb-xl-5">
-                 <div x-cloak x-data="{totalVendors:{{ $totalVendors }},totalActiveVendors:{{ $totalActiveVendors }},totalCampaigns:{{ $totalCampaigns }},messagesInQueue:{{ $messagesInQueue }},totalContacts:{{ $totalContacts }},totalMessagesProcessed:{{ $totalMessagesProcessed }} }">
+            <div x-cloak x-data="{totalVendors:{{ $totalVendors }},totalActiveVendors:{{ $totalActiveVendors }},totalCampaigns:{{ $totalCampaigns }},messagesInQueue:{{ $messagesInQueue }},totalContacts:{{ $totalContacts }},totalMessagesProcessed:{{ $totalMessagesProcessed }} }">
                         <div class="row">
                     <div class="col-lg-4 mt-3">
                         <div class="stat-card stat-card-blue">
@@ -571,7 +571,7 @@
                             <div class="stat-card-bg"></div>
                             <div class="stat-card-icon">
                                 <i class="fas fa-rocket"></i>
-                            </div>
+                </div>
                             <div class="stat-card-content">
                                 <div class="stat-card-value" x-text="__Utils.formatAsLocaleNumber(totalCampaigns)"></div>
                                 <div class="stat-card-title">{{ __tr('Overall Campaigns') }}</div>

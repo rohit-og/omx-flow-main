@@ -67,7 +67,7 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
             color: #ffffff !important;
         }
         th {
-            background-color: #0861F2 !important;
+            background-color:rgb(11, 119, 83) !important;
             color: #ffffff !important;
         }
         td {
@@ -77,27 +77,7 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
         td a {
             color: #0066C8 !important;
         }
-        li.active a.page-link {
-            background-color: #0861F2 !important;
-        }
-        .btn-primary.btn-sm {
-            background: linear-gradient(135deg, #0059FF, #00b6ff) !important;
-        }
-        .btn-sm.btn-default {
-            background: linear-gradient(135deg, #112C58, #234e93) !important;
-        }
-        .btn-danger.btn-sm {
-            background: linear-gradient(135deg, #f70000, #ff8819) !important;
-        }
-        .btn-warning.btn-sm {
-            background: linear-gradient(135deg, #fcbd00, #ffe207) !important;
-        }
-        .btn-light.btn-sm {
-            background: linear-gradient(135deg, #ADB5BD, #d6d6d6) !important;
-        }
-        .btn-dark.btn-sm {
-            background: linear-gradient(135deg, #212528, #68747c) !important;
-        }
+       
         .empty {
             
         }
