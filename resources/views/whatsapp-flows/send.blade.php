@@ -15,25 +15,31 @@
                 <div class="card-body">
                     <h4 class="mb-3">Flow: {{ $flow['name'] }}</h4>
                     
-                    <!-- Response Display Area (initially hidden) -->
-                    <div id="responseContainer" class="mb-4" style="display:none;">
-                        <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">Server Response</h5>
-                                <button type="button" class="btn-close" aria-label="Close" onclick="hideResponse()"></button>
-                            </div>
-                            <div class="card-body">
-                                <pre id="responseData" class="bg-light p-3 rounded" style="max-height: 300px; overflow-y: auto;"></pre>
-                            </div>
-                        </div>
+                    <!-- Flow Status Badge -->
+                    <div class="mb-3">
+                        <span class="badge {{ $flow['status'] === 'DRAFT' ? 'bg-warning' : 'bg-success' }}">
+                            {{ $flow['status'] }}
+                        </span>
                     </div>
+
+                    <!-- Validation Errors -->
+                    @if(!empty($flow['validation_errors']))
+                        <div class="alert alert-warning mb-3">
+                            <h5 class="alert-heading">Validation Warnings</h5>
+                            <ul class="mb-0">
+                                @foreach($flow['validation_errors'] as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     
-                    <form id="sendFlowForm">
+                    <form id="sendFlowForm" method="POST" action="{{ route('whatsapp-flows.send', ['id' => $flow['id']]) }}">
                         @csrf
                         <div class="mb-3">
                             <label for="phone_number" class="form-label">Phone Number (with country code)</label>
                             <input type="text" class="form-control" id="phone_number" name="phone_number"
-                                   pattern="[0-9]+" placeholder="e.g., 917908963371" required
+                                   pattern="[0-9]+" placeholder="e.g., 91882228282" required
                                    title="Please enter numbers only">
                             <div class="form-text">Include country code without '+' or '00'. Numbers only.</div>
                         </div>
@@ -53,92 +59,135 @@
 
 @section('scripts')
 <script>
-function showResponse(data) {
-    // Format the JSON nicely
-    const formattedJson = JSON.stringify(data, null, 2);
-    // Set the response content
-    document.getElementById('responseData').textContent = formattedJson;
-    // Show the response container
-    document.getElementById('responseContainer').style.display = 'block';
-}
-
-function hideResponse() {
-    document.getElementById('responseContainer').style.display = 'none';
-}
-
-document.getElementById('sendFlowForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing form handler');
+    
+    const form = document.getElementById('sendFlowForm');
     const sendButton = document.getElementById('sendButton');
-    const phoneNumber = document.getElementById('phone_number').value;
+    const phoneNumberInput = document.getElementById('phone_number');
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    // Validate phone number format (numbers only)
-    if (!/^[0-9]+$/.test(phoneNumber)) {
-        alert('Please enter a valid phone number (numbers only)');
+    if (!form || !sendButton || !phoneNumberInput) {
+        console.error('Required elements not found:', {
+            form: !!form,
+            sendButton: !!sendButton,
+            phoneNumberInput: !!phoneNumberInput
+        });
         return;
     }
 
-    sendButton.disabled = true;
-    sendButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
+    console.log('Form elements found, setting up event listeners');
 
-    // Create FormData
-    const formData = new FormData();
-    formData.append('phone_number', phoneNumber);
-    formData.append('_token', document.querySelector('input[name="_token"]').value);
+    // Enforce numbers-only input for phone number
+    phoneNumberInput.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
 
-    // Use FormData in the fetch request
-    fetch('/vendor-console/whatsapp/flows/{{ $flow["id"] }}/send', {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
-            'Accept': 'application/json'
-        },
-        body: formData
-    })
-    .then(response => {
-        console.log('Response status:', response.status);
-        return response.json();
-    })
-    .then(data => {
-        console.log('Response data:', data);
-        // Always show the response data
-        showResponse(data);
+    form.addEventListener('submit', function(e) {
+        console.log('Form submitted');
+        e.preventDefault();
         
-        if (data.success) {
-            sendButton.classList.remove('btn-primary');
-            sendButton.classList.add('btn-success');
-            sendButton.innerHTML = '<i class="fa fa-check"></i> Flow Sent Successfully';
-        } else {
+        const phoneNumber = phoneNumberInput.value;
+        console.log('Phone number:', phoneNumber);
+
+        // Validate phone number format (numbers only)
+        if (!/^[0-9]+$/.test(phoneNumber)) {
+            console.error('Invalid phone number format');
+            if (window.__Utils && window.__Utils.notification) {
+                window.__Utils.notification('Please enter a valid phone number (numbers only)', 'error');
+            } else {
+                alert('Please enter a valid phone number (numbers only)');
+            }
+            return;
+        }
+
+        // Disable the button and show loading state
+        sendButton.disabled = true;
+        sendButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
+
+        // Create FormData
+        const formData = new FormData();
+        formData.append('phone_number', phoneNumber);
+        formData.append('_token', csrfToken);
+
+        // Log the request data
+        console.log('Sending request with data:', {
+            phone_number: phoneNumber,
+            flow_id: '{{ $flow["id"] }}',
+            csrf_token: csrfToken
+        });
+
+        // Make the API request
+        fetch('{{ route("whatsapp-flows.send", ["id" => $flow["id"]]) }}', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(formData)
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            
+            if (data.success) {
+                sendButton.classList.remove('btn-primary');
+                sendButton.classList.add('btn-success');
+                sendButton.innerHTML = '<i class="fa fa-check"></i> Flow Sent Successfully';
+                
+                // Show success notification
+                if (window.__Utils && window.__Utils.notification) {
+                    window.__Utils.notification('Flow sent successfully', 'success');
+                } else {
+                    alert('Flow sent successfully');
+                }
+            } else {
+                sendButton.classList.remove('btn-primary');
+                sendButton.classList.add('btn-danger');
+                sendButton.innerHTML = '<i class="fa fa-exclamation-circle"></i> Failed to Send Flow';
+                
+                // Show error notification
+                const errorMessage = data.error || 'Failed to send flow';
+                if (window.__Utils && window.__Utils.notification) {
+                    window.__Utils.notification(errorMessage, 'error');
+                } else {
+                    alert(errorMessage);
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
             sendButton.classList.remove('btn-primary');
             sendButton.classList.add('btn-danger');
-            sendButton.innerHTML = '<i class="fa fa-exclamation-circle"></i> Failed to Send Flow';
-            // Keep the error message displayed in the response container
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showResponse({
-            success: false,
-            error: error.message || 'An unexpected error occurred'
+            sendButton.innerHTML = '<i class="fa fa-exclamation-circle"></i> Error';
+            
+            // Show error notification
+            const errorMessage = error.message || 'An unexpected error occurred';
+            if (window.__Utils && window.__Utils.notification) {
+                window.__Utils.notification(errorMessage, 'error');
+            } else {
+                alert(errorMessage);
+            }
+        })
+        .finally(() => {
+            // Re-enable the button after 3 seconds to allow for another attempt
+            setTimeout(() => {
+                sendButton.disabled = false;
+                sendButton.classList.remove('btn-success', 'btn-danger');
+                sendButton.classList.add('btn-primary');
+                sendButton.innerHTML = '<i class="fa fa-paper-plane"></i> Send Flow';
+            }, 3000);
         });
-        
-        sendButton.classList.remove('btn-primary');
-        sendButton.classList.add('btn-danger');
-        sendButton.innerHTML = '<i class="fa fa-exclamation-circle"></i> Error';
-    })
-    .finally(() => {
-        // Re-enable the button after 3 seconds to allow for another attempt
-        setTimeout(() => {
-            sendButton.disabled = false;
-            sendButton.classList.remove('btn-success', 'btn-danger');
-            sendButton.classList.add('btn-primary');
-            sendButton.innerHTML = '<i class="fa fa-paper-plane"></i> Send Flow';
-        }, 3000);
     });
-});
 
-// Enforce numbers-only input for phone number
-document.getElementById('phone_number').addEventListener('input', function(e) {
-    this.value = this.value.replace(/[^0-9]/g, '');
+    console.log('Form handler initialization complete');
 });
 </script>
 @endsection
