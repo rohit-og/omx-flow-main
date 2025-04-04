@@ -3,14 +3,13 @@
     <div class="container-fluid">
         <!-- Brand -->
         <a class="h1 mb-0 d-none d-lg-inline-block"  style="color: #0861F2;" href="{{ route('home') }}">
-<<<<<<< Updated upstream
+
             
         </a>
-=======
+
             <!-- <strong>{{ __tr('Dashboard') }}</strong> -->
         </a>
-        
->>>>>>> Stashed changes
+
         @if(session('loggedByVendor'))
         <a data-method="post" href="{{ route('vendor.user.write.logout_as') }}" class="h4 mb-0 d-none d-lg-inline-block lw-ajax-link-action px-5"><i class="fa fa-arrow-left"></i> {{ __tr('You (__userFullName__) are logged to this user account , click here to go back to your account', [
             '__userFullName__' => session('loggedByVendor.name')
