@@ -3,7 +3,7 @@
 @section('content')
 <div class="container py-4 mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-12">
+        <div class="col-md-12 mt-4">
             <!-- Page Heading -->
             <h1>Create WhatsApp Flow</h1>
             <!-- Page Heading -->
@@ -60,9 +60,7 @@
                             <textarea class="form-control @error('flow_json') is-invalid @enderror" 
                                     id="flow_json" name="flow_json" rows="12" required>{{ old('flow_json', $defaultFlowJson) }}</textarea>
                             <div class="mt-2 text-end">
-                                <button type="button" class="btn btn-outline-secondary" id="formatJson">
-                                    <i class="fa fa-code"></i> Format JSON
-                                </button>
+                               
                                 <a type="button" class="btn btn-outline-primary" href="https://developers.facebook.com/docs/whatsapp/flows/playground" target="_blank">
                                     <i class="fa fa-code"></i> Generate Flow JSON
                                 </a>

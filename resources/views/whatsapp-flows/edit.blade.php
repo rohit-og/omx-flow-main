@@ -43,7 +43,7 @@
 
                         <div class="mb-3">
                             <label for="flow_json" class="form-label">Flow JSON</label>
-                            <textarea class="form-control" id="flow_json" name="flow_json" rows="15" required>{{ old('flow_json', json_encode($flow, JSON_PRETTY_PRINT)) }}</textarea>
+                            <textarea class="form-control" id="flow_json" name="flow_json" rows="15" required>{{ old('flow_json', isset($flowJson) ? $flowJson : json_encode($flow, JSON_PRETTY_PRINT)) }}</textarea>
                         </div>
 
                         <div class="text-end">

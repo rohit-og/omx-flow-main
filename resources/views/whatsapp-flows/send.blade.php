@@ -80,17 +80,26 @@ document.getElementById('sendFlowForm').addEventListener('submit', function(e) {
     sendButton.disabled = true;
     sendButton.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Sending...';
 
+    // Create FormData
+    const formData = new FormData();
+    formData.append('phone_number', phoneNumber);
+    formData.append('_token', document.querySelector('input[name="_token"]').value);
+
+    // Use FormData in the fetch request
     fetch('/vendor-console/whatsapp/flows/{{ $flow["id"] }}/send', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
             'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
             'Accept': 'application/json'
         },
-        body: JSON.stringify({ phone_number: phoneNumber })
+        body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         // Always show the response data
         showResponse(data);
         
@@ -98,11 +107,6 @@ document.getElementById('sendFlowForm').addEventListener('submit', function(e) {
             sendButton.classList.remove('btn-primary');
             sendButton.classList.add('btn-success');
             sendButton.innerHTML = '<i class="fa fa-check"></i> Flow Sent Successfully';
-            
-            // You can add this timeout to navigate back after a delay if desired
-            // setTimeout(() => {
-            //    window.location.href = '{{ route("whatsapp-flows.index") }}';
-            // }, 5000);
         } else {
             sendButton.classList.remove('btn-primary');
             sendButton.classList.add('btn-danger');
