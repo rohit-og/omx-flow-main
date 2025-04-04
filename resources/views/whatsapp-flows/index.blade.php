@@ -90,8 +90,6 @@
                                                                class="btn btn-sm btn-danger lw-ajax-link-action-via-confirm" 
                                                                data-method="delete"
                                                                data-confirm="#lwDeleteFlow-template"
-                                                               data-callback-params="{{ json_encode(['reloadPage' => true]) }}"
-                                                               data-callback="flowDeleteCallback"
                                                                title="{{ __tr('Delete') }}">
                                                                 <i class="fa fa-trash"></i> {{ __tr('Delete') }}
                                                             </a>
@@ -177,25 +175,67 @@
             }
         };
 
-        // Initialize delete buttons if __Utils is not available
-        if (!window.__Utils || !window.__Utils.showConfirmation) {
-            document.querySelectorAll('.lw-ajax-link-action-via-confirm').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Get the confirmation template ID
-                    const confirmTemplateId = this.getAttribute('data-confirm');
-                    const confirmTemplate = document.querySelector(confirmTemplateId);
-                    const confirmContent = confirmTemplate ? confirmTemplate.innerHTML : '{{ __tr("Are you sure you want to delete this flow?") }}';
-                    
-                    // Show confirmation
-                    if (confirm(confirmContent.replace(/<[^>]*>/g, ''))) {
-                        const form = this.closest('form');
-                        form.submit();
-                    }
-                });
+        // Initialize delete buttons
+        document.querySelectorAll('.lw-ajax-link-action-via-confirm').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get the URL from the href attribute
+                const url = this.getAttribute('href');
+                console.log('Delete URL:', url);
+                
+                // Get the confirmation template ID
+                const confirmTemplateId = this.getAttribute('data-confirm');
+                const confirmTemplate = document.querySelector(confirmTemplateId);
+                const confirmContent = confirmTemplate ? confirmTemplate.innerHTML : '{{ __tr("Are you sure you want to delete this flow?") }}';
+                
+                // Show confirmation
+                if (confirm(confirmContent.replace(/<[^>]*>/g, ''))) {
+                    // Use fetch API to send DELETE request
+                    fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Delete response:', data);
+                        if (data.success) {
+                            // Show success notification
+                            if (window.__Utils && window.__Utils.notification) {
+                                window.__Utils.notification('{{ __tr("Flow deleted successfully") }}', 'success');
+                            } else {
+                                alert('{{ __tr("Flow deleted successfully") }}');
+                            }
+                            // Reload the page
+                            window.location.reload();
+                        } else {
+                            // Show error notification
+                            const errorMessage = data.message || '{{ __tr("Failed to delete flow") }}';
+                            if (window.__Utils && window.__Utils.notification) {
+                                window.__Utils.notification(errorMessage, 'error');
+                            } else {
+                                alert(errorMessage);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        if (window.__Utils && window.__Utils.notification) {
+                            window.__Utils.notification('{{ __tr("An error occurred while deleting the flow") }}', 'error');
+                        } else {
+                            alert('{{ __tr("An error occurred while deleting the flow") }}');
+                        }
+                    });
+                }
             });
-        }
+        });
 
         // Refresh Functionality
         if (refreshBtn) {
