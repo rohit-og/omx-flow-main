@@ -297,7 +297,7 @@
                 
                 <li class="nav-item">
                     <a class="nav-link" href="#configurationMenu" data-toggle="collapse" role="button"
-                        aria-expanded="true" aria-controls="configurationMenu">
+                        aria-expanded="false" aria-controls="configurationMenu">
                         <i class="fa fa-tools icon-tools"></i>
                         <span class="nav-link-text">{{ __tr('Settings') }}</span>
                     </a>
