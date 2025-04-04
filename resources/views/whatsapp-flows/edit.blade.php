@@ -17,37 +17,51 @@
                         <div class="alert alert-danger">{{ session('error') }}</div>
                     @endif
 
+                    @if (session('success'))
+                        <div class="alert alert-success">{{ session('success') }}</div>
+                    @endif
+
                     <form method="POST" action="{{ route('whatsapp-flows.update', $flow['id']) }}">
                         @csrf
                         @method('PUT')
 
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" 
-                                   value="{{ old('name', $flow['name']) }}" required>
+                        <div class="row">
+                            <!-- Flow Name -->
+                            <div class="form-group col-md-6">
+                                <label for="name" class="form-label">Flow Name</label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                       id="name" name="name" value="{{ old('name', $flow['name']) }}" required>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <!-- Categories - Single select dropdown -->
+                            <div class="form-group col-md-6">
+                                <label for="category" class="form-label">Category</label>
+                                <select class="form-control @error('categories') is-invalid @enderror" 
+                                        id="category" name="categories[]" required>
+                                    <option value="">Select a category</option>
+                                    <option value="SIGN_UP" {{ in_array('SIGN_UP', old('categories', $flow['categories'])) ? 'selected' : '' }}>Sign Up</option>
+                                    <option value="SIGN_IN" {{ in_array('SIGN_IN', old('categories', $flow['categories'])) ? 'selected' : '' }}>Sign In</option>
+                                    <option value="APPOINTMENT_BOOKING" {{ in_array('APPOINTMENT_BOOKING', old('categories', $flow['categories'])) ? 'selected' : '' }}>Appointment Booking</option>
+                                    <option value="LEAD_GENERATION" {{ in_array('LEAD_GENERATION', old('categories', $flow['categories'])) ? 'selected' : '' }}>Lead Generation</option>
+                                    <option value="CONTACT_US" {{ in_array('CONTACT_US', old('categories', $flow['categories'])) ? 'selected' : '' }}>Contact Us</option>
+                                    <option value="CUSTOMER_SUPPORT" {{ in_array('CUSTOMER_SUPPORT', old('categories', $flow['categories'])) ? 'selected' : '' }}>Customer Support</option>
+                                    <option value="SURVEY" {{ in_array('SURVEY', old('categories', $flow['categories'])) ? 'selected' : '' }}>Survey</option>
+                                    <option value="OTHER" {{ in_array('OTHER', old('categories', $flow['categories'])) ? 'selected' : '' }}>Other</option>
+                                </select>
+                                <small class="form-text text-muted">Select a category for your flow</small>
+                                @error('categories')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="categories" class="form-label">Categories</label>
-                            <select class="form-select" id="categories" name="categories">
-                                <option value="SIGN_UP" {{ in_array('SIGN_UP', $flow['categories']) ? 'selected' : '' }}>Sign Up</option>
-                                <option value="SIGN_IN" {{ in_array('SIGN_IN', $flow['categories']) ? 'selected' : '' }}>Sign In</option>
-                                <option value="APPOINTMENT_BOOKING" {{ in_array('APPOINTMENT_BOOKING', $flow['categories']) ? 'selected' : '' }}>Appointment Booking</option>
-                                <option value="LEAD_GENERATION" {{ in_array('LEAD_GENERATION', $flow['categories']) ? 'selected' : '' }}>Lead Generation</option>
-                                <option value="CONTACT_US" {{ in_array('CONTACT_US', $flow['categories']) ? 'selected' : '' }}>Contact Us</option>
-                                <option value="CUSTOMER_SUPPORT" {{ in_array('CUSTOMER_SUPPORT', $flow['categories']) ? 'selected' : '' }}>Customer Support</option>
-                                <option value="SURVEY" {{ in_array('SURVEY', $flow['categories']) ? 'selected' : '' }}>Survey</option>
-                                <option value="OTHER" {{ in_array('OTHER', $flow['categories']) ? 'selected' : '' }}>Other</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="flow_json" class="form-label">Flow JSON</label>
-                            <textarea class="form-control" id="flow_json" name="flow_json" rows="15" required>{{ old('flow_json', isset($flowJson) ? $flowJson : json_encode($flow, JSON_PRETTY_PRINT)) }}</textarea>
-                        </div>
-
-                        <div class="text-end">
-                            <button type="submit" class="btn btn-primary">Update Flow</button>
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> Update Flow
+                            </button>
                         </div>
                     </form>
                 </div>
