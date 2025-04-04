@@ -34,14 +34,14 @@
                             <select class="form-control @error('categories') is-invalid @enderror" 
                                     id="category" name="categories[]" required>
                                 <option value="">Select a category</option>
-                                <option value="SIGN_UP">Sign Up</option>
-                                <option value="SIGN_IN">Sign In</option>
-                                <option value="APPOINTMENT_BOOKING">Appointment Booking</option>
-                                <option value="LEAD_GENERATION">Lead Generation</option>
-                                <option value="CONTACT_US">Contact Us</option>
-                                <option value="CUSTOMER_SUPPORT">Customer Support</option>
-                                <option value="SURVEY">Survey</option>
-                                <option value="OTHER">Other</option>
+                                <option value="SIGN_UP" {{ in_array('SIGN_UP', old('categories', [])) ? 'selected' : '' }}>Sign Up</option>
+                                <option value="SIGN_IN" {{ in_array('SIGN_IN', old('categories', [])) ? 'selected' : '' }}>Sign In</option>
+                                <option value="APPOINTMENT_BOOKING" {{ in_array('APPOINTMENT_BOOKING', old('categories', [])) ? 'selected' : '' }}>Appointment Booking</option>
+                                <option value="LEAD_GENERATION" {{ in_array('LEAD_GENERATION', old('categories', [])) ? 'selected' : '' }}>Lead Generation</option>
+                                <option value="CONTACT_US" {{ in_array('CONTACT_US', old('categories', [])) ? 'selected' : '' }}>Contact Us</option>
+                                <option value="CUSTOMER_SUPPORT" {{ in_array('CUSTOMER_SUPPORT', old('categories', [])) ? 'selected' : '' }}>Customer Support</option>
+                                <option value="SURVEY" {{ in_array('SURVEY', old('categories', [])) ? 'selected' : '' }}>Survey</option>
+                                <option value="OTHER" {{ in_array('OTHER', old('categories', [])) ? 'selected' : '' }}>Other</option>
                             </select>
                             <small class="form-text text-muted">Select a category for your flow</small>
                             @error('categories')
@@ -58,9 +58,8 @@
                         <label for="flow_json">Flow JSON</label>
                         <div class="position-relative">
                             <textarea class="form-control @error('flow_json') is-invalid @enderror" 
-                                    id="flow_json" name="flow_json" rows="12" required>{{ old('flow_json', $defaultFlowJson) }}</textarea>
+                                    id="flow_json" name="flow_json" rows="12" required>{{ old('flow_json', '') }}</textarea>
                             <div class="mt-2 text-end">
-                               
                                 <a type="button" class="btn btn-outline-primary" href="https://developers.facebook.com/docs/whatsapp/flows/playground" target="_blank">
                                     <i class="fa fa-code"></i> Generate Flow JSON
                                 </a>
@@ -105,9 +104,9 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('createFlowForm');
+    const nameInput = document.getElementById('name');
     const categorySelect = document.getElementById('category');
     const flowJsonTextarea = document.getElementById('flow_json');
-    const formatJsonBtn = document.getElementById('formatJson');
     const submitBtn = document.getElementById('submitBtn');
 
     // Check for flash messages and display them using notification
@@ -139,20 +138,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
-    // Format JSON button handler
-    formatJsonBtn.addEventListener('click', function() {
-        try {
-            const jsonObj = JSON.parse(flowJsonTextarea.value);
-            flowJsonTextarea.value = JSON.stringify(jsonObj, null, 2);
-        } catch (error) {
-            showNotification('Invalid JSON format. Please check your flow configuration.', 'error');
-        }
-    });
-
     // Form validation
     form.addEventListener('submit', function(e) {
         submitBtn.disabled = true;
         
+        // Validate name
+        if (!nameInput.value.trim()) {
+            e.preventDefault();
+            nameInput.classList.add('is-invalid');
+            submitBtn.disabled = false;
+            return;
+        }
+        nameInput.classList.remove('is-invalid');
+
         // Validate category
         if (!categorySelect.value) {
             e.preventDefault();
@@ -163,11 +161,19 @@ document.addEventListener('DOMContentLoaded', function() {
         categorySelect.classList.remove('is-invalid');
 
         // Validate JSON
+        if (!flowJsonTextarea.value.trim()) {
+            e.preventDefault();
+            flowJsonTextarea.classList.add('is-invalid');
+            submitBtn.disabled = false;
+            return;
+        }
+
         try {
             const flowJson = JSON.parse(flowJsonTextarea.value);
             if (!flowJson.version || !flowJson.screens) {
                 throw new Error('Invalid flow structure');
             }
+            flowJsonTextarea.classList.remove('is-invalid');
         } catch (error) {
             e.preventDefault();
             flowJsonTextarea.classList.add('is-invalid');
@@ -180,6 +186,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Clear validation on input
+    nameInput.addEventListener('input', function() {
+        this.classList.remove('is-invalid');
+    });
+
     categorySelect.addEventListener('change', function() {
         this.classList.remove('is-invalid');
     });
