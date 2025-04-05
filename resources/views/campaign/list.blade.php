@@ -53,14 +53,14 @@
         </div>
         <!-- action template -->
         <script type="text/template" id="campaignActionColumnTemplate">
-        <a href="<%= __Utils.apiURL("{{ route('vendor.campaign.status.view', ['campaignUid' => 'campaignUid',]) }}", {'campaignUid': __tData._uid}) %>" class="btn btn-dark btn-sm" title="{{ __tr('Campaign Details') }}"><i class="fa fa-tachometer"></i> {{  __tr('Campaign Dashboard') }}</a>
+        <a href="<%= __Utils.apiURL("{{ route('vendor.campaign.status.view', ['campaignUid' => 'campaignUid',]) }}", {'campaignUid': __tData._uid}) %>" class="btn btn-info btn-sm" title="{{ __tr('Campaign Details') }}"><i class="fa fa-tachometer"></i> {{  __tr('Campaign Dashboard') }}</a>
 <!--  Delete Action -->
 <% if(__tData.delete_allowed) { %>
-<a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.campaign.write.delete', [ 'campaignIdOrUid']) }}", {'campaignIdOrUid': __tData._uid}) %>" class="btn btn-danger btn-sm lw-ajax-link-action-via-confirm" data-confirm="#lwDeleteCampaign-template" title="{{ __tr('Delete') }}" data-callback-params="{{ json_encode(['datatableId' => '#lwCampaignList']) }}" data-callback="appFuncs.modelSuccessCallback"><i class="fa fa-trash"></i> {{  __tr('Delete') }}</a>
+<a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.campaign.write.delete', [ 'campaignIdOrUid']) }}", {'campaignIdOrUid': __tData._uid}) %>" class="btn btn-outline-danger btn-sm lw-ajax-link-action-via-confirm" data-confirm="#lwDeleteCampaign-template" title="{{ __tr('Delete') }}" data-callback-params="{{ json_encode(['datatableId' => '#lwCampaignList']) }}" data-callback="appFuncs.modelSuccessCallback"><i class="fa fa-trash"></i> {{  __tr('Delete') }}</a>
 <% } else { %>
     <!--  Archived button -->
     <% if(__tData.status != 5) { %>
-        <a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.campaign.write.archive', [ 'campaignIdOrUid']) }}", {'campaignIdOrUid': __tData._uid}) %>" class="btn btn-warning btn-sm lw-ajax-link-action" title="{{ __tr('Archive') }}" data-callback-params="{{ json_encode(['datatableId' => '#lwCampaignList']) }}" data-callback="appFuncs.modelSuccessCallback">{{  __tr('Archive') }}</a>
+        <a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.campaign.write.archive', [ 'campaignIdOrUid']) }}", {'campaignIdOrUid': __tData._uid}) %>" class="btn btn-outline-secondary btn-sm lw-ajax-link-action" title="{{ __tr('Archive') }}" data-callback-params="{{ json_encode(['datatableId' => '#lwCampaignList']) }}" data-callback="appFuncs.modelSuccessCallback">{{  __tr('Archive') }}</a>
         <% } else { %>
              <!--  /Archived button -->
             <!--  UnArchived button -->

@@ -77,7 +77,7 @@
                     <a target="_blank" title="{{  __tr('Edit Template on Meta') }}" class="dropdown-item" href="https://business.facebook.com/wa/manage/message-templates/?&waba_id={{ getVendorSettings('whatsapp_business_account_id') }}&id=<%- __tData.template_id %>">{{  __tr('Edit Template on Meta') }} <i class="fas fa-external-link-alt"></i></a>
                 </div>
               </div>
-            <a title="{{  __tr('Delete Template') }}" data-callback="reloadDtOnSuccess" data-method="post" data-confirm="#lwConfirmTemplateDelete" data-confirm-params="<%- toJsonString({'templateName': __tData.template_name}) %>" class="lw-btn btn btn-sm btn-danger lw-ajax-link-action" href="<%= __Utils.apiURL(" {{ route('vendor.whatsapp_service.templates.write.delete',['whatsappTemplateUid']) }}", {'whatsappTemplateUid': __tData._uid}) %>">{{  __tr('Delete') }}</a>
+            <a title="{{  __tr('Delete Template') }}" data-callback="reloadDtOnSuccess" data-method="post" data-confirm="#lwConfirmTemplateDelete" data-confirm-params="<%- toJsonString({'templateName': __tData.template_name}) %>" class="lw-btn btn btn-sm btn-outline-danger lw-ajax-link-action" href="<%= __Utils.apiURL(" {{ route('vendor.whatsapp_service.templates.write.delete',['whatsappTemplateUid']) }}", {'whatsappTemplateUid': __tData._uid}) %>">{{  __tr('Delete') }}</a>
         </script>
         <!-- /action template -->
         <script type="text/template" id="lwConfirmTemplateDelete">
