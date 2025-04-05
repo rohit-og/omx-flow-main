@@ -198,7 +198,7 @@ class WhatsappFlowController extends BaseController
             // Make the API request using the correct endpoint structure
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}", [
+            ])->get("{$this->baseUrl}/v20.0/{$id}", [
                 'fields' => 'id,name,categories,preview,status,validation_errors,json_version,data_api_version,endpoint_uri,whatsapp_business_account,application,health_status'
             ]);
 
@@ -218,7 +218,7 @@ class WhatsappFlowController extends BaseController
             $errorData = $response->json();
             Log::error('WhatsApp API Error', [
                 'error' => $errorData,
-                'endpoint' => "{$this->baseUrl}/{$this->wabaId}/flows/{$id}"
+                'endpoint' => "{$this->baseUrl}/v20.0/{$id}"
             ]);
             
             $errorMessage = $errorData['error']['message'] ?? 'Unknown error occurred';
