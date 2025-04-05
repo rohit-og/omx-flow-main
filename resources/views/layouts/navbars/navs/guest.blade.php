@@ -1,10 +1,10 @@
 <nav class="navbar navbar-top navbar-horizontal navbar-expand-md shadow-sm">
-    <div class="container px-5">
+    <div class="container d-flex ">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse-main"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon fa fa-bars"></span>
         </button>
-        <a class="navbar-brand" href="{{ route('landing_page') }}">
+        <a class="omx-logo" href="{{ route('landing_page') }}">
             @if (isVendorShop())
                 <img src="{{ getVendorSettings('logo_image_url') }}" class="navbar-brand-img"
                     alt="{{ getVendorSettings('name') }}" >
@@ -72,3 +72,10 @@
         </div>
     </div>
 </nav>
+<style>
+   .omx-logo{
+    
+    max-width: 80%;
+    min-height: 60px;
+   }
+</style>

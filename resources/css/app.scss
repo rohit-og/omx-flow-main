@@ -48,7 +48,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.child > {
     }
 }
 img {
-    max-width: 100%;
+    max-width: 80%;
 }
 a {
     color: #2aac32;
@@ -140,10 +140,6 @@ html > body {
         width: 2px;
     }
 }
-.navbar > .container {
-    padding-right: 4.5rem !important;
-}
-
 .navbar-horizontal .navbar-nav .nav-link {
     font-size: initial;
     color: #212529;
@@ -546,7 +542,7 @@ h6 {
     font-weight: 400;
 }
 .navbar-brand-img {
-    min-height: 50px;
+    min-height: 50px !important;
 }
 @media (min-width: 768px) {
     .main-content .container-fluid {
@@ -720,16 +716,6 @@ a.text-primary:hover {
     background-color: #636f7b;
 }
 
-.navbar-horizontal .navbar-brand {
-    text-align: center;
-    img {
-        max-height: 90px;
-        min-height: 60px;
-        max-width: 100%;
-        object-fit: contain;
-        height: auto;
-    }
-}
 
 .lw-form-card-box {
     backdrop-filter: blur(4px) grayscale(0.6);
