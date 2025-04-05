@@ -417,7 +417,7 @@ class WhatsappFlowController extends BaseController
      * Delete a WhatsApp flow.
      *
      * @param  string  $id
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function delete($id)
     {
@@ -442,10 +442,8 @@ class WhatsappFlowController extends BaseController
                         'id' => $id,
                         'status' => $flow['status']
                     ]);
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Only draft flows can be deleted'
-                    ], 403);
+                    return redirect()->route('whatsapp-flows.index')
+                        ->with('error', 'Only draft flows can be deleted');
                 }
             } else {
                 // If we can't get the flow details, log the error but continue with deletion
@@ -460,12 +458,12 @@ class WhatsappFlowController extends BaseController
             // Delete the flow using the correct endpoint format
             Log::info('Sending delete request to WhatsApp API', [
                 'id' => $id,
-                'url' => "{$this->baseUrl}/{$this->wabaId}/flows/{$id}"
+                'url' => "{$this->baseUrl}/v20.0/{$id}"
             ]);
             
             $deleteResponse = Http::withHeaders([
                 'Authorization' => "Bearer {$this->accessToken}",
-            ])->delete("{$this->baseUrl}/{$this->wabaId}/flows/{$id}");
+            ])->delete("{$this->baseUrl}/v20.0/{$id}");
 
             Log::info('Delete response received', [
                 'status' => $deleteResponse->status(),
@@ -473,17 +471,12 @@ class WhatsappFlowController extends BaseController
             ]);
 
             if ($deleteResponse->successful()) {
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Flow deleted successfully'
-                ]);
+                return redirect()->route('whatsapp-flows.index')
+                    ->with('success', 'Flow deleted successfully');
             }
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete flow',
-                'error' => $deleteResponse->json()
-            ], $deleteResponse->status());
+            return redirect()->route('whatsapp-flows.index')
+                ->with('error', 'Failed to delete flow: ' . ($deleteResponse->json()['error']['message'] ?? 'Unknown error'));
 
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Delete Exception', [
@@ -492,11 +485,8 @@ class WhatsappFlowController extends BaseController
                 'trace' => $e->getTraceAsString()
             ]);
             
-            return response()->json([
-                'success' => false,
-                'message' => 'An error occurred while deleting the flow',
-                'error' => $e->getMessage()
-            ], 500);
+            return redirect()->route('whatsapp-flows.index')
+                ->with('error', 'An error occurred while deleting the flow: ' . $e->getMessage());
         }
     }
 
