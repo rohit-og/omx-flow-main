@@ -70,11 +70,11 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
             background: linear-gradient(135deg, #0059FF, #00b6ff) !important;
         }
         .btn-sm.btn-default {
-            background-color: #6f42c1 !important; /* Purple */
+            background-color:rgb(70, 180, 166) !important; /* Purple */
             color: white;
         }
         .btn-danger.btn-sm {
-            background: linear-gradient(135deg, #f70000, #ff8819) !important;
+            
         }
         .btn-warning.btn-sm {
             background: linear-gradient(135deg, #fcbd00, #ffe207) !important;
@@ -83,11 +83,11 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
             background: linear-gradient(135deg, #ADB5BD, #d6d6d6) !important;
         }
         .btn-dark.btn-sm {
-            background-color: #a0522d  !important; /* Dark Gray */
+            background-color:rgb(69, 56, 173)  !important; /* Dark Gray */
             color: white;
         }
         .btn-dark.btn-sm:hover {
-            background-color:rgb(97, 47, 24)  !important;
+            background-color:rgb(60, 44, 121)  !important;
         }
         th {
             background-color:rgb(11, 119, 83) !important;
