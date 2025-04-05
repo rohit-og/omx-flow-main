@@ -46,6 +46,7 @@ $vendorViewBySuperAdmin = false;
     </div>
 </div>
     
+@if (isWhatsAppBusinessAccountReady())
 <!-- features section  -->
 <div class="container-fluid mt-4 ">
         <div class="row features-row">
@@ -317,6 +318,7 @@ $vendorViewBySuperAdmin = false;
         new Chart(ctx, config);
     });
 </script>
+@endif
 <style>
     /* Modern Card Styling based on reference image */
     .stat-card {
