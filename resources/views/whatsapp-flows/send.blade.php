@@ -34,7 +34,7 @@
                         </div>
                     @endif
                     
-                    <form id="sendFlowForm" method="POST" action="{{ route('whatsapp-flows.send', ['id' => $flow['id']]) }}">
+                    <form id="sendFlowForm" method="POST" action="{{ route('whatsapp-flows.send.post', ['id' => $flow['id']]) }}">
                         @csrf
                         <div class="mb-3">
                             <label for="phone_number" class="form-label">Phone Number (with country code)</label>
@@ -83,16 +83,31 @@ document.addEventListener('DOMContentLoaded', function() {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
 
+    // Show toast notifications for flash messages
+    @if(session('success'))
+        if (window.__Utils && window.__Utils.notification) {
+            window.__Utils.notification('{{ session('success') }}', 'success');
+        } else {
+            alert('{{ session('success') }}');
+        }
+    @endif
+
+    @if(session('error'))
+        if (window.__Utils && window.__Utils.notification) {
+            window.__Utils.notification('{{ session('error') }}', 'error');
+        } else {
+            alert('{{ session('error') }}');
+        }
+    @endif
+
+    // Handle form submission with AJAX
     form.addEventListener('submit', function(e) {
-        console.log('Form submitted');
         e.preventDefault();
         
         const phoneNumber = phoneNumberInput.value;
-        console.log('Phone number:', phoneNumber);
-
+        
         // Validate phone number format (numbers only)
         if (!/^[0-9]+$/.test(phoneNumber)) {
-            console.error('Invalid phone number format');
             if (window.__Utils && window.__Utils.notification) {
                 window.__Utils.notification('Please enter a valid phone number (numbers only)', 'error');
             } else {
@@ -110,15 +125,8 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('phone_number', phoneNumber);
         formData.append('_token', csrfToken);
 
-        // Log the request data
-        console.log('Sending request with data:', {
-            phone_number: phoneNumber,
-            flow_id: '{{ $flow["id"] }}',
-            csrf_token: csrfToken
-        });
-
         // Make the API request
-        fetch('{{ route("whatsapp-flows.send", ["id" => $flow["id"]]) }}', {
+        fetch(form.action, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': csrfToken,
@@ -128,7 +136,6 @@ document.addEventListener('DOMContentLoaded', function() {
             body: new URLSearchParams(formData)
         })
         .then(response => {
-            console.log('Response status:', response.status);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -138,56 +145,44 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Response data:', data);
             
             if (data.success) {
-                sendButton.classList.remove('btn-primary');
-                sendButton.classList.add('btn-success');
-                sendButton.innerHTML = '<i class="fa fa-check"></i> Flow Sent Successfully';
-                
-                // Show success notification
+                // Show success toast notification
                 if (window.__Utils && window.__Utils.notification) {
-                    window.__Utils.notification('Flow sent successfully', 'success');
+                    if (data.toast) {
+                        window.__Utils.notification(data.toast.message, data.toast.type, data.toast.title);
+                    } else {
+                        window.__Utils.notification(data.message || 'Flow sent successfully', 'success');
+                    }
                 } else {
-                    alert('Flow sent successfully');
+                    alert(data.message || 'Flow sent successfully');
                 }
-            } else {
-                sendButton.classList.remove('btn-primary');
-                sendButton.classList.add('btn-danger');
-                sendButton.innerHTML = '<i class="fa fa-exclamation-circle"></i> Failed to Send Flow';
                 
-                // Show error notification
-                const errorMessage = data.error || 'Failed to send flow';
+                // Reset form
+                phoneNumberInput.value = '';
+            } else {
+                // Show error toast notification
                 if (window.__Utils && window.__Utils.notification) {
-                    window.__Utils.notification(errorMessage, 'error');
+                    window.__Utils.notification(data.error || 'Failed to send flow', 'error');
                 } else {
-                    alert(errorMessage);
+                    alert(data.error || 'Failed to send flow');
                 }
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            sendButton.classList.remove('btn-primary');
-            sendButton.classList.add('btn-danger');
-            sendButton.innerHTML = '<i class="fa fa-exclamation-circle"></i> Error';
             
-            // Show error notification
-            const errorMessage = error.message || 'An unexpected error occurred';
+            // Show error toast notification
             if (window.__Utils && window.__Utils.notification) {
-                window.__Utils.notification(errorMessage, 'error');
+                window.__Utils.notification('An error occurred while sending the flow', 'error');
             } else {
-                alert(errorMessage);
+                alert('An error occurred while sending the flow');
             }
         })
         .finally(() => {
-            // Re-enable the button after 3 seconds to allow for another attempt
-            setTimeout(() => {
-                sendButton.disabled = false;
-                sendButton.classList.remove('btn-success', 'btn-danger');
-                sendButton.classList.add('btn-primary');
-                sendButton.innerHTML = '<i class="fa fa-paper-plane"></i> Send Flow';
-            }, 3000);
+            // Re-enable the button
+            sendButton.disabled = false;
+            sendButton.innerHTML = '<i class="fa fa-paper-plane"></i> Send Flow';
         });
     });
-
-    console.log('Form handler initialization complete');
 });
 </script>
 @endsection
