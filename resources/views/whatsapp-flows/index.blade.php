@@ -36,6 +36,14 @@
             </div>
         @endif
 
+        @if (session('success'))
+            <div class="col-xl-12">
+                <div class="alert alert-success" role="alert">
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
+
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-body">
