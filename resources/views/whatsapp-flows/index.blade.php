@@ -65,7 +65,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach($flows as $flow)
-                                            <tr class="{{ $flow['status'] === 'PUBLISHED' ? 'table-success' : '' }}">
+                                            <tr class="{{ $flow['status'] === 'PUBLISHED' ? 'table-success' : '' }}" data-flow-id="{{ $flow['id'] }}">
                                                 <td>{{ $flow['id'] }}</td>
                                                 <td>{{ $flow['name'] }}</td>
                                                 <td>
@@ -87,9 +87,9 @@
                                                                 <i class="fa fa-pencil"></i> {{ __tr('Edit') }}
                                                             </a>
                                                             <a href="{{ route('whatsapp-flows.delete', ['id' => $flow['id']]) }}" 
-                                                               class="btn btn-sm btn-danger lw-ajax-link-action-via-confirm" 
-                                                               data-method="delete"
-                                                               data-confirm="#lwDeleteFlow-template"
+                                                               class="btn btn-sm btn-danger delete-flow-btn" 
+                                                               data-flow-id="{{ $flow['id'] }}"
+                                                               data-flow-name="{{ $flow['name'] }}"
                                                                title="{{ __tr('Delete') }}">
                                                                 <i class="fa fa-trash"></i> {{ __tr('Delete') }}
                                                             </a>
@@ -153,86 +153,134 @@
         const loadingElement = document.getElementById('loading');
         const flowsContainer = document.getElementById('flows-container');
 
-        // Define callback function for delete action
-        window.flowDeleteCallback = function(response) {
-            if (response.success) {
-                // Show success notification if available
-                if (window.__Utils && window.__Utils.notification) {
-                    window.__Utils.notification('{{ __tr("Flow deleted successfully") }}', 'success');
-                } else {
-                    alert('{{ __tr("Flow deleted successfully") }}');
-                }
-                // Reload the page
-                window.location.reload();
-            } else {
-                // Show error notification
-                const errorMessage = response.message || '{{ __tr("Failed to delete flow") }}';
-                if (window.__Utils && window.__Utils.notification) {
-                    window.__Utils.notification(errorMessage, 'error');
-                } else {
-                    alert(errorMessage);
-                }
-            }
-        };
-
         // Initialize delete buttons
-        document.querySelectorAll('.lw-ajax-link-action-via-confirm').forEach(button => {
+        document.querySelectorAll('.delete-flow-btn').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 
                 // Get the URL from the href attribute
                 const url = this.getAttribute('href');
-                console.log('Delete URL:', url);
                 
-                // Get the confirmation template ID
-                const confirmTemplateId = this.getAttribute('data-confirm');
-                const confirmTemplate = document.querySelector(confirmTemplateId);
-                const confirmContent = confirmTemplate ? confirmTemplate.innerHTML : '{{ __tr("Are you sure you want to delete this flow?") }}';
+                // Get flow details from data attributes
+                const flowId = this.getAttribute('data-flow-id');
+                const flowName = this.getAttribute('data-flow-name');
                 
                 // Show confirmation
-                if (confirm(confirmContent.replace(/<[^>]*>/g, ''))) {
-                    // Use fetch API to send DELETE request
-                    fetch(url, {
-                        method: 'DELETE',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
+                if (confirm('{{ __tr("Are you sure you want to delete flow") }} "' + flowName + '"? {{ __tr("This action cannot be undone.") }}')) {
+                    // Find the flow row before making the request
+                    const flowRow = document.querySelector(`tr[data-flow-id="${flowId}"]`);
+                    
+                    // Remove the row immediately for better user experience
+                    if (flowRow) {
+                        // Store the row for potential restoration if deletion fails
+                        const rowClone = flowRow.cloneNode(true);
+                        
+                        // Hide the row immediately
+                        flowRow.style.display = 'none';
+                        
+                        // Check if there are any flows left
+                        const remainingFlows = document.querySelectorAll('tbody tr:not([style*="display: none"])').length;
+                        if (remainingFlows === 0) {
+                            // If no flows left, show the empty message
+                            const tbody = document.querySelector('tbody');
+                            const table = tbody.closest('.table-responsive');
+                            table.innerHTML = `
+                                <div class="alert alert-info">
+                                    {{ __tr('No WhatsApp flows found. Try refreshing or check your API connection.') }}
+                                </div>
+                            `;
                         }
-                    })
-                    .then(response => {
-                        console.log('Response status:', response.status);
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Delete response:', data);
-                        if (data.success) {
-                            // Show success notification
-                            if (window.__Utils && window.__Utils.notification) {
-                                window.__Utils.notification('{{ __tr("Flow deleted successfully") }}', 'success');
-                            } else {
-                                alert('{{ __tr("Flow deleted successfully") }}');
+                        
+                        // Show a loading notification
+                        if (window.__Utils && window.__Utils.notification) {
+                            window.__Utils.notification('{{ __tr("Deleting flow...") }}', 'info');
+                        }
+                        
+                        // Use fetch API to send DELETE request
+                        fetch(url, {
+                            method: 'DELETE',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                             }
-                            // Reload the page
-                            window.location.reload();
-                        } else {
-                            // Show error notification
-                            const errorMessage = data.message || '{{ __tr("Failed to delete flow") }}';
+                        })
+                        .then(response => {
+                            // Check if the response is JSON
+                            const contentType = response.headers.get('content-type');
+                            if (contentType && contentType.includes('application/json')) {
+                                return response.json();
+                            } else {
+                                // If not JSON, return a custom error
+                                throw new Error('Server returned non-JSON response');
+                            }
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                // Permanently remove the flow row from the table
+                                if (flowRow) {
+                                    flowRow.remove();
+                                }
+                                
+                                // Show success notification
+                                if (window.__Utils && window.__Utils.notification) {
+                                    window.__Utils.notification(data.message || '{{ __tr("Flow deleted successfully") }}', 'success');
+                                } else {
+                                    alert(data.message || '{{ __tr("Flow deleted successfully") }}');
+                                }
+                            } else {
+                                // If deletion failed, restore the row
+                                if (flowRow) {
+                                    flowRow.style.display = '';
+                                } else {
+                                    // If the row was already removed, add it back
+                                    const tbody = document.querySelector('tbody');
+                                    if (tbody) {
+                                        tbody.appendChild(rowClone);
+                                    }
+                                }
+                                
+                                // Show error notification
+                                const errorMessage = data.message || '{{ __tr("Failed to delete flow") }}';
+                                if (window.__Utils && window.__Utils.notification) {
+                                    window.__Utils.notification(errorMessage, 'error');
+                                } else {
+                                    alert(errorMessage);
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            
+                            // If there was an error, restore the row
+                            if (flowRow) {
+                                flowRow.style.display = '';
+                            } else {
+                                // If the row was already removed, add it back
+                                const tbody = document.querySelector('tbody');
+                                if (tbody) {
+                                    tbody.appendChild(rowClone);
+                                }
+                            }
+                            
+                            // Show a more specific error message
+                            let errorMessage = '{{ __tr("An error occurred while deleting the flow") }}';
+                            
+                            // Check for specific error types
+                            if (error.message.includes('Failed to fetch')) {
+                                errorMessage = '{{ __tr("Network error. Please check your internet connection and try again.") }}';
+                            } else if (error.message.includes('non-JSON response')) {
+                                errorMessage = '{{ __tr("Server error. Please try again later or contact support.") }}';
+                            }
+                            
                             if (window.__Utils && window.__Utils.notification) {
                                 window.__Utils.notification(errorMessage, 'error');
                             } else {
                                 alert(errorMessage);
                             }
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        if (window.__Utils && window.__Utils.notification) {
-                            window.__Utils.notification('{{ __tr("An error occurred while deleting the flow") }}', 'error');
-                        } else {
-                            alert('{{ __tr("An error occurred while deleting the flow") }}');
-                        }
-                    });
+                        });
+                    }
                 }
             });
         });
@@ -242,38 +290,7 @@
             refreshBtn.addEventListener('click', function() {
                 loadingElement.classList.remove('d-none');
                 flowsContainer.classList.add('d-none');
-
-                fetch('{{ route("whatsapp-flows.refresh") }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json',
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        window.location.reload();
-                    } else {
-                        if (window.__Utils && window.__Utils.notification) {
-                            window.__Utils.notification('{{ __tr("Error refreshing flows: ") }}' + data.message, 'error');
-                        } else {
-                            alert('{{ __tr("Error refreshing flows: ") }}' + data.message);
-                        }
-                        loadingElement.classList.add('d-none');
-                        flowsContainer.classList.remove('d-none');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    if (window.__Utils && window.__Utils.notification) {
-                        window.__Utils.notification('{{ __tr("An error occurred while refreshing flows") }}', 'error');
-                    } else {
-                        alert('{{ __tr("An error occurred while refreshing flows") }}');
-                    }
-                    loadingElement.classList.add('d-none');
-                    flowsContainer.classList.remove('d-none');
-                });
+                window.location.reload();
             });
         }
     });
