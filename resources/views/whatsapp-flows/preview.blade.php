@@ -26,8 +26,8 @@
                             <div class="preview-wrapper">
                                 <iframe 
                                     src="{{ $flow['preview_url'] }}"
-                                    width="480"
-                                    height="900"
+                                    width="1000"
+                                    height="1000"
                                     style="border: 1px solid #ddd; border-radius: 8px; background: #fff;"
                                     allow="clipboard-write"
                                 ></iframe>
