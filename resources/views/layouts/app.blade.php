@@ -43,9 +43,60 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
             color: #2D3748 !important;
             font-weight: 600;
         }
+        .switchery {
+            height: 20px !important;
+            width: 40px;
+        }
+        .switchery > small {
+            border-radius: 10px;
+            height: 20px !important;
+            width: 20px;
+        }
+        a.lw-btn {
+            color: #ffffff !important;
+        }
         
-        .navbar-nav .nav-link {
-            color: #4A5568 !important;
+        .btn-sm.btn-default {
+            background-color:rgb(70, 180, 166) !important; /* Purple */
+            color: white;
+        }
+        .btn-danger.btn-sm {
+            
+        }
+        .btn-warning.btn-sm {
+            background: linear-gradient(135deg, #fcbd00, #ffe207) !important;
+        }
+        .btn-light.btn-sm {
+            background: rgb(44, 119, 46) !important;
+        }
+        .btn-light.btn-sm:hover{
+            background: rgb(27, 73, 28) !important;
+
+        } 
+        .btn-dark.btn-sm {
+            background-color:rgb(69, 56, 173)  !important; /* Dark Gray */
+            color: white;
+        }
+        .btn-dark.btn-sm:hover {
+            background-color:rgb(60, 44, 121)  !important;
+        }
+        th {
+            background-color:rgb(11, 119, 83) !important;
+            color: #ffffff !important;
+        }
+        td {
+            background-color: #F4F6F9;
+            color: #333333;
+        }
+        td a {
+            color: #0066C8 !important;
+        }
+       
+        .empty {
+            
+        }
+        legend {
+            background-color: #EBF5FF !important;
             font-weight: 500;
             transition: all 0.3s ease;
         }
