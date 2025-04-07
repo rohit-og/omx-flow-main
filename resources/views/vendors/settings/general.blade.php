@@ -38,19 +38,19 @@
             <div class="row">
                 <div class="col-md-4">
                     <x-lw.input-field data-form-group-class="" name="address" :label="__tr('Address line')"
-                        value="{{ $configurationData['address'] }}" required />
+                        value="{{ $configurationData['address'] }}"  />
                 </div>
                 <div class="col-md-4">
                     <x-lw.input-field data-form-group-class="" name="postal_code" :label="__tr('Postal Code')"
-                        value="{{ $configurationData['postal_code'] }}" required />
+                        value="{{ $configurationData['postal_code'] }}"  />
                 </div>
                 <div class="col-md-4">
                     <x-lw.input-field data-form-group-class="" name="city" :label="__tr('City')"
-                        value="{{ $configurationData['city'] }}" required />
+                        value="{{ $configurationData['city'] }}"  />
                 </div>
                 <div class="col-md-4">
                     <x-lw.input-field data-form-group-class="" name="state" :label="__tr('State')"
-                        value="{{ $configurationData['state'] }}" required />
+                        value="{{ $configurationData['state'] }}"  />
                 </div>
                 <div class="col-md-4">
                     <!-- Select country -->
