@@ -20,7 +20,6 @@
     .card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        background: linear-gradient( rgba(34, 213, 112, 0.08), rgba(34, 213, 112, 0));
         transition: 0.30s ease-in-out;
     }
     .card2{
