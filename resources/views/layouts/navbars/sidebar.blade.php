@@ -370,7 +370,7 @@
                         {{ __tr('Dashboard') }}
                     </a>
                 </li>
-                 @if (hasVendorAccess('messaging'))
+                 @if (hasVendorAccess('messaging') && isWhatsAppBusinessAccountReady())
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.chat_message.contact.view') }}" href="{{ route('vendor.chat_message.contact.view') }}">
                         <span x-cloak x-show="unreadMessagesCount" class="badge badge-success rounded-pill ml--2" x-text="unreadMessagesCount"></span>
@@ -378,7 +378,7 @@
                     </a>
                 </li>
                 @endif
-                @if (hasVendorAccess('manage_templates'))
+                @if (hasVendorAccess('manage_templates') && isWhatsAppBusinessAccountReady())
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.whatsapp_service.templates.read.list_view') }}"
                         href="{{ route('vendor.whatsapp_service.templates.read.list_view') }}">
@@ -387,7 +387,7 @@
                     </a>
                 </li>
                 @endif
-                @if (hasVendorAccess('manage_campaigns'))
+                @if (hasVendorAccess('manage_campaigns') && isWhatsAppBusinessAccountReady())
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.campaign.read.list_view') }}"
                         href="{{ route('vendor.campaign.read.list_view') }}">
@@ -396,7 +396,7 @@
                     </a>
                 </li>
                 @endif
-                @if (hasVendorAccess('manage_flows'))
+                @if (hasVendorAccess('manage_flows') && isWhatsAppBusinessAccountReady())
                 <li class="nav-item">
                     <a class="nav-link" href="#vendorFlowSubmenuNav" data-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="vendorFlowSubmenuNav">
@@ -416,7 +416,7 @@
                     </div>
                 </li>
                 @endif
-                @if (hasVendorAccess('manage_contacts'))
+                @if (hasVendorAccess('manage_contacts') && isWhatsAppBusinessAccountReady())
                 <li class="nav-item">
                     <a class="nav-link" href="#vendorContactSubmenuNav" data-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="vendorContactSubmenuNav">
@@ -447,7 +447,7 @@
                 </div>
             </li>
             @endif
-                 @if (hasVendorAccess('manage_bot_replies'))
+                 @if (hasVendorAccess('manage_bot_replies') && isWhatsAppBusinessAccountReady())
                  <li class="nav-item">
                     <a class="nav-link" href="#vendorAutomationSubmenuNav" data-toggle="collapse" role="button"
                         aria-expanded="false" aria-controls="vendorAutomationSubmenuNav">
@@ -472,7 +472,7 @@
                 </div>
             </li>
                 @endif
-                @if (hasVendorAccess('administrative'))
+                @if (hasVendorAccess('administrative') && isWhatsAppBusinessAccountReady())
                 <li class="nav-item">
                     <a class="nav-link {{ markAsActiveLink('vendor.user.read.list_view') }}"
                         href="{{ route('vendor.user.read.list_view') }}">
