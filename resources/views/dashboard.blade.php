@@ -237,7 +237,7 @@
         color: white;
         border: none;
         border-radius: 12px;
-        padding: 12px 24px;
+        padding: 10px 13px;
         font-weight: 600;
         transition: all 0.3s ease;
         text-transform: uppercase;

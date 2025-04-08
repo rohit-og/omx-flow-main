@@ -6,10 +6,10 @@
         </button>
         <a class="omx-logo" href="{{ route('landing_page') }}">
             @if (isVendorShop())
-                <img src="{{ getVendorSettings('logo_image_url') }}" class="navbar-brand-img"
+                <img src="{{ getVendorSettings('logo_image_url') }}" class="navbar-brand-img " style="max-width:60% !important; "
                     alt="{{ getVendorSettings('name') }}" >
             @else
-                <img src="{{ getAppSettings('logo_image_url') }}" class="navbar-brand-img"
+                <img src="{{ getAppSettings('logo_image_url') }}" class="navbar-brand-img" style="max-width:60% !important;"
                     alt="{{ getAppSettings('name') }}">
             @endif
         </a>
