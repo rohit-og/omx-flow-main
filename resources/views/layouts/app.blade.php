@@ -361,6 +361,27 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
         }
     </style>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.redirect-to-setup').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'info',
+                    title: 'WhatsApp Setup Required',
+                    text: 'Please setup WhatsApp to access this feature',
+                    confirmButtonText: 'Go to Setup'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}";
+                    }
+                });
+            });
+        });
+    });
+</script>
+
 <body class="@if(hasVendorAccess() or hasVendorUserAccess()) empty @endif pb-5 @if(isLoggedIn()) lw-authenticated-page @else lw-guest-page @endif {{ $class ?? '' }}" x-cloak x-data="{disableSoundForMessageNotification:{{ getVendorSettings('is_disabled_message_sound_notification') ? 1 : 0 }},unreadMessagesCount:null}">
     @auth()
     @include('layouts.navbars.sidebar')

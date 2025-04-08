@@ -63,11 +63,11 @@ $vendorViewBySuperAdmin = false;
                     <div class="feature-content">
                         <h3 class="feature-title">Live Chat</h3>
                         <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
-                        <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
-                        <a href="{{ $isWhatsAppReady ? route('vendor.whatsapp_service.templates.read.new_view') : $whatsappSetupRoute }}" class="feature-button template-button">
-                            Go To Unified Team Inbox
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
+                        <a href="#" class="feature-button redirect-to-setup">
+   Go To Unified Team Inbox
+   <i class="fas fa-arrow-right ml-2"></i>
+</a>
+
                     </div>
                 </div>
             </div>
@@ -81,10 +81,11 @@ $vendorViewBySuperAdmin = false;
                     <div class="feature-content">
                         <h3 class="feature-title">Template</h3>
                         <p class="feature-description">Create and manage pre-approved message templates for consistent and compliant WhatsApp business messaging.</p>
-                        <a href="{{ $isWhatsAppReady ? route('vendor.whatsapp_service.templates.read.new_view') : $whatsappSetupRoute }}" class="feature-button template-button">
-                            Create New Template
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
+                        <a href="#" class="feature-button redirect-to-setup">
+   Create New Template
+   <i class="fas fa-arrow-right ml-2"></i>
+</a>
+
                     </div>
                 </div>
             </div>
@@ -98,10 +99,11 @@ $vendorViewBySuperAdmin = false;
                     <div class="feature-content">
                         <h3 class="feature-title">Campaign</h3>
                         <p class="feature-description">Launch targeted messaging campaigns to engage your audience with personalized content at scale.</p>
-                        <a href="{{ $isWhatsAppReady ? route('vendor.campaign.new.view') : $whatsappSetupRoute }}" class="feature-button campaign-button">
-                            Create New Campaign
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
+                        <a href="#" class="feature-button redirect-to-setup">
+   Create New Campaign
+   <i class="fas fa-arrow-right ml-2"></i>
+</a>
+
                     </div>
                 </div>
             </div>
@@ -114,10 +116,11 @@ $vendorViewBySuperAdmin = false;
                     <div class="feature-content">
                         <h3 class="feature-title">Contacts</h3>
                         <p class="feature-description">Organize and manage your customer database with custom fields, tags, and segmentation for targeted messaging.</p>
-                        <a href="{{ $isWhatsAppReady ? route('vendor.contact.read.list_view') : $whatsappSetupRoute }}" class="feature-button contact-button">
-                            Create New Contact
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
+                        <a href="#" class="feature-button redirect-to-setup">
+   Go To Contacts
+   <i class="fas fa-arrow-right ml-2"></i>
+</a>
+
                     </div>
                 </div>
             </div>
@@ -130,10 +133,11 @@ $vendorViewBySuperAdmin = false;
                     <div class="feature-content">
                         <h3 class="feature-title">Bot Reply</h3>
                         <p class="feature-description">Set up automated responses to handle common inquiries and provide 24/7 customer support through WhatsApp.</p>
-                        <a href="{{ $isWhatsAppReady ? route('vendor.bot_reply.read.list_view') : $whatsappSetupRoute }}" class="feature-button bot-button">
-                            Create New Chatbot
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
+                        <a href="#" class="feature-button redirect-to-setup">
+   Go To Bot Reply
+   <i class="fas fa-arrow-right ml-2"></i>
+</a>
+
                     </div>
                 </div>
             </div>
@@ -146,10 +150,11 @@ $vendorViewBySuperAdmin = false;
                     <div class="feature-content">
                         <h3 class="feature-title">Agents</h3>
                         <p class="feature-description">Manage your support team with role-based access control and monitor agent performance for better service.</p>
-                        <a href="{{ $isWhatsAppReady ? route('vendor.user.read.list_view') : $whatsappSetupRoute }}" class="feature-button agent-button">
-                            Create New Agent
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
+                        <a href="#" class="feature-button redirect-to-setup">
+   Go To Agents
+   <i class="fas fa-arrow-right ml-2"></i>
+</a>
+
                     </div>
                 </div>
             </div>

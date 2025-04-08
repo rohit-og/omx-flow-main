@@ -377,7 +377,7 @@
                 </li>
                 @if (hasVendorAccess('messaging'))
     <li class="nav-item">
-        <a class="nav-link {{ markAsActiveLink('vendor.chat_message.contact.view') }}" href="{{ $isWhatsAppReady ? route('vendor.chat_message.contact.view') : $whatsappSetupRoute }}">
+        <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.chat_message.contact.view') : $whatsappSetupRoute }}">
             <span x-cloak x-show="unreadMessagesCount" class="badge badge-success rounded-pill ml--2" x-text="unreadMessagesCount"></span>
             <i class="fa fa-comments icon-chat "></i> <span class="ml--2">{{ __tr('Live Chat') }}</span>
         </a>
@@ -386,7 +386,7 @@
 
     @if (hasVendorAccess('manage_templates'))
     <li class="nav-item">
-        <a class="nav-link {{ markAsActiveLink('vendor.whatsapp_service.templates.read.list_view') }}" href="{{ $isWhatsAppReady ? route('vendor.whatsapp_service.templates.read.list_view') : $whatsappSetupRoute }}">
+        <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.whatsapp_service.templates.read.list_view') : $whatsappSetupRoute }}">
             <i class="fa fa-layer-group icon-templates"></i>
             {{ __tr('Templates') }}
         </a>
@@ -395,7 +395,7 @@
 
     @if (hasVendorAccess('manage_campaigns'))
     <li class="nav-item">
-        <a class="nav-link {{ markAsActiveLink('vendor.campaign.read.list_view') }}" href="{{ $isWhatsAppReady ? route('vendor.campaign.read.list_view') : $whatsappSetupRoute }}">
+        <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.campaign.read.list_view') : $whatsappSetupRoute }}">
             <i class="fa fa-rocket icon-campaigns "></i>
             {{ __tr('Campaigns') }}
         </a>
@@ -404,15 +404,14 @@
 
     @if (hasVendorAccess('manage_flows'))
     <li class="nav-item">
-        <a class="nav-link" href="#vendorFlowSubmenuNav" data-toggle="collapse" role="button"
-            aria-expanded="false" aria-controls="vendorFlowSubmenuNav">
+        <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('whatsapp-flows.index') : $whatsappSetupRoute }}">
             <i class="fas fa-sitemap gradient-icon-10"></i>
             <span class="">{{ __tr('Flows') }}</span>
         </a>
         <div class="collapse lw-expandable-nav" id="vendorFlowSubmenuNav">
             <ul class="nav nav-sm flex-column">
                 <li class="nav-item">
-                    <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.flow.read.list_view') }}" href="{{ $isWhatsAppReady ? route('whatsapp-flows.index') : $whatsappSetupRoute }}">
+                    <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('whatsapp-flows.index') : $whatsappSetupRoute }}">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('All Flows') }}
                     </a>
                 </li>
@@ -423,7 +422,7 @@
 
     @if (hasVendorAccess('manage_contacts'))
     <li class="nav-item">
-        <a class="nav-link" href="#vendorContactSubmenuNav" data-toggle="collapse" role="button"
+        <a class="nav-link redirect-to-setup" href="#vendorContactSubmenuNav" data-toggle="collapse" role="button"
             aria-expanded="false" aria-controls="vendorContactSubmenuNav">
             <i class="fa fa-users icon-users "></i>
             <span class="">{{ __tr('Contacts') }}</span>
@@ -431,17 +430,17 @@
         <div class="collapse lw-expandable-nav" id="vendorContactSubmenuNav">
             <ul class="nav nav-sm flex-column">
                 <li class="nav-item">
-                    <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.contact.read.list_view') }}" href="{{ $isWhatsAppReady ? route('vendor.contact.read.list_view') : $whatsappSetupRoute }}">
+                    <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.contact.read.list_view') : $whatsappSetupRoute }}">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('All Contacts') }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.contact.group.read.list_view') }}" href="{{ $isWhatsAppReady ? route('vendor.contact.group.read.list_view') : $whatsappSetupRoute }}">
+                    <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.contact.group.read.list_view') : $whatsappSetupRoute }}">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Contact Groups') }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.contact.custom_field.read.list_view') }}" href="{{ $isWhatsAppReady ? route('vendor.contact.custom_field.read.list_view') : $whatsappSetupRoute }}">
+                    <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.contact.custom_field.read.list_view') : $whatsappSetupRoute }}">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Add Input') }}
                     </a>
                 </li>
@@ -452,20 +451,19 @@
 
     @if (hasVendorAccess('manage_bot_replies'))
     <li class="nav-item">
-        <a class="nav-link" href="#vendorAutomationSubmenuNav" data-toggle="collapse" role="button"
-            aria-expanded="false" aria-controls="vendorAutomationSubmenuNav">
+        <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.bot_reply.read.list_view') : $whatsappSetupRoute }}">
             <i class="fas fa-robot icon-chatbot "></i>
             <span class="">{{ __tr('Chatbot') }}</span>
         </a>
         <div class="collapse lw-expandable-nav" id="vendorAutomationSubmenuNav">
             <ul class="nav nav-sm flex-column">
                 <li class="nav-item">
-                    <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.bot_reply.read.list_view') }}" href="{{ $isWhatsAppReady ? route('vendor.bot_reply.read.list_view') : $whatsappSetupRoute }}">
+                    <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.bot_reply.read.list_view') : $whatsappSetupRoute }}">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('All Chatbots') }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.bot_reply.bot_flow.read.list_view') }}" href="{{ $isWhatsAppReady ? route('vendor.bot_reply.bot_flow.read.list_view') : $whatsappSetupRoute }}">
+                    <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.bot_reply.bot_flow.read.list_view') : $whatsappSetupRoute }}">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Flow Maker') }}
                     </a>
                 </li>
@@ -476,7 +474,7 @@
 
     @if (hasVendorAccess('administrative'))
     <li class="nav-item">
-        <a class="nav-link {{ markAsActiveLink('vendor.user.read.list_view') }}" href="{{ $isWhatsAppReady ? route('vendor.user.read.list_view') : $whatsappSetupRoute }}">
+        <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('vendor.user.read.list_view') : $whatsappSetupRoute }}">
             <i class="fa fa-user-tie icon-agents"></i>
             {{ __tr('Agents') }}
         </a>
@@ -485,7 +483,7 @@
 
     @if (isWhatsAppBusinessAccountReady())
     <li class="nav-item">
-        <a class="nav-link" href="#" data-toggle="modal" data-target="#lwScanMeDialog">
+        <a class="nav-link redirect-to-setup" href="#" data-toggle="modal" data-target="#lwScanMeDialog">
             <i class="fa fa-qrcode icon-qrcode"></i>
             {{ __tr('QR Code') }}
         </a>
@@ -494,39 +492,38 @@
 
     @if (hasVendorAccess('administrative'))
     <li class="nav-item">
-        <a class="nav-link {{ markAsActiveLink('subscription.read.show') }}" href="{{ $isWhatsAppReady ? route('subscription.read.show') : $whatsappSetupRoute }}">
+        <a class="nav-link redirect-to-setup" href="{{ $isWhatsAppReady ? route('subscription.read.show') : $whatsappSetupRoute }}">
             <i class="fa fa-wallet icon-plan"></i>
             {{ __tr('My Plan') }}
         </a>
     </li>
 
     <li class="nav-item">
-        <a class="nav-link @if($isWhatsAppReady) collapsed @else text-warning @endif" href="#vendorSettingsNav" data-toggle="collapse" role="button"
-            aria-expanded="{{ $isWhatsAppReady ? 'false' : 'true' }}" aria-controls="vendorSettingsNav">
-            <i class="fa fa-cog icon-settings"></i>
-            <span class="">{{ __tr('Setup') }}</span>
-        </a>
+    <a class="nav-link @if(isWhatsAppBusinessAccountReady()) collapsed @else text-warning @endif" href="#vendorSettingsNav" data-toggle="collapse" role="button"
+                            aria-expanded="@php echo !isWhatsAppBusinessAccountReady() ? 'true' : 'false'; @endphp" aria-controls="vendorSettingsNav">
+                            <i class="fa fa-cog icon-settings"></i>
+                            <span class="">{{ __tr('Setup') }}</span>
+                        </a>
         <div class="collapse @if(!$isWhatsAppReady) show @endif lw-expandable-nav" id="vendorSettingsNav">
             <ul class="nav nav-sm flex-column">
                 <li class="nav-item">
-                    <a class="nav-link nav-link-ul {{ (isset($pageType) && $pageType == 'general') ? 'active' : '' }}" href="{{ route('vendor.settings.read', ['pageType' => 'general']) }}">
+                    <a class="nav-link redirect-to-setup" href="{{ route('vendor.settings.read', ['pageType' => 'general']) }}">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Basic') }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <strong>
-                        <a class="nav-link nav-link-ul {{ (isset($pageType) && $pageType == 'whatsapp-cloud-api-setup') ? 'active' : '' }} @if(!$isWhatsAppReady) text-warning @endif" href="{{ $whatsappSetupRoute }}">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('WhatsApp Setup') }} @if(!$isWhatsAppReady)<i class="fas fa-exclamation-triangle ml-1"></i>@endif
-                        </a>
-                    </strong>
-                </li>
+                                <strong><a class="nav-link nav-link-ul <?= (isset($pageType) and $pageType == 'whatsapp-cloud-api-setup') ? 'active' : '' ?> @if(!isWhatsAppBusinessAccountReady()) text-warning @endif"
+                                    href="<?= route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) ?>">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('WhatsApp Setup') }} @if(!isWhatsAppBusinessAccountReady())<i class="fas fa-exclamation-triangle ml-1"></i>@endif
+                                </a></strong>
+                            </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-link-ul {{ (isset($pageType) && $pageType == 'ai-chat-bot-setup') ? 'active' : '' }}" href="{{ route('vendor.settings.read', ['pageType' => 'ai-chat-bot-setup']) }}">
+                    <a class="nav-link redirect-to-setup" href="{{ route('vendor.settings.read', ['pageType' => 'ai-chat-bot-setup']) }}">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Chatbot Settings') }}
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link nav-link-ul {{ (isset($pageType) && $pageType == 'api-access') ? 'active' : '' }}" href="{{ route('vendor.settings.read', ['pageType' => 'api-access']) }}">
+                    <a class="nav-link redirect-to-setup" href="{{ route('vendor.settings.read', ['pageType' => 'api-access']) }}">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('API Integration') }}
                     </a>
                 </li>
