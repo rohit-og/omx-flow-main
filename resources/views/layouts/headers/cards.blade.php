@@ -1,889 +1,540 @@
-@php
-if(!isset($vendorViewBySuperAdmin))
-$vendorViewBySuperAdmin = false;
-@endphp
-@if (hasCentralAccess() and !$vendorViewBySuperAdmin )
-<div class="header pb-5 pt-2 pt-md-7">
-    <div class="container-fluid">
-    </div>
-    
-</div>
-{{-- show.dropdown.result --}}
-@elseif(hasVendorAccess() or hasVendorUserAccess() or $vendorViewBySuperAdmin )
-<div class="header">
-    <div class="container-fluid">
-    <div class="container-fluid ">
-        <div class="header-body">
-            <!-- Welcome card -->
-            <div class="row pb-0 pt-3 pt-lg-6 d-flex align-items-stretch mt-4">
-                <div class="col-12 p-0">
-                    <div class="welcome-card" style="background: linear-gradient(135deg, #41C6B5, #1771E6); border-radius: 16px; box-shadow: 0 10px 30px rgba(23, 113, 230, 0.15); overflow: hidden; position: relative;">
-                        <div class="card-body p-4 p-md-4">
-                            <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <h1 class="text-white mb-3 font-weight-bold" style="font-size: 2rem;">Welcome, {{ getUserAuthInfo('profile.first_name') }}!</h1>
-                                    <p class="text-white mb-4 opacity-80" style="font-size: 0.95rem; max-width: 600px;">Manage your WhatsApp business communications, create campaigns, and engage with your customers all in one place.</p>
-                                    
-                                </div>
-                                <div class="d-flex flex-wrap">
-                                    <a href="{{ route('subscription.read.show') }}" class="btn btn-light font-weight-bold mr-3  mb-md-0" style="padding: 10px 20px; border-radius: 8px; transition: all 0.3s ease;">
-                                            <i class="fas fa-crown mr-2"></i> View Plan
-                                        </a>
-                                        <a href="<?= route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) ?>" class="btn btn-api font-weight-bold mr-3  mb-md-0 ">
-                                            <i class="fas fa-cog mr-2"></i> API Setup
-                                        </a>    
-                            </div>
-                                
-                            </div>
-                        </div>
-                        <!-- Decorative elements -->
-                        <div class="welcome-shape-1" style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255, 255, 255, 0.1);"></div>
-                        <div class="welcome-shape-2" style="position: absolute; bottom: -80px; left: -80px; width: 250px; height: 250px; border-radius: 50%; background: rgba(255, 255, 255, 0.1);"></div>
-                    </div>
-        	    </div>
-            </div>
-        </div>
-    </div>
-</div>
-    
-@if (isWhatsAppBusinessAccountReady())
-<!-- features section  -->
-<div class="container-fluid mt-4 ">
-        <div class="row features-row">
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-comments"></i>
-                        <span x-cloak x-show="unreadMessagesCount" class="feature-counter" x-text="unreadMessagesCount">{{ __tr('Live Chat') }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Live Chat</h3>
-                        <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
-                        <a href="{{ route('vendor.chat_message.contact.view') }}" class="feature-button">
-                            Go To Unified Team Inbox
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon template-icon">
-                        <i class="fa fa-layer-group"></i>
-                        <span class="feature-counter">{{ __tr($totalTemplates) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Template</h3>
-                        <p class="feature-description">Create and manage pre-approved message templates for consistent and compliant WhatsApp business messaging.</p>
-                        <a href="{{ route('vendor.whatsapp_service.templates.read.new_view') }}" class="feature-button template-button">
-                            Create New Template
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon campaign-icon">
-                        <i class="fa fa-rocket"></i>
-                        <span class="feature-counter">{{ __tr($totalCampaigns) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Campaign</h3>
-                        <p class="feature-description">Launch targeted messaging campaigns to engage your audience with personalized content at scale.</p>
-                        <a href="{{ route('vendor.campaign.new.view') }}" class="feature-button campaign-button">
-                            Create New Campaign
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon contact-icon">
-                        <i class="fa fa-users"></i>
-                        <span class="feature-counter">{{ __tr($totalContacts) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Contacts</h3>
-                        <p class="feature-description">Organize and manage your customer database with custom fields, tags, and segmentation for targeted messaging.</p>
-                        <a href="{{ route('vendor.contact.read.list_view') }}" class="feature-button contact-button">
-                            Create New Contact
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon bot-icon">
-                        <i class="fas fa-robot"></i>
-                        <span class="feature-counter">{{ __tr($totalBotReplies) }}</span>
-        </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Bot Reply</h3>
-                        <p class="feature-description">Set up automated responses to handle common inquiries and provide 24/7 customer support through WhatsApp.</p>
-                        <a href="{{ route('vendor.bot_reply.read.list_view') }}" class="feature-button bot-button">
-                            Create New Chatbot
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon agent-icon">
-                        <i class="fa fa-user-tie"></i>
-                        <span class="feature-counter">{{ __tr($activeTeamMembers) }}</span>
-        </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Agents</h3>
-                        <p class="feature-description">Manage your support team with role-based access control and monitor agent performance for better service.</p>
-                        <a href="{{ route('vendor.user.read.list_view') }}" class="feature-button agent-button">
-                            Create New Agent
-                            <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-        <!--feature section end  -->
-
-
-<div class="container-fluid ">
-    <div class="row  mt-4 d-flex align-items-stretch">
-        <div class="col-xl-6 ">
-            <div class="card h-100" style="border-radius: 16px; border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);">
-                <div class="card-body p-2">
-                    <div style="position: relative;">
-                        <canvas id="donutChart" width="400" height="400" style="max-height:220px;"></canvas>
-                    </div>
-                    <div class="chart-legend mt-4 d-flex justify-content-center">
-                        <div class="d-flex flex-wrap justify-content-center">
-                            <div class="legend-item d-flex align-items-center mr-4 mb-2">
-                                <div class="legend-color" style="width: 12px; height: 12px; border-radius: 50%; background-color: #22D571; margin-right: 8px;"></div>
-                                <span class="legend-label">Sent Messages</span>
-                            </div>
-                            <div class="legend-item d-flex align-items-center mr-4 mb-2">
-                                <div class="legend-color" style="width: 12px; height: 12px; border-radius: 50%; background-color: #FFD166; margin-right: 8px;"></div>
-                                <span class="legend-label">Pending Messages</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xl-6 d-flex align-items-center mt-4 mt-xl-0">
-            <div class="card h-100 w-100" style="border-radius: 16px; border: none; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);">
-                <div class="card-body ">
-                    <div class="">
-                    @if (!empty(getVendorSettings('whatsapp_phone_numbers')))
-                    @foreach (getVendorSettings('whatsapp_phone_numbers') as $whatsappPhoneNumber)
-                        <div class="text-center">
-                            <img class="lw-qr-image" src="{{ route('vendor.whatsapp_qr', [
-                            'vendorUid' => getVendorUid(),
-                            'phoneNumber' => cleanDisplayPhoneNumber($whatsappPhoneNumber['display_phone_number']),
-                        ]) }}">
-                            <div class="h2 text-dark font-weight-bold">{{ $whatsappPhoneNumber['verified_name'] }}</div>
-                            <div class="h3 text-primary font-weight-bold">{{ $whatsappPhoneNumber['display_phone_number'] }}</div>
-                        </div>
-                    @endforeach
-                    @endif
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid p-3 mt-2">
-    <div class="row d-flex align-items-stretch">
-        <div class="col-12 mb-5 mb-xl-5">
-              
-            <div class="row">
-                    <div class="col-lg-4 mt-3">
-                        <div class="stat-card stat-card-blue">
-                            <div class="stat-card-bg"></div>
-                            <div class="stat-card-icon">
-                                <i class="fas fa-paper-plane"></i>
-                            </div>
-                            <div class="stat-card-content">
-                                <div style="font-size:15px;">
-                                  Total<br>
-                                    <span class="font-weight-bold text-primary" style="font-size:20px;">{{ __tr($totalMessagesProcessed + $messagesInQueue) }}</span>
-                                     <span class="font-weight-bold text-primary"> Messages</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-lg-4 mt-3">
-                        <div class="stat-card stat-card-green">
-                            <div class="stat-card-bg"></div>
-                            <div class="stat-card-icon">
-                                <i class="fas fa-clipboard-check"></i>
-                            </div>
-                            <div class="stat-card-content">
-                            <div style="font-size:15px;">
-                                    Sent<br>
-                                    <span class="font-weight-bold text-success" style="font-size:20px;">{{ __tr($totalMessagesProcessed) }}</span>
-                                    <span class="font-weight-bold text-success"> Messages</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                    
-                    <div class="col-lg-4 mt-3">
-                        <div class="stat-card stat-card-pink">
-                            <div class="stat-card-bg"></div>
-                            <div class="stat-card-icon">
-                                <i class="fas fa-hourglass-half"></i>
-                                    </div>
-                            <div class="stat-card-content">
-                                <div style="font-size:15px;">
-                                     Pending<br>
-                                     <span class="font-weight-bold text-muted" style="font-size:20px;">{{ __tr($messagesInQueue) }}</span>
-                                    <span class="font-weight-bold text-muted"> Messages</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-            </div>        
-
-        </div>
-    </div>
-</div>
- 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Get the chart canvas
-        const ctx = document.getElementById('donutChart').getContext('2d');
-
-        // Calculate percentages
-        const sentMessages = {{ $totalMessagesProcessed }};
-        const pendingMessages = {{ $messagesInQueue }};
-        const total = sentMessages + pendingMessages;
-        
-        let sentPercentage = 0;
-        let pendingPercentage = 0;
-        
-        if (total > 0) {
-            sentPercentage = Math.round((sentMessages / total) * 100);
-            pendingPercentage = Math.round((pendingMessages / total) * 100);
-        }
-
-        // Data for the chart
-        const data = {
-            labels: ['Sent Messages', 'Pending Messages'],
-            datasets: [{
-                data: [sentPercentage, pendingPercentage],
-                backgroundColor: ['#22D571', '#FFD166'],
-                hoverBackgroundColor: ['#1ebe64', '#f5c759'],
-                borderWidth: 0,
-            }]
-        };
-
-        // Chart configuration
-        const config = {
-            type: 'doughnut',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                cutout: '70%',
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return context.label + ': ' + context.raw + '%';
-                            }
-                        }
-                    }
-                },
-                animation: {
-                    animateScale: true,
-                    animateRotate: true
-                }
-            }
-        };
-
-        // Render the chart
-        new Chart(ctx, config);
-    });
-</script>
-@endif
 <style>
-    /* Modern Card Styling based on reference image */
-    .stat-card {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        padding: 24px;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
-    }
-    .btn-api{
-        color: white !important;
-        background-color:rgb(19, 47, 75);
-        border-color: #adb5bd ;
-        border-radius: 5px;
-        z-index: 1;
-    }
-    .btn-api:hover{
-        background-color:rgb(131, 142, 153);
-        border-color:rgb(131, 142, 153);
-    }
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    /* Modern Sidebar Styling */
+    #sidenav-main {
+        background-color: #ffffff !important;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.05);
     }
     
-    .stat-card-content {
-        flex: 1;
-    }
-    
-    .stat-card-value {
-        font-size: 36px;
-        font-weight: 700;
-        color: #2D3748;
-        margin-bottom: 5px;
-        line-height: 1;
-    }
-    
-    .stat-card-title {
-        font-size: 14px;
+    .navbar-vertical .navbar-nav .nav-link {
+        padding: 8px 15px;
+        color:black;
         font-weight: 500;
-        color: #718096;
-        margin: 0;
+        font-size: 12px;
+        border-radius: 6px;
+        margin: 4px 8px;
+        transition: all 0.2s ease;
     }
     
-    .stat-card-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 20px;
+    .navbar-vertical .navbar-nav .nav-link:hover {
+        background-color: #f5f7fa;
+        color: #3a4a5c;
     }
     
-    .stat-card-icon i {
-        font-size: 24px;
-        color: white;
+    .navbar-vertical .navbar-nav .nav-link.active {
+        background-color: #f0f5ff;
+        color: #1771E6;
+        font-weight: 600;
     }
     
-    .stat-card-bg {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        transform: translate(30%, -30%);
-        z-index: 0;
-        opacity: 0.1;
-    }
-    /* Base feature card styling */
-    .feature-card {
-        background: white;
-        border-radius: 12px;
-        border: 1px solid #e9ecef;
-        padding: 25px;
-        transition: all 0.3s ease;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-        margin-bottom: 20px;
-        
+    .navbar-vertical .navbar-nav .nav-link i, 
+    .navbar-vertical .navbar-nav .nav-link .fa,
+    .navbar-vertical .navbar-nav .nav-link .fas {
+        font-size: 16px;
+        width: 20px;
+        margin-right: 8px;
+        text-align: center;
+        vertical-align: middle;
     }
     
-    .feature-card:hover {
-        
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-        border-color: #d1d9e6;
+    /* Icon colors */
+    .icon-dashboard {
+        color: #1771E6;
     }
     
-    /* Icon base styling */
-    .feature-icon {
-        width: 50px;
-        height: 50px;
-        border-radius: 10px;
-        background-color: rgba(34, 213, 113, 0.1);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 20px;
-        position: relative;
+    .icon-users {
+        color:rgb(213, 34, 132);
     }
     
-    .feature-icon i {
-        font-size: 24px;
-        color: #22D571;
-    }
-    
-    /* Template - Teal */
-    .template-icon {
-        background-color: rgba(190, 235, 229, 0.1);
-    }
-    
-    .template-icon i {
-        color: #2dbcab;
-    }
-    
-    /* Campaign - Orange */
-    .campaign-icon {
-        background-color: rgba(4, 0, 255, 0.1);
-    }
-    
-    .campaign-icon i {
-        color: #2b4d87;
-    }
-    
-    /* Contact - Pink */
-    .contact-icon {
-        background-color: rgba(227, 79, 149, 0.1);
-    }
-    
-    .contact-icon i {
-        color: #E34F95;
-    }
-    
-    /* Bot - Purple */
-    .bot-icon {
-        background-color: rgba(141, 93, 234, 0.1);
-    }
-    
-    .bot-icon i {
+    .icon-wallet {
         color: #8D5DEA;
     }
     
-    .agent-icon i{
-        color:  #5a6268;
-    }
-    .agent-icon{
-        background-color:rgba(90, 98, 104, 0.12);
-    }
-    .feature-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
+    .icon-pages {
+        color:rgb(231, 217, 18);
     }
     
-    .feature-title {
-        font-size: 15px;
-        font-weight: 600;
-        color: #2D3748;
-        margin-bottom: 10px;
+    .icon-globe {
+        color: #1765C9;
     }
     
-    .feature-description {
-        font-size: 12px;
-        color: #718096;
-            
-        flex: 1;
-    }
-    /* Button styling */
-    .feature-button {
-        display: inline-flex;
-        align-items: center;
-        padding: 8px 16px;
-        background-color: #22D571;
-        color: white;
-        border-radius: 6px;
-        font-weight: 500;
-        font-size: 12px;
-        transition: all 0.2s ease;
-        text-decoration: none;
-        align-self: flex-start;
+    .icon-settings {
+        color: #6C757D;
     }
     
-    .feature-button:hover {
-        background-color: #1eb863;
-        color: white;
-        text-decoration: none;
-        transform: translateX(5px);
+    .icon-facebook {
+        color: #0866FF;
     }
     
-    .template-button {
-        background-color: #2dbcab;
+    .icon-tools {
+        color: #6C757D;
     }
     
-    .template-button:hover {
-        background-color: rgb(37, 165, 150);
-    }
-    
-    /* Campaign button - Orange */
-    .campaign-button {
-        background-color:rgb(31, 57, 104);
-    }
-    
-    .campaign-button:hover {
-        background-color: #172b4d;
-    }
-    
-    /* Contact button - Pink */
-    .contact-button {
-        background-color: #E34F95;
-    }
-    
-    .contact-button:hover {
-        background-color: #d13884;
-    }
-    .bot-button {
-        background-color: #8D5DEA;
-    }
-    
-    .bot-button:hover {
-        background-color: #7a4dd0;
-    }
-    
-    /* Agent button - Gray */
-    .agent-button {
-        background-color: #6C757D;
-    }
-    
-    .agent-button:hover {
-        background-color: #5a6268;
-    }
-    
-    .feature-button i {
-        transition: transform 0.2s ease;
-    }
-    
-    .feature-button:hover i {
-        transform: translateX(3px);
-    }
-    /* Color variations */
-    .stat-card-green .stat-card-icon {
-        background-color: #22D571;
-    }
-    
-    .stat-card-green .stat-card-bg {
-        background-color: #22D571;
-    }
-    
-    .stat-card-blue .stat-card-icon {
-        background-color: #1771E6;
-    }
-    
-    .stat-card-blue .stat-card-bg {
-        background-color: #1771E6;
-    }
-    
-    .stat-card-purple .stat-card-icon {
-        background-color: #8D5DEA;
-    }
-    
-    .stat-card-purple .stat-card-bg {
-        background-color: #8D5DEA;
-    }
-    
-    .stat-card-orange .stat-card-icon {
-        background-color: #F19946;
-    }
-    
-    .stat-card-orange .stat-card-bg {
-        background-color: #F19946;
-    }
-    
-    .stat-card-pink .stat-card-icon {
-        background-color: #E34F95;
-    }
-    
-    .stat-card-pink .stat-card-bg {
-        background-color: #E34F95;
-    }
-    
-    .stat-card-gray .stat-card-icon {
-        background-color: #6C757D;
-    }
-    
-    .stat-card-gray .stat-card-bg {
-        background-color: #6C757D;
-    }
-    /* Action Link Styling */
-    .action-link {
-        display: block;
-        margin-bottom: 12px;
-        border-radius: 12px;
-        overflow: hidden;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        position: relative;
-        z-index: 1;
-    }
-    
-    .action-link:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-    }
-    
-    .action-link-content {
-        display: flex;
-        align-items: center;
-        padding: 12px 16px;
-        font-weight: 600;
-        color: white;
-        position: relative;
-        z-index: 2;
-    }
-    
-    .action-link-icon {
-        margin-right: 10px;
-        font-size: 18px;
-    }
-    
-    /* Individual Link Styles */
-    .template-link {
-        background-color: #2dbcab;
-    }
-    
-    .template-link::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(90deg, #9eefe6, #2dbcab);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: -1;
-    }
-    
-    .template-link:hover::before {
-        opacity: 1;
-    }
-    
-    .campaign-link {
-        background-color: #E34F95;
-    }
-    
-    .campaign-link::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(45deg,rgb(21, 24, 65),rgb(36, 14, 61));
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: -1;
-    }
-    
-    .campaign-link:hover::before {
-        opacity: 1;
-    }
-    
-    .contact-link {
-        background-color: #1765C9;
-    }
-    
-    .contact-link::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, #1765C9, #55BFF0);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: -1;
-    }
-    
-    .contact-link:hover::before {
-        opacity: 1;
-    }
-    
-    .agent-link {
-        background-color: #6C757D;
-    }
-    
-    .agent-link::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, #c4c4c4, #6C757D);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: -1;
-    }
-    
-    .agent-link:hover::before {
-        opacity: 1;
-    }
-    
-    .chatbot-link {
-        background-color: #0866FF;
-    }
-    
-    .chatbot-link::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, #b5d1ff, #0866FF);
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        z-index: -1;
-    }
-    
-    .chatbot-link:hover::before {
-        opacity: 1;
-    }
-    
-
    
-    
-    /* Larger icons */
-    .gradient-icon-lg-1, .gradient-icon-lg-2, .gradient-icon-lg-3, 
-    .gradient-icon-lg-4, .gradient-icon-lg-5, .gradient-icon-lg-6, 
-    .gradient-icon-lg-7, .gradient-icon-lg-8, .gradient-icon-lg-9, 
-    .gradient-icon-lg-10 {
-        font-size: 50px !important;
+    /* Vendor icon colors */
+    .icon-chat {
+        color: #22D571;
     }
     
-    /* Feature card counter badge styling */
-    .feature-counter {
+    .icon-templates {
+        color: #2dbcab;
+    }
+    
+   
+    .icon-chatbot{
+        color: #A136E6;
+    }
+    .icon-campaigns {
+        color: #2b4d87;
+    }
+    
+    .icon-automation {
+        color: #A136E6;
+    }
+    
+    .icon-agents {
+        color: #6C757D;
+    }
+    
+    .icon-plan {
+        color: #8D5DEA;
+    }
+    
+    /* Submenu styling */
+    .lw-expandable-nav {
+        padding-left: 10px;
+        margin-top: 5px;
+    }
+    
+    .nav-link-ul {
+        font-size: 12px !important;
+        padding: 6px 10px 6px 30px !important;
+        position: relative;
+    }
+    .navbar-vertical.navbar-expand-md .navbar-nav .nav-link {
+        padding: 10px 10px 10px 10px !important;
+    }
+    .nav-link-ul::before {
+        content: '';
         position: absolute;
-        top: -10px;
-        right: -10px;
-        background: linear-gradient(135deg, #22D571, #1eb863);
-        color: white;
-        border-radius: 20px;
-        padding: 2px 6px;
-        font-size: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background-color: #c0c6cc;
+    }
+    
+    
+    .nav-link-ul:hover::before {
+        background-color: #1771E6;
+    }
+    
+    .nav-link-ul.active {
+        color: #1771E6 !important;
         font-weight: 600;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        min-width: 22px;
-        text-align: center;
-        z-index: 2;
-        border: 2px solid white;
-        transition: all 0.3s ease;
+    }
+   
+    .nav-link-ul.active::before {
+        background-color: #1771E6;
     }
     
-    .feature-card:hover .feature-counter {
-        transform: scale(1.1);
-    }
-    
-    /* Color variations for different feature types */
-    .feature-icon .feature-counter {
-        background: linear-gradient(135deg, #1771E6, #1461c7);
-    }
-    
-    .template-icon .feature-counter {
-        background: linear-gradient(135deg, #2dbcab, rgb(37, 165, 150));
-    }
-    
-    .campaign-icon .feature-counter {
-        background: linear-gradient(135deg,rgb(48, 38, 109),rgb(56, 8, 112));
-    }
-    
-    .contact-icon .feature-counter {
-        background: linear-gradient(135deg, #E34F95, #d13884);
-    }
-    
-    .bot-icon .feature-counter {
-        background: linear-gradient(135deg, #8D5DEA, #7a4dd0);
-    }
-    
-    .agent-icon .feature-counter {
-        background: linear-gradient(135deg, #6C757D, #5a6268);
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .feature-counter {
-            font-size: 10px;
-            padding: 1px 5px;
-            min-width: 20px;
-            top: -8px;
-            right: -8px;
-            border-width: 1.5px;
-        }
+    /* Dropdown indicators */
+    .nav-link[data-toggle="collapse"]::after {
+        content: '';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        right: 20px;
+        transition: transform 0.2s ease;
         
-        .feature-icon {
-            width: 45px;
-            height: 45px;
-        }
-        
-        .feature-icon i {
-            font-size: 20px;
-        }
     }
     
-    @media (max-width: 576px) {
-        .feature-counter {
-            font-size: 9px;
-            padding: 1px 4px;
-            min-width: 18px;
-            top: -6px;
-            right: -6px;
-            border-width: 1px;
-        }
-        
-        .feature-icon {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 15px;
-        }
-        
-        .feature-icon i {
-            font-size: 18px;
-        }
-        
-        .feature-title {
-            font-size: 16px;
-        }
-        
-        .feature-description {
-            font-size: 13px;
-        }
+    .nav-link[data-toggle="collapse"][aria-expanded="true"]::after {
+        transform: rotate(90deg);
     }
     
-    /* Add row gap to features section */
-    .features-row {
-        display: flex;
-        flex-wrap: wrap;
-        row-gap: 24px;
-        margin-right: -12px;
-        margin-left: -12px;
+    /* Section dividers */
+    .sidebar-section-divider {
+        height: 1px;
+        background-color: #edf0f5;
+        margin: 15px 20px;
     }
     
-    .features-row > [class*="col-"] {
-        padding-right: 12px;
-        padding-left: 12px;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .features-row {
-            row-gap: 20px;
-        }
-    }
-    
-    @media (max-width: 576px) {
-        .features-row {
-            row-gap: 16px;
-        }
-    }
+    /* Active submenu background */
+   
 </style>
-@endif
+
+<!-- Update the icon classes in the navbar -->
+<nav class="navbar navbar-vertical fixed-left navbar-expand-md text-dark lw-sidebar-container" id="sidenav-main">
+    <div class="container-fluid">
+        <span>
+            <!-- Toggler -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#sidenav-collapse-main"
+        aria-controls="sidenav-main" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+    </button>
+    <!-- Brand -->
+    <a class="navbar-brand pt-0 d-none d-sm-inline" href="{{ url('/') }}">
+        <img src="{{ getAppSettings('logo_image_url') }}" class="navbar-brand-img lw-sidebar-logo-normal" alt="{{ getAppSettings('name') }}">
+        <img src="{{ getAppSettings('small_logo_image_url') }}" class="navbar-brand-img lw-sidebar-logo-small" alt="{{ getAppSettings('name') }}">
+    </a>
+        </span>
+        <!-- User -->
+        <ul class="nav align-items-center d-md-none">
+            <li class="nav-item">
+                @include('layouts.navbars.locale-menu')
+              </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <div class="media align-items-center">
+                        <span class="avatar avatar-sm rounded-circle">
+                            <i class="fa fa-user"></i>
+                        </span>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-arrow dropdown-menu-right">
+                    <div class=" dropdown-header noti-title">
+                        <h6 class="text-overflow m-0">{{ __tr('Welcome!') }}</h6>
+                    </div>
+                    <a href="{{ route('user.profile.edit') }}" class="dropdown-item">
+                        <i class="fa fa-user"></i>
+                        <span>{{ __tr('My profile') }}</span>
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <a data-method="post" href="{{ route('auth.logout') }}" class="dropdown-item lw-ajax-link-action">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>{{ __tr('Logout') }}</span>
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <!-- Collapse -->
+        <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+            <!-- Collapse header -->
+            <div class="navbar-collapse-header d-md-none">
+                <div class="row">
+                    <div class="col-6 collapse-brand">
+                        <a href="{{ url('/') }}">
+                            <img src="{{ getAppSettings('logo_image_url') }}">
+                        </a>
+                    </div>
+                    <div class="col-6 collapse-close">
+                        <button type="button" class="navbar-toggler" data-toggle="collapse"
+                            data-target="#sidenav-collapse-main" aria-controls="sidenav-main" aria-expanded="false"
+                            aria-label="Toggle sidenav">
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Navigation -->
+            <ul class="navbar-nav">
+                @if (hasCentralAccess())
+                <li class="nav-item">
+                    <a class="nav-link {{ markAsActiveLink('central.console') }}" href="{{ route('central.console') }}">
+                        <i class="fa fa-chart-line icon-dashboard"></i> {{ __tr('Dashboard') }}
+                    </a>
+                </li>
+               
+                <li class="nav-item">
+                    <a class="nav-link" href="#lwSubscriptionSubMenu" data-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="lwSubscriptionSubMenu">
+                        <i class="fa fa-wallet icon-wallet"></i>
+                        <span class="nav-link-text">{{ __tr('User Plans') }}</span>
+                    </a>
+                    <div class="collapse show lw-expandable-nav" id="lwSubscriptionSubMenu">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item {{ markAsActiveLink('central.subscriptions') }}">
+                                <a class="bg-primary-light nav-link nav-link-ul" href="{{ route('central.subscriptions') }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Auto') }}
+                                </a>
+                            </li>
+                            <li class="nav-item {{ markAsActiveLink('central.subscription.manual_subscription.read.list_view') }}">
+                                <a class="nav-link nav-link-ul bg-primary-light" href="{{ route('central.subscription.manual_subscription.read.list_view') }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Manual/Prepaid') }} @if(getPendingSubscriptionCount())<span class="badge badge-danger ml-2">{{ getPendingSubscriptionCount() }}</span> @endif
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+                <li class="nav-item  ">
+                    <a class="nav-link"  href="{{ route('central.vendors') }}" >
+                        <i class="fas fa-users icon-users"></i> {{ __tr('Users') }}
+                    </a>
+                    
+                </li>
+                
+                <li class="nav-item ">
+                    <a class="nav-link {{ markAsActiveLink('page.list') }}" href="{{ route('page.list') }}">
+                        <i class="fas fa-copy icon-pages"></i> {{ __tr('Pages') }}
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link {{ markAsActiveLink('manage.translations.languages') }}" href="{{ route('manage.translations.languages') }}">
+                        <i class="fas fa-globe icon-globe"></i> {{ __tr('Languages') }}
+                    </a>
+                </li>
+                
+                <li class="nav-item {{ request('pageType') == 'other' ? 'active' : '' }}">
+                    <a class="bg-primary-light nav-link nav-link-footer"
+                        href="{{ route('manage.configuration.read', ['pageType' => 'other']) }}">
+                        <i class="fa fa-cogs icon-settings"></i>
+                        {!! __tr('Setup') !!}
+                    </a>
+                </li>
+                
+                <li class="nav-item {{ request('pageType') == 'whatsapp-onboarding' ? 'active' : '' }}">
+                    <a class="bg-primary-light nav-link nav-link-footer"
+                        href="{{ route('manage.configuration.read', ['pageType' => 'whatsapp-onboarding']) }}">
+                        <i class="fab fa-facebook icon-facebook"></i>
+                        {!! __tr('Embedded Signup') !!}
+                    </a>
+                </li>
+                
+                <li class="nav-item">
+                    <a class="nav-link" href="#configurationMenu" data-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="configurationMenu">
+                        <i class="fa fa-tools icon-tools"></i>
+                        <span class="nav-link-text">{{ __tr('Settings') }}</span>
+                    </a>
+
+                    <div class="collapse show lw-expandable-nav" id="configurationMenu">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="bg-primary-light nav-link nav-link-ul {{ request('pageType') == 'general' ? 'active' : '' }}"
+                                    href="{{ route('manage.configuration.read', ['pageType' => 'general']) }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('General') }}
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request('pageType') == 'user' ? 'active' : '' }}">
+                                <a class="bg-primary-light nav-link nav-link-ul"
+                                    href="{{ route('manage.configuration.read', ['pageType' => 'user']) }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!! __tr('User') !!}
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request('pageType') == 'currency' ? 'active' : '' }}">
+                                <a class="bg-primary-light nav-link nav-link-ul"
+                                    href="{{ route('manage.configuration.read', ['pageType' => 'currency']) }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Currency') }}
+                                </a>
+                            </li>
+                            <li class="nav-item {{ markAsActiveLink('manage.configuration.payment') }}">
+                                <a class="bg-primary-light nav-link-ul nav-link <?= (isset($pageType) and $pageType == 'payment') ? 'active' : '' ?>"
+                                    href="<?= route('manage.configuration.read', ['pageType' => 'payment']) ?>">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Payments') }}
+                                </a>
+                            </li>
+                            <li class="nav-item {{ markAsActiveLink('manage.configuration.subscription-plans') }}">
+                                <a class="bg-primary-light nav-link nav-link-ul" href="{{ route('manage.configuration.subscription-plans') }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('User Plans') }}
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request('pageType') == 'email' ? 'active' : '' }}">
+                                <a class="bg-primary-light nav-link nav-link-ul"
+                                    href="{{ route('manage.configuration.read', ['pageType' => 'email']) }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Email') }}
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request('pageType') == 'social-login' ? 'active' : '' }}">
+                                <a class="bg-primary-light nav-link nav-link-ul"
+                                    href="{{ route('manage.configuration.read', ['pageType' => 'social-login']) }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Logins') }}
+                                </a>
+                            </li>
+                            <li class="nav-item {{ request('pageType') == 'misc' ? 'active' : '' }}">
+                                <a class="bg-primary-light nav-link nav-link-ul"
+                                    href="{{ route('manage.configuration.read', ['pageType' => 'misc']) }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!! __tr('Apperance') !!}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+                <!--li class="nav-item <!--?= Request::fullUrl() == route('manage.configuration.read', ['pageType' => 'licence-information']) ? 'active' : '' ?>"-->
+                    <!--a class="bg-primary-light nav-link nav-link-footer"  href="<!--?= route('manage.configuration.read', ['pageType' => 'licence-information']) ?>"-->
+                        <!--i class="fas fa-shield-alt" style="color: #20C997 !important"></i-->
+                        <!--span--><!--?= __tr('License') ?></span-->
+                    <!--/a>
+                </li---->
+                
+                @endif
+                @if (hasVendorAccess() or hasVendorUserAccess())
+                <li class="nav-item">
+                    <a class="nav-link {{ markAsActiveLink('vendor.console') }}" href="{{ route('vendor.console') }}">
+                        <i class="fa fa-chart-line icon-dashboard"></i>
+                        {{ __tr('Dashboard') }}
+                    </a>
+                </li>
+                 @if (hasVendorAccess('messaging') && isWhatsAppBusinessAccountReady())
+                <li class="nav-item">
+                    <a class="nav-link {{ markAsActiveLink('vendor.chat_message.contact.view') }}" href="{{ route('vendor.chat_message.contact.view') }}">
+                        <span x-cloak x-show="unreadMessagesCount" class="badge badge-success rounded-pill ml--2" x-text="unreadMessagesCount"></span>
+                        <i class="fa fa-comments icon-chat "></i> <span class="ml--2">{{ __tr('Live Chat') }}</span>
+                    </a>
+                </li>
+                @endif
+                @if (hasVendorAccess('manage_templates') && isWhatsAppBusinessAccountReady())
+                <li class="nav-item">
+                    <a class="nav-link {{ markAsActiveLink('vendor.whatsapp_service.templates.read.list_view') }}"
+                        href="{{ route('vendor.whatsapp_service.templates.read.list_view') }}">
+                        <i class="fa fa-layer-group icon-templates"></i>
+                        {{ __tr('Templates') }}
+                    </a>
+                </li>
+                @endif
+                @if (hasVendorAccess('manage_campaigns') && isWhatsAppBusinessAccountReady())
+                <li class="nav-item">
+                    <a class="nav-link {{ markAsActiveLink('vendor.campaign.read.list_view') }}"
+                        href="{{ route('vendor.campaign.read.list_view') }}">
+                        <i class="fa fa-rocket icon-campaigns "></i>
+                        {{ __tr('Campaigns') }}
+                    </a>
+                </li>
+                @endif
+                @if (hasVendorAccess('manage_flows') && isWhatsAppBusinessAccountReady())
+                <li class="nav-item">
+                    <a class="nav-link" href="#vendorFlowSubmenuNav" data-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="vendorFlowSubmenuNav">
+                        <i class="fas fa-sitemap gradient-icon-10"></i>
+                        <span class="">{{ __tr('Flows') }}</span>
+                    </a>
+                    <div class="collapse lw-expandable-nav" id="vendorFlowSubmenuNav">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.flow.read.list_view') }}"
+                                    href="{{ route('whatsapp-flows.index') }}">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('All Flows') }}
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </div>
+                </li>
+                @endif
+                @if (hasVendorAccess('manage_contacts') && isWhatsAppBusinessAccountReady())
+                <li class="nav-item">
+                    <a class="nav-link" href="#vendorContactSubmenuNav" data-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="vendorContactSubmenuNav">
+                        <i class="fa fa-users icon-users "></i>
+                        <span class="">{{ __tr('Contacts') }}</span>
+                    </a>
+                <div class="collapse lw-expandable-nav" id="vendorContactSubmenuNav">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.contact.read.list_view') }}"
+                                href="{{ route('vendor.contact.read.list_view') }}">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('All Contacts') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.contact.group.read.list_view') }}"
+                                href="{{ route('vendor.contact.group.read.list_view') }}">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Contact Groups') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.contact.custom_field.read.list_view') }}"
+                                href="{{ route('vendor.contact.custom_field.read.list_view') }}">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Add Input') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            @endif
+                 @if (hasVendorAccess('manage_bot_replies') && isWhatsAppBusinessAccountReady())
+                 <li class="nav-item">
+                    <a class="nav-link" href="#vendorAutomationSubmenuNav" data-toggle="collapse" role="button"
+                        aria-expanded="false" aria-controls="vendorAutomationSubmenuNav">
+                        <i class="fas fa-robot icon-chatbot "></i>
+                        <span class="">{{ __tr('Chatbot') }}</span>
+                    </a>
+                <div class="collapse lw-expandable-nav" id="vendorAutomationSubmenuNav">
+                    <ul class="nav nav-sm flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.bot_reply.read.list_view') }}"
+                                href="{{ route('vendor.bot_reply.read.list_view') }}">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('All Chatbots') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-link-ul {{ markAsActiveLink('vendor.bot_reply.bot_flow.read.list_view') }}"
+                                href="{{ route('vendor.bot_reply.bot_flow.read.list_view') }}">
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Flow Maker') }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+                @endif
+                @if (hasVendorAccess('administrative') && isWhatsAppBusinessAccountReady())
+                <li class="nav-item">
+                    <a class="nav-link {{ markAsActiveLink('vendor.user.read.list_view') }}"
+                        href="{{ route('vendor.user.read.list_view') }}">
+                        <i class="fa fa-user-tie icon-agents"></i>
+                        {{ __tr('Agents') }}
+                    </a>
+                </li>
+                @endif
+                @if (isWhatsAppBusinessAccountReady())
+                <li class="nav-item">
+                    <a class="nav-link" href="#" data-toggle="modal" data-target="#lwScanMeDialog">
+                        <i class="fa fa-qrcode icon-qrcode"></i>
+                        {{ __tr('QR Code') }}
+                    </a>
+                </li>
+                @endif
+                @if (hasVendorAccess('administrative'))
+                <li class="nav-item">
+                    <a class="nav-link {{ markAsActiveLink('subscription.read.show') }}"
+                        href="{{ route('subscription.read.show') }}">
+                        <i class="fa fa-wallet icon-plan"></i>
+                        {{ __tr('My Plan') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                        <a class="nav-link @if(isWhatsAppBusinessAccountReady()) collapsed @else text-warning @endif" href="#vendorSettingsNav" data-toggle="collapse" role="button"
+                            aria-expanded="@php echo !isWhatsAppBusinessAccountReady() ? 'true' : 'false'; @endphp" aria-controls="vendorSettingsNav">
+                            <i class="fa fa-cog icon-settings"></i>
+                            <span class="">{{ __tr('Setup') }}</span>
+                        </a>
+                    <div class="collapse @if(!isWhatsAppBusinessAccountReady()) show @endif lw-expandable-nav" id="vendorSettingsNav">
+                        <ul class="nav nav-sm flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-ul <?= (isset($pageType) and $pageType == 'general') ? 'active' : '' ?>"
+                                    href="<?= route('vendor.settings.read', ['pageType' => 'general']) ?>">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('Basic') }}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <strong><a class="nav-link nav-link-ul <?= (isset($pageType) and $pageType == 'whatsapp-cloud-api-setup') ? 'active' : '' ?> @if(!isWhatsAppBusinessAccountReady()) text-warning @endif"
+                                    href="<?= route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) ?>">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ __tr('WhatsApp Setup') }} @if(!isWhatsAppBusinessAccountReady())<i class="fas fa-exclamation-triangle ml-1"></i>@endif
+                                </a></strong>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-ul <?= (isset($pageType) and $pageType == 'ai-chat-bot-setup') ? 'active' : '' ?>"
+                                    href="<?= route('vendor.settings.read', ['pageType' => 'ai-chat-bot-setup']) ?>">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!! __tr('Chatbot Settings') !!}
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-ul <?= (isset($pageType) and $pageType == 'api-access') ? 'active' : '' ?>"
+                                    href="<?= route('vendor.settings.read', ['pageType' => 'api-access']) ?>">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!! __tr('API Integration') !!}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                @endif
+                @endif
+            </ul>
+        </div>
+    </div>
+</nav>
