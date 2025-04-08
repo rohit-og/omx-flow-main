@@ -26,9 +26,15 @@ $vendorViewBySuperAdmin = false;
                                     
                                 </div>
                                 <div class="d-flex flex-wrap">
-                                    <a href="{{ route('subscription.read.show') }}" class="btn btn-light font-weight-bold mr-3  mb-md-0" style="padding: 10px 20px; border-radius: 8px; transition: all 0.3s ease;">
-                                            <i class="fas fa-crown mr-2"></i> View Plan
-                                        </a>
+                                <a href="javascript:void(0);" 
+   onclick="redirectWithPopup('{{ route('subscription.read.show') }}')" 
+   class="btn btn-light font-weight-bold mr-3  mb-md-0" 
+   style="padding: 10px 20px; border-radius: 8px; transition: all 0.3s ease;">
+    <i class="fas fa-crown mr-2"></i> View Plan
+</a>
+
+
+
                                         <a href="<?= route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) ?>" class="btn btn-api font-weight-bold mr-3  mb-md-0 ">
                                             <i class="fas fa-cog mr-2"></i> API Setup
                                         </a>    
