@@ -63,11 +63,8 @@ $vendorViewBySuperAdmin = false;
                     <div class="feature-content">
                         <h3 class="feature-title">Live Chat</h3>
                         <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
-                        <a href="{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}" data-allow>
-    WhatsApp Setup
-</a>
-
-
+                        <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
+                        <a href="{{ $isWhatsAppReady ? route('vendor.whatsapp_service.templates.read.new_view') : $whatsappSetupRoute }}" class="feature-button template-button">
                             Go To Unified Team Inbox
                             <i class="fas fa-arrow-right ml-2"></i>
                         </a>
