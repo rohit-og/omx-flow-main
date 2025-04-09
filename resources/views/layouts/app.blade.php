@@ -11,6 +11,11 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ $CURRENT_LOCALE_DIRECTION }}">
 <head>
+    <!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -644,11 +649,27 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
     @push('scripts')
 <script>
     function alertAndRedirect(event, redirectUrl) {
-        event.preventDefault();
-        if (confirm("You need to complete your WhatsApp setup to access this feature.")) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: 'WhatsApp Setup Required',
+        text: 'Please complete your WhatsApp Business setup to access this feature.',
+        icon: 'warning',
+        confirmButtonText: 'Go to Setup',
+        confirmButtonColor: '#3085d6',
+        background: '#f7f7f7',
+        customClass: {
+            popup: 'rounded-lg shadow-lg',
+            title: 'text-lg font-semibold',
+            confirmButton: 'btn btn-primary'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
             window.location.href = redirectUrl;
         }
-    }
+    });
+}
+
 </script>
 @endpush
 @stack('scripts')
