@@ -9,7 +9,7 @@
         padding: 8px 15px;
         color:black;
         font-weight: 500;
-        font-size: 14px;
+        font-size: 12px;
         border-radius: 6px;
         margin: 4px 8px;
         transition: all 0.2s ease;
@@ -106,7 +106,7 @@
     }
     
     .nav-link-ul {
-        font-size: 14px !important;
+        font-size: 12px !important;
         padding: 6px 10px 6px 30px !important;
         position: relative;
     }
@@ -378,8 +378,8 @@
        @if (!isWhatsAppBusinessAccountReady())
            onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
        @endif>
-       <i class="fas fa-comments icon-chat"></i>
-       <p>Live Chat</p>
+       <i class="fa fa-comments icon-chat"></i>
+       <span class="ml-2">{{ __tr('Live Chat') }}</span>
     </a>
 </li>
 @endif
@@ -392,7 +392,7 @@
            onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
        @endif>
        <i class="fa fa-layer-group icon-templates"></i>
-       <p>Templates</p>
+       {{ __tr('Templates') }}
     </a>
 </li>
 @endif
@@ -405,7 +405,7 @@
            onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
        @endif>
        <i class="fa fa-rocket icon-campaigns "></i>
-       <p>Campaigns</p>
+       {{ __tr('Campaigns') }}
     </a>
 </li>
 @endif
@@ -424,7 +424,7 @@
        <i class="fas fa-sitemap gradient-icon-10"></i>
         <span>{{ __tr('Flows') }}</span>
     </a>
-    @if (isWhatsAppBusinessAccountReady())
+    
     <div class="collapse lw-expandable-nav" id="vendorFlowSubmenuNav">
         <ul class="nav nav-sm flex-column">
             <li class="nav-item">
@@ -435,7 +435,6 @@
             </li>
         </ul>
     </div>
-    @endif
 </li>
 @endif
 
@@ -447,7 +446,7 @@
            onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
        @endif>
        <i class="fa fa-users icon-users "></i>
-       <p>Contacts</p>
+       {{ __tr('Contacts') }}
     </a>
 </li>
 @if (isWhatsAppBusinessAccountReady())
