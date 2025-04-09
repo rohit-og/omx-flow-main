@@ -68,7 +68,6 @@ class VendorController extends BaseController
         $mobileNumber = $request->mobile_number;
         $request->validate([
             'vendor_title' => 'required|string|min:2|max:100',
-            'username' => 'required|string|alpha_dash|min:2|max:45|unique:users,username',
             'first_name' => 'required|string|min:1|max:45',
             'last_name' => 'required|string|min:1|max:45',
             'mobile_number' => [
@@ -89,7 +88,11 @@ class VendorController extends BaseController
             'password_confirmation' => 'required',
         ]);
       
-        $processReaction = $this->authEngine->processRegistration($request->all());
+        // Add email as username to the request data
+        $requestData = $request->all();
+        $requestData['username'] = $request->email;
+        
+        $processReaction = $this->authEngine->processRegistration($requestData);
 
         return $this->processResponse($processReaction, [], [], true);
     }
@@ -183,14 +186,6 @@ class VendorController extends BaseController
             'vendorIdOrUid' => 'required',
             'userIdOrUid' => '',
             'title' => 'required|string|min:2|max:100',
-            'username' => [
-                'required',
-                'string',
-                'alpha_dash',
-                'min:2',
-                'max:45',
-                Rule::unique((new AuthModel())->getTable())->ignore($request->userIdOrUid, '_uid')
-            ],
             'first_name' => 'required|string|min:1|max:45',
             'last_name' => 'required|string|min:1|max:45',
             'mobile_number' => [
@@ -216,8 +211,12 @@ class VendorController extends BaseController
             'status' => '',
         ]);
        
+        // Set email as username in the request data
+        $requestData = $request->all();
+        $requestData['username'] = $request->email;
+        
         // ask engine to process the request
-        $processReaction = $this->vendorEngine->processVendorUpdate($request->all());
+        $processReaction = $this->vendorEngine->processVendorUpdate($requestData);
 
         // get back with response
         return $this->processResponse($processReaction, [], [], true);

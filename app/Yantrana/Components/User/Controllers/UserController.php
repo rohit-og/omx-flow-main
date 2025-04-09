@@ -172,9 +172,16 @@ class UserController extends BaseController
         $mobileNumber = $request->mobile_number;
         // process the validation based on the provided rules
         $request->validate([
-            'email' => 'required|string|email|unique:users,email' . (getAppSettings('disallow_disposable_emails') ? '|indisposable' : ''),
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'unique:users,email',
+                'unique:users,username',
+                (getAppSettings('disallow_disposable_emails') ? 'indisposable' : '')
+            ],
             'password' => 'required|string|min:8',
-            'username' => 'required|string|unique:users|alpha_dash|min:2|max:45|unique:users,username',
+            // Removed separate username validation as we're using email as username
             'first_name' => 'required|string|min:1|max:45',
             'last_name' => 'required|string|min:1|max:45',
             'mobile_number' => [
@@ -192,8 +199,13 @@ class UserController extends BaseController
                 }
             ],
         ]);
+        
+        // Prepare data with email as username
+        $userData = $request->all();
+        $userData['username'] = $userData['email'];
+        
         // ask engine to process the request
-        $processReaction = $this->userEngine->processUserCreate($request->all());
+        $processReaction = $this->userEngine->processUserCreate($userData);
         // get back with response
         return $this->processResponse($processReaction);
     }
@@ -288,7 +300,8 @@ class UserController extends BaseController
                 'required',
                 'email',
                 (getAppSettings('disallow_disposable_emails') ? 'indisposable' : ''),
-                Rule::unique((new AuthModel())->getTable())->ignore($request->get('userIdOrUid'), '_uid')
+                Rule::unique((new AuthModel())->getTable())->ignore($request->get('userIdOrUid'), '_uid'),
+                Rule::unique('users', 'username')->ignore($request->get('userIdOrUid'), '_uid')
             ],
             'password' => 'nullable|string|min:8',
             'first_name' => 'required|string|min:1|max:45',
@@ -309,8 +322,13 @@ class UserController extends BaseController
                 }
             ],
         ]);
+        
+        // Prepare data with email as username
+        $userData = $request->all();
+        $userData['username'] = $userData['email'];
+        
         // ask engine to process the request
-        $processReaction = $this->userEngine->processUserUpdate($request->get('userIdOrUid'), $request);
+        $processReaction = $this->userEngine->processUserUpdate($request->get('userIdOrUid'), (object)$userData);
         // get back with response
         return $this->processResponse($processReaction, [], [], true);
     }

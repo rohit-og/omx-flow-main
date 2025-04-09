@@ -29,9 +29,7 @@
                 <th data-orderable="true" data-name="fullName">
                     <?= __tr('Admin Name') ?>
                 </th>
-                <th data-orderable="true" data-name="username">
-                    <?= __tr('username') ?>
-                </th>
+                
                 <th data-orderable="true" data-name="email">
                     <?= __tr('email') ?>
                 </th>
@@ -107,16 +105,6 @@
                 {{-- VENDOR TITLE --}}
                 <div class="text-center text-muted mb-4 ">
                     {{ __tr('Admin User') }}
-                </div>
-                {{-- USERNAME --}}
-                <div class="form-group mb-3">
-                    <div class="input-group input-group-alternative">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-id-card"></i></span>
-                        </div>
-                        <input class="form-control" placeholder="{{ __tr('Username') }}" type="text" name="username"
-                            value="{{ old('username') }}" required autofocus>
-                    </div>
                 </div>
                 {{-- USERNAME --}}
                 {{-- FIRSTNAME --}}
@@ -230,7 +218,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-id-card"></i></span>
                         </div>
-                        <input type="text" class="lw-form-field form-control" placeholder="<?= __tr('Username') ?>" id="lwUserNameEditField" value="<%- __tData.username%>" name="username" required="true" />
+                        <input type="text"class="lw-form-field form-control" placeholder="<?= __tr('Email ') ?>" id="lwEmailEditField" value="<%- __tData.email%>" name="email" />
                     </div>
                 </div>
                 <!-- /UserName  -->

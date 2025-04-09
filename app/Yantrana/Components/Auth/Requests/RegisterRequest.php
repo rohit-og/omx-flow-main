@@ -5,7 +5,6 @@ namespace App\Yantrana\Components\Auth\Requests;
 use App\Yantrana\Base\BaseRequest;
 use App\Yantrana\Components\Auth\Models\AuthModel;
 
-
 class RegisterRequest extends BaseRequest
 {
     /**
@@ -31,12 +30,16 @@ class RegisterRequest extends BaseRequest
     public function rules()
     {
         $inputData = $this->all();
-         // Combine country code and mobile number
-         $mobileNumber = $inputData['mobile_number'];
+
+        // Set username to email
+        $this->merge(['username' => $inputData['email']]);
+
+        // Combine country code and mobile number
+        $mobileNumber = $inputData['mobile_number'];
         $rules = [
             'email' => 'required|string|email|unique:users,email' . (getAppSettings('disallow_disposable_emails') ? '|indisposable' : ''),
+            'username' => 'string|unique:users,username',
             'password' => 'required|string|confirmed|min:8',
-            'username' => 'required|string|unique:users|alpha_dash|min:2|max:45|unique:users,username',
             'mobile_number' => [
                 'required',
                 'min:9',
@@ -46,11 +49,11 @@ class RegisterRequest extends BaseRequest
                         $fail('Mobile number should be a numeric value without prefixing 0 or +.');
                     }
                     $exists = AuthModel::
-                    where('mobile_number', $mobileNumber)
-                    ->exists();
-                if ($exists) {
-                    $fail('The mobile number has already been taken with the given country code.');
-                }
+                        where('mobile_number', $mobileNumber)
+                        ->exists();
+                    if ($exists) {
+                        $fail('The mobile number has already been taken with the given country code.');
+                    }
                 }
             ],
             'vendor_title' => 'required|string|min:2|max:100',
@@ -65,4 +68,3 @@ class RegisterRequest extends BaseRequest
         return $rules;
     }
 }
-

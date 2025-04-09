@@ -162,11 +162,7 @@
                                     name="vendor_title" value="{{ old('vendor_title') }}" required autofocus>
                         </div>
                         <!-- Username -->
-                        <div class="form-group">
-                            <label>Admin Username</label>
-                            <input class="form-control" placeholder="{{ __tr('Admin Username') }}" type="text"
-                                    name="username" value="{{ old('username') }}" required autofocus>
-                        </div>
+                        
                         <label style="font-size: 15px; font-weight: 600; text-transform: uppercase;">Name</label>
                         <div class="row">
                             <div class="col-md-6">
