@@ -10,3 +10,9 @@ body {
   padding: 10px 8px;
   border: 1px solid #c7c7c7;
 }
+.sidebar-label {
+  font-size: 14px; /* or 1rem */
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  line-height: 1.4;
+}

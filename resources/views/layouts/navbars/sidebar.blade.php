@@ -9,7 +9,7 @@
         padding: 8px 15px;
         color:black;
         font-weight: 500;
-        font-size: 12px;
+        font-size: 14px;
         border-radius: 6px;
         margin: 4px 8px;
         transition: all 0.2s ease;
@@ -106,7 +106,7 @@
     }
     
     .nav-link-ul {
-        font-size: 12px !important;
+        font-size: 14px !important;
         padding: 6px 10px 6px 30px !important;
         position: relative;
     }
@@ -378,7 +378,7 @@
        @if (!isWhatsAppBusinessAccountReady())
            onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
        @endif>
-       <i class="fas fa-comments nav-icon"></i>
+       <i class="fas fa-comments icon-chat"></i>
        <p>Live Chat</p>
     </a>
 </li>
@@ -391,7 +391,7 @@
        @if (!isWhatsAppBusinessAccountReady())
            onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
        @endif>
-       <i class="fa fa-layer-group nav-icon"></i>
+       <i class="fa fa-layer-group icon-templates"></i>
        <p>Templates</p>
     </a>
 </li>
@@ -404,7 +404,7 @@
        @if (!isWhatsAppBusinessAccountReady())
            onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
        @endif>
-       <i class="fa fa-rocket nav-icon"></i>
+       <i class="fa fa-rocket icon-campaigns "></i>
        <p>Campaigns</p>
     </a>
 </li>
@@ -421,7 +421,7 @@
        role="button"
        aria-expanded="false"
        aria-controls="vendorFlowSubmenuNav">
-        <i class="fas fa-sitemap gradient-icon-10"></i>
+       <i class="fas fa-sitemap gradient-icon-10"></i>
         <span>{{ __tr('Flows') }}</span>
     </a>
     @if (isWhatsAppBusinessAccountReady())
@@ -446,7 +446,7 @@
        @if (!isWhatsAppBusinessAccountReady())
            onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
        @endif>
-       <i class="fa fa-users nav-icon"></i>
+       <i class="fa fa-users icon-users "></i>
        <p>Contacts</p>
     </a>
 </li>

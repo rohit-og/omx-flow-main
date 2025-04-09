@@ -653,7 +653,7 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
 
     Swal.fire({
         title: 'WhatsApp Setup Required',
-        text: 'Please complete your WhatsApp Business setup to access this feature.',
+        text: 'Please complete your WhatsApp API setup to access this feature.',
         icon: 'warning',
         confirmButtonText: 'Go to Setup',
         confirmButtonColor: '#3085d6',
