@@ -7,6 +7,23 @@
 ])
 @push('head')
 {!! __yesset('dist/css/whatsapp-chat.css', true) !!}
+<style>
+    .lw-contact-list {
+        max-height: 70vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        position: relative;
+    }
+    
+    /* Add a loading indicator for when more contacts are being loaded */
+    .lw-contact-list-loading {
+        text-align: center;
+        padding: 10px;
+        font-size: 12px;
+        color: #666;
+    }
+</style>
 @endpush
 <div x-data="initialMessageData">
 {{-- @if ($contact) --}}
@@ -39,21 +56,21 @@
                         <a href="{{ route('vendor.chat_message.export' 
              ) }}" data-method="post" class="btn btn-dark btn-sm mt-3"><i class="fa fa-download"></i> {{  __tr('Report') }}</a>
                     </div>
-                        <nav>
-                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            @if (isVendorAdmin(getVendorId()) or !hasVendorAccess('assigned_chats_only'))
-                              <a class="nav-link {{ ($assigned ?? null) ? '' : 'active' }}" href="{{ route('vendor.chat_message.contact.view') }}" id="lw-all-contacts-tab"  data-target="#lwAllContactsTab" type="button" role="tab" aria-controls="lwAllContactsTab" aria-selected="true">{{  __tr('All') }} <span x-cloak x-show="unreadMessagesCount" class="badge bg-yellow text-dark badge-white rounded-pill ml-2" x-text="unreadMessagesCount"></span></a>
-                            @endif
-                              <a href="{{ route('vendor.chat_message.contact.view', [
-                                'assigned' => 'to-me',
-                              ]) }}" class="nav-link {{ (($assigned ?? null) == 'to-me') ? 'active' : '' }}" id="lw-to-me-tab"  data-target="#lwAssignedToMeTab" type="button" role="tab" aria-controls="lwAssignedToMeTab" aria-selected="false">{{  __tr('Mine') }} <span x-cloak x-show="myAssignedUnreadMessagesCount" class="badge bg-yellow text-dark badge-white rounded-pill ml-2" x-text="myAssignedUnreadMessagesCount"></span></a>
-                              @if (isVendorAdmin(getVendorId()) or !hasVendorAccess('assigned_chats_only'))
-                              <a href="{{ route('vendor.chat_message.contact.view', [
-                                'assigned' => 'unassigned',
-                              ]) }}" class="nav-link {{ ($assigned ?? null) == 'unassigned' ? 'active' : '' }}" id="lw-unassigned-tab"  data-target="#lwUnassignedTab" type="button" role="tab" aria-controls="lwUnassignedTab" aria-selected="false">{{  __tr('Unassigned') }} <span x-cloak x-show="myUnassignedUnreadMessagesCount" class="badge bg-yellow text-dark badge-white rounded-pill ml-2" x-text="myUnassignedUnreadMessagesCount"></span></a>
-                               @endif
-                            </div>
-                          </nav>
+                    <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    @if (isVendorAdmin(getVendorId()) or !hasVendorAccess('assigned_chats_only'))
+      <a class="nav-link {{ ($assigned ?? null) ? '' : 'active' }}" href="{{ route('vendor.chat_message.contact.view') }}" id="lw-all-contacts-tab"  data-target="#lwAllContactsTab" type="button" role="tab" aria-controls="lwAllContactsTab" aria-selected="true">{{  __tr('All') }} <span x-cloak x-show="unreadContactsCount()" class="badge bg-yellow text-dark badge-white rounded-pill ml-2" x-text="unreadContactsCount()"></span></a>
+    @endif
+      <a href="{{ route('vendor.chat_message.contact.view', [
+        'assigned' => 'to-me',
+      ]) }}" class="nav-link {{ (($assigned ?? null) == 'to-me') ? 'active' : '' }}" id="lw-to-me-tab"  data-target="#lwAssignedToMeTab" type="button" role="tab" aria-controls="lwAssignedToMeTab" aria-selected="false">{{  __tr('Mine') }} <span x-cloak x-show="myAssignedUnreadContactsCount()" class="badge bg-yellow text-dark badge-white rounded-pill ml-2" x-text="myAssignedUnreadContactsCount()"></span></a>
+      @if (isVendorAdmin(getVendorId()) or !hasVendorAccess('assigned_chats_only'))
+      <a href="{{ route('vendor.chat_message.contact.view', [
+        'assigned' => 'unassigned',
+      ]) }}" class="nav-link {{ ($assigned ?? null) == 'unassigned' ? 'active' : '' }}" id="lw-unassigned-tab"  data-target="#lwUnassignedTab" type="button" role="tab" aria-controls="lwUnassignedTab" aria-selected="false">{{  __tr('Unassigned') }} <span x-cloak x-show="myUnassignedUnreadContactsCount()" class="badge bg-yellow text-dark badge-white rounded-pill ml-2" x-text="myUnassignedUnreadContactsCount()"></span></a>
+      @endif
+    </div>
+</nav>
                           <div class="tab-content" id="nav-tabContent" x-cloak>
                             <div class="tab-pane fade show active" id="lwAllContactsTab" role="tabpanel" aria-labelledby="lw-all-contacts-tab">
                             <div class="form-group">
@@ -103,9 +120,6 @@
                                 {{-- </template> --}}
                                 @endif
                             </template>
-                            <div class="p-4" x-show="contactsPaginatePage">
-                                <button x-cloak class="btn btn-sm btn-block btn-secondary" @click="loadMoreContacts" ><i class="fa fa-download"></i> {{  __tr('Load More') }}</button>
-                            </div>
                         </div>
                     </div>
                     </div>
@@ -582,6 +596,21 @@
             contacts: {},
             assignedLabelIds: [],
             allLabels: @json($allLabels),
+            unreadContactsCount() {
+        return Object.values(this.contacts).filter(contact => contact.unread_messages_count > 0).length;
+    },
+    myAssignedUnreadContactsCount() {
+        return Object.values(this.contacts).filter(contact => 
+            contact.unread_messages_count > 0 && 
+            contact.assigned_users__id == '{{ getUserId() }}'
+        ).length;
+    },
+    myUnassignedUnreadContactsCount() {
+        return Object.values(this.contacts).filter(contact => 
+            contact.unread_messages_count > 0 && 
+            !contact.assigned_users__id
+        ).length;
+    },
             filteredContacts: function () {
                 return _.reverse(_.sortBy(this.contacts, [function(o) { return o.last_message?.messaged_at; }]));
             },
@@ -636,6 +665,29 @@
     window.messagePaginatePage = 1;
     window.searchValue = '';
     window.showUnreadContactsOnly = 0;
+    window.isLoadingMoreContacts = false;
+    $(document).ready(function() {
+    const contactListContainer = $('.lw-contact-list');
+    
+    contactListContainer.on('scroll', function() {
+        // Check if we're near the bottom (within 200px of bottom)
+        if (this.scrollHeight - this.scrollTop - this.clientHeight < 200) {
+            // Only load more if there are more pages to load
+            if (window.contactsPaginatePage > 0) {
+                // Prevent multiple simultaneous requests
+                if (!window.isLoadingMoreContacts) {
+                    window.isLoadingMoreContacts = true;
+                    window.loadMoreContacts();
+                    
+                    // Reset the loading flag after a short delay
+                    setTimeout(function() {
+                        window.isLoadingMoreContacts = false;
+                    }, 1000);
+                }
+            }
+        }
+    });
+});
     window.loadEarlierMessages = function(responseData, callbackParams) {
         __DataRequest.get(__Utils.apiURL('{!! route('vendor.chat_message.contact.view', ['contactUid', 'way' => 'prepend', 'page', 'assigned' => ($assigned ?? '')]) !!}',{'contactUid': $('#lwWhatsAppChatWindow').attr('data-contact-uid'),'page':'page='+ window.messagePaginatePage}),{}, function() {});
         if(callbackParams) {
@@ -650,8 +702,17 @@
     };
     window.contactsPaginatePage = 1;
     window.loadMoreContacts = function(responseData, callbackParams) {
-        __DataRequest.get(__Utils.apiURL("{!! route('vendor.contacts.data.read', ['contactUid', 'page' => '', 'way' => 'append', 'search' => '', 'unread_only' => '', 'assigned' => ($assigned ?? '')]) !!}", {'contactUid': $('#lwWhatsAppChatWindow').attr('data-contact-uid'),'page':'page='+ window.contactsPaginatePage + '&', 'search':'search='+ window.searchValue + '&', 'unread_only':'unread_only='+ window.showUnreadContactsOnly + '&'}),{}, function() {});
-    };
+    // If responseData is provided and indicates no more pages, set contactsPaginatePage to 0
+    if (responseData && responseData.data && responseData.data.hasMorePages === false) {
+        window.contactsPaginatePage = 0;
+        __DataRequest.updateModels({
+            contactsPaginatePage: 0,
+        });
+        return;
+    }
+    
+    __DataRequest.get(__Utils.apiURL("{!! route('vendor.contacts.data.read', ['contactUid', 'page' => '', 'way' => 'append', 'search' => '', 'unread_only' => '', 'assigned' => ($assigned ?? '')]) !!}", {'contactUid': $('#lwWhatsAppChatWindow').attr('data-contact-uid'),'page':'page='+ window.contactsPaginatePage + '&', 'search':'search='+ window.searchValue + '&', 'unread_only':'unread_only='+ window.showUnreadContactsOnly + '&'}),{}, function() {});
+};
     window.searchContacts = function(responseData, callbackParams) {
         window.contactsPaginatePage = 1;
         __DataRequest.updateModels({
