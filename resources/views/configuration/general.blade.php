@@ -17,18 +17,22 @@
             <div class="form-group float-left mr-5">
                 <label for="lwUploadLogo"><?= __tr('Logo') ?></label>
             <input type="file" data-lw-plugin="lwUploader" data-label-idle="{{ __tr('Select New Logo') }}" data-allow-revert="true" data-instant-upload="true" data-action="<?= route('media.upload_logo') ?>" id="lwUploadLogo" data-callback="afterUploadedFile" data-default-image-url="<?= getAppSettings('logo_image_url') ?>">
-            </div>
+            <small class="form-text text-muted">{{ __tr('Recommended size: 930x240 pixels | Format:png') }}</small>    
+        </div>
              <!-- /upload logo -->
               <!-- upload small logo -->
             <div class="form-group mr-5">
                 <label for="lwUploadSmallLogo"><?= __tr('Small Logo') ?></label>
             <input type="file" data-lw-plugin="lwUploader" data-label-idle="{{ __tr('Select New Small Logo') }}" data-allow-revert="true" data-instant-upload="true" data-action="<?= route('media.upload_small_logo') ?>" id="lwUploadSmallLogo" data-callback="afterUploadedFile" data-default-image-url="<?= getAppSettings('small_logo_image_url') ?>">
-            </div>
+            <small class="form-text text-muted">{{ __tr('Recommended size: 520x460 pixels | Format:png') }}</small>    
+        </div>
              <!-- /upload small logo -->
               <!-- upload favicon -->
             <div class="form-group float-right">
                 <label for="lwUploadFavicon"><?= __tr('Favicon') ?></label>
                 <input type="file" data-lw-plugin="lwUploader" data-label-idle="{{ __tr('Select New Favicon') }}" data-instant-upload="true" data-action="<?= route('media.upload_favicon') ?>" data-callback="afterUploadedFile" id="lwUploadFavicon" data-default-image-url="<?= getAppSettings('favicon_image_url') ?>">
+                <small class="form-text text-muted">{{ __tr('Recommended size: 520x460 pixels ') }}</small>
+                <small class="form-text text-muted">{{ __tr(' Format:png') }}</small>
             </div>
              <!-- /upload favicon -->
         </div>
@@ -95,7 +99,7 @@
                     data-callback="afterUploadedFile" 
                     id="lwUploadHeroImage" 
                     data-default-image-url="<?= getAppSettings('hero_image') ?>">
-                <small class="form-text text-muted">{{ __tr('Recommended size: 1200x1200 pixels') }}</small>
+                <small class="form-text text-muted">{{ __tr('Recommended size: 1200x1200 pixels | Format: .png') }}</small>
             </div>
              <!-- /Hero Image Upload -->
 
