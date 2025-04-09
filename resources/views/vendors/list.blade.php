@@ -55,7 +55,7 @@
         <a  href ="<%= __Utils.apiURL("{{ route('vendor.dashboard',['vendorIdOrUid'=>'vendorIdOrUid'])}}", {'vendorIdOrUid':__tData._uid}) %>"> <%-__tData.title %> </a> 
     </script>
     <script type="text/template" id="lwQuickActionButtons">
-        <a data-method="post" href="<%= __Utils.apiURL("{{ route('central.vendors.user.write.login_as', [ 'vendorUid']) }}", {'vendorUid': __tData._uid}) %>" class="btn btn-outline-success btn-sm lw-ajax-link-action" data-confirm="#lwLoginAs-template" title="{{ __tr('Login as Vendor Admin') }}"><i class="fa fa-sign-in-alt"></i> {{  __tr('Login') }}</a>
+        <a data-method="post" href="<%= __Utils.apiURL("{{ route('central.vendors.user.write.login_as', [ 'vendorUid']) }}", {'vendorUid': __tData._uid}) %>" class="btn btn-outline-success btn-sm lw-ajax-link-action"  title="{{ __tr('Login as Vendor Admin') }}"><i class="fa fa-sign-in-alt"></i> {{  __tr('Login') }}</a>
         <a class="btn btn-info btn-sm" href ="<%= __Utils.apiURL("{{ route('central.vendor.details',['vendorIdOrUid'=>'vendorIdOrUid'])}}", {'vendorIdOrUid':__tData._uid}) %>"> {{  __tr('Subscription') }} </a>
     </script>
     <script type="text/template" id="actionButtons">
@@ -71,10 +71,7 @@
         <a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.permanant.delete', ['vendorIdOrUid']) }}", {'vendorIdOrUid': __tData._uid}) %>" class="btn btn-outline-danger btn-sm lw-ajax-link-action-via-confirm" data-confirm="#lwDeleteVendor-template" title="{{ __tr('Delete') }}" data-toggle="modal" data-target="#deletePlan" data-callback-params="{{ json_encode(['modalId' => '#lwDeleteVendor-template','datatableId' => '#lwManageVendorsTable']) }}" data-callback="appFuncs.modelSuccessCallback"><i class="fa fa-trash"></i> {{ __tr('Delete') }}</a>
            <!--  /PERMANANT DELTE ACTION -->
     </script>
-    <script type="text/template" id="lwLoginAs-template">
-        <h2>{{ __tr('Are You Sure!') }}</h2>
-        <p>{{ __tr('You want login to this vendor admin account?') }}</p>
-</script>
+    
     <!-- VENDOR DELETE TEMPLATE -->
     <script type="text/template" id="lwSoftDeleteVendor-template">
         <h2><?= __tr('Are You Sure!') ?></h2>
