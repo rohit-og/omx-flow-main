@@ -18,8 +18,8 @@ $vendorViewBySuperAdmin = false;
             <div class="row pb-0 pt-3 pt-lg-6 d-flex align-items-stretch mt-4">
                 <div class="col-12 p-0">
                     <div class="welcome-card" style="background: linear-gradient(135deg, #41C6B5, #1771E6); border-radius: 16px; box-shadow: 0 10px 30px rgba(23, 113, 230, 0.15); overflow: hidden; position: relative;">
-                        <div class="card-body p-4 p-md-4">
-                            <div class="row align-items-center">
+                        <div class="card-body p-4 p-md-2">
+                            <div class="row align-items-center ml-2">
                                 <div class="col-md-8">
                                     <h1 class="text-white mb-3 font-weight-bold" style="font-size: 2rem;">Welcome, {{ getUserAuthInfo('profile.first_name') }}!</h1>
                                     <p class="text-white mb-4 opacity-80" style="font-size: 0.95rem; max-width: 600px;">Manage your WhatsApp business communications, create campaigns, and engage with your customers all in one place.</p>
@@ -58,7 +58,7 @@ $vendorViewBySuperAdmin = false;
                     </div>
                     <div class="feature-content">
                         <h3 class="feature-title">Live Chat</h3>
-                        <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
+                        <p class="feature-description">Centralize WhatsApp chats in one team inbox for seamless support.</p>
                         <a href="{{ route('vendor.chat_message.contact.view') }}" class="feature-button">
                             Go To Unified Team Inbox
                             <i class="fas fa-arrow-right ml-2"></i>
@@ -75,7 +75,7 @@ $vendorViewBySuperAdmin = false;
                     </div>
                     <div class="feature-content">
                         <h3 class="feature-title">Template</h3>
-                        <p class="feature-description">Create and manage pre-approved message templates for consistent and compliant WhatsApp business messaging.</p>
+                        <p class="feature-description">Create and manage approved templates for consistent, compliant WhatsApp messaging.</p>
                         <a href="{{ route('vendor.whatsapp_service.templates.read.new_view') }}" class="feature-button template-button">
                             Create New Template
                             <i class="fas fa-arrow-right ml-2"></i>
@@ -92,7 +92,7 @@ $vendorViewBySuperAdmin = false;
                     </div>
                     <div class="feature-content">
                         <h3 class="feature-title">Campaign</h3>
-                        <p class="feature-description">Launch targeted messaging campaigns to engage your audience with personalized content at scale.</p>
+                        <p class="feature-description">Run targeted campaigns with personalized content at scale.</p>
                         <a href="{{ route('vendor.campaign.new.view') }}" class="feature-button campaign-button">
                             Create New Campaign
                             <i class="fas fa-arrow-right ml-2"></i>
@@ -108,7 +108,7 @@ $vendorViewBySuperAdmin = false;
                     </div>
                     <div class="feature-content">
                         <h3 class="feature-title">Contacts</h3>
-                        <p class="feature-description">Organize and manage your customer database with custom fields, tags, and segmentation for targeted messaging.</p>
+                        <p class="feature-description">Segment and manage customers with custom fields and tags.</p>
                         <a href="{{ route('vendor.contact.read.list_view') }}" class="feature-button contact-button">
                             Create New Contact
                             <i class="fas fa-arrow-right ml-2"></i>
@@ -124,7 +124,7 @@ $vendorViewBySuperAdmin = false;
         </div>
                     <div class="feature-content">
                         <h3 class="feature-title">Bot Reply</h3>
-                        <p class="feature-description">Set up automated responses to handle common inquiries and provide 24/7 customer support through WhatsApp.</p>
+                        <p class="feature-description">Automate replies to handle FAQs and offer 24/7 WhatsApp support.</p>
                         <a href="{{ route('vendor.bot_reply.read.list_view') }}" class="feature-button bot-button">
                             Create New Chatbot
                             <i class="fas fa-arrow-right ml-2"></i>
@@ -140,7 +140,7 @@ $vendorViewBySuperAdmin = false;
         </div>
                     <div class="feature-content">
                         <h3 class="feature-title">Agents</h3>
-                        <p class="feature-description">Manage your support team with role-based access control and monitor agent performance for better service.</p>
+                        <p class="feature-description" style="margin: 0 !important;">Control team access and track agent performance for better support.</p>
                         <a href="{{ route('vendor.user.read.list_view') }}" class="feature-button agent-button">
                             Create New Agent
                             <i class="fas fa-arrow-right ml-2"></i>
@@ -219,8 +219,7 @@ $vendorViewBySuperAdmin = false;
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="col-lg-4 mt-3">
+                                        <div class="col-lg-4 mt-3">
                         <div class="stat-card stat-card-green">
                             <div class="stat-card-bg"></div>
                             <div class="stat-card-icon">
@@ -395,6 +394,7 @@ $vendorViewBySuperAdmin = false;
     }
     /* Base feature card styling */
     .feature-card {
+        
         background: white;
         border-radius: 12px;
         border: 1px solid #e9ecef;
@@ -409,7 +409,7 @@ $vendorViewBySuperAdmin = false;
     }
     
     .feature-card:hover {
-        
+        transform: translateY(-5px);
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         border-color: #d1d9e6;
     }
@@ -423,7 +423,7 @@ $vendorViewBySuperAdmin = false;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         position: relative;
     }
     
@@ -434,7 +434,7 @@ $vendorViewBySuperAdmin = false;
     
     /* Template - Teal */
     .template-icon {
-        background-color: rgba(190, 235, 229, 0.1);
+        background-color: rgba(169, 240, 230, 0.1);
     }
     
     .template-icon i {
@@ -490,7 +490,7 @@ $vendorViewBySuperAdmin = false;
     .feature-description {
         font-size: 12px;
         color: #718096;
-            
+        line-height:1.5;   
         flex: 1;
     }
     /* Button styling */
@@ -506,6 +506,7 @@ $vendorViewBySuperAdmin = false;
         transition: all 0.2s ease;
         text-decoration: none;
         align-self: flex-start;
+        margin-top:-10px;
     }
     
     .feature-button:hover {
@@ -856,6 +857,7 @@ $vendorViewBySuperAdmin = false;
         
         .feature-description {
             font-size: 13px;
+            margin: 0 !important;
         }
     }
     
