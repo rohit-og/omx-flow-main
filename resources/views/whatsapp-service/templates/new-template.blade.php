@@ -77,17 +77,133 @@
                             :action="route('vendor.whatsapp_service.templates.write.create')">
                             <!-- Template Name -->
                             <x-lw.input-field type="text" id="lwTemplateNameField" data-form-group-class=""
-                                :label="__tr('Template Name')" name="template_name" required="true" />
+                                :label="__tr('Template Name')" name="template_name" required="true" 
+                                oninput="this.value = this.value.replace(/\s+/g, '_').toLowerCase();" />
                             <span class="form-text text-muted mt-3 text-sm"><a target="_blank"
                                     href="https://developers.facebook.com/docs/whatsapp/message-templates/guidelines/">{{
-                                    __tr('Template Formatting Help') }}</a></span>
+                                    __tr('Template Formatting Help') }}</a>
+                            </span>
                             <!-- /Template Name -->
                             <!-- Template Language -->
-                            <x-lw.input-field type="text" id="lwTemplateLanguageField" data-form-group-class=""
-                                :label="__tr('Template Language Code')" name="language_code" required="true" />
-                                <div class="alert alert-secondary my-3">
-                                    {{  __tr('While Authentication and Flow templates are supported for sending however you need to create/edit those templates on Meta.') }} <a class="lw-btn btn btn-sm btn-light float-right" target="_blank" href="https://business.facebook.com/wa/manage/message-templates/?waba_id={{ getVendorSettings('whatsapp_business_account_id') }}" > {{ __tr('Manage Templates on Meta') }} <i class="fas fa-external-link-alt"></i></a>
-                                </div>
+                            <x-lw.input-field type="selectize" data-lw-plugin="lwSelectize" id="lwTemplateLanguageField"
+                                data-form-group-class="" :label="__tr('Template Language Code')" name="language_code" required="true">
+                                <x-slot name="selectOptions">
+                                    <option value="af">Afrikaans</option>
+                                    <option value="sq">Albanian</option>
+                                    <option value="ar">Arabic</option>
+                                    <option value="ar_EG">Arabic (EGY)</option>
+                                    <option value="ar_AE">Arabic (UAE)</option>
+                                    <option value="ar_LB">Arabic (LBN)</option>
+                                    <option value="ar_MA">Arabic (MAR)</option>
+                                    <option value="ar_QA">Arabic (QAT)</option>
+                                    <option value="az">Azerbaijani</option>
+                                    <option value="be_BY">Belarusian</option>
+                                    <option value="bn">Bengali</option>
+                                    <option value="bn_IN">Bengali (IND)</option>
+                                    <option value="bg">Bulgarian</option>
+                                    <option value="ca">Catalan</option>
+                                    <option value="zh_CN">Chinese (CHN)</option>
+                                    <option value="zh_HK">Chinese (HKG)</option>
+                                    <option value="zh_TW">Chinese (TAI)</option>
+                                    <option value="hr">Croatian</option>
+                                    <option value="cs">Czech</option>
+                                    <option value="da">Danish</option>
+                                    <option value="prs_AF">Dari</option>
+                                    <option value="nl">Dutch</option>
+                                    <option value="nl_BE">Dutch (BEL)</option>
+                                    <option value="en" selected>English</option>
+                                    <option value="en_GB">English (UK)</option>
+                                    <option value="en_US">English (US)</option>
+                                    <option value="en_AE">English (UAE)</option>
+                                    <option value="en_AU">English (AUS)</option>
+                                    <option value="en_CA">English (CAN)</option>
+                                    <option value="en_GHA">English (GHA)</option>
+                                    <option value="en_IE">English (IRL)</option>
+                                    <option value="en_IN">English (IND)</option>
+                                    <option value="en_JM">English (JAM)</option>
+                                    <option value="en_MY">English (MYS)</option>
+                                    <option value="en_NZ">English (NZL)</option>
+                                    <option value="en_QA">English (QAT)</option>
+                                    <option value="en_SGP">English (SGP)</option>
+                                    <option value="en_UG">English (UGA)</option>
+                                    <option value="en_ZA">English (ZAF)</option>
+                                    <option value="et">Estonian</option>
+                                    <option value="fil">Filipino</option>
+                                    <option value="fi">Finnish</option>
+                                    <option value="fr">French</option>
+                                    <option value="fr_BE">French (BEL)</option>
+                                    <option value="fr_CA">French (CAN)</option>
+                                    <option value="fr_CH">French (CHE)</option>
+                                    <option value="fr_CI">French (CIV)</option>
+                                    <option value="fr_MA">French (MAR)</option>
+                                    <option value="ka">Georgian</option>
+                                    <option value="de">German</option>
+                                    <option value="de_AT">German (AUT)</option>
+                                    <option value="de_CH">German (CHE)</option>
+                                    <option value="el">Greek</option>
+                                    <option value="gu">Gujarati</option>
+                                    <option value="ha">Hausa</option>
+                                    <option value="he">Hebrew</option>
+                                    <option value="hi">Hindi</option>
+                                    <option value="hu">Hungarian</option>
+                                    <option value="id">Indonesian</option>
+                                    <option value="ga">Irish</option>
+                                    <option value="it">Italian</option>
+                                    <option value="ja">Japanese</option>
+                                    <option value="kn">Kannada</option>
+                                    <option value="kk">Kazakh</option>
+                                    <option value="rw_RW">Kinyarwanda</option>
+                                    <option value="ko">Korean</option>
+                                    <option value="ky_KG">Kyrgyz (Kyrgyzstan)</option>
+                                    <option value="lo">Lao</option>
+                                    <option value="lv">Latvian</option>
+                                    <option value="lt">Lithuanian</option>
+                                    <option value="mk">Macedonian</option>
+                                    <option value="ms">Malay</option>
+                                    <option value="ml">Malayalam</option>
+                                    <option value="mr">Marathi</option>
+                                    <option value="nb">Norwegian</option>
+                                    <option value="ps_AF">Pashto</option>
+                                    <option value="fa">Persian</option>
+                                    <option value="pl">Polish</option>
+                                    <option value="pt_BR">Portuguese (BR)</option>
+                                    <option value="pt_PT">Portuguese (POR)</option>
+                                    <option value="pa">Punjabi</option>
+                                    <option value="ro">Romanian</option>
+                                    <option value="ru">Russian</option>
+                                    <option value="sr">Serbian</option>
+                                    <option value="si_LK">Sinhala</option>
+                                    <option value="sk">Slovak</option>
+                                    <option value="sl">Slovenian</option>
+                                    <option value="es">Spanish</option>
+                                    <option value="es_AR">Spanish (ARG)</option>
+                                    <option value="es_CL">Spanish (CHL)</option>
+                                    <option value="es_CO">Spanish (COL)</option>
+                                    <option value="es_CR">Spanish (CRI)</option>
+                                    <option value="es_DO">Spanish (DOM)</option>
+                                    <option value="es_EC">Spanish (ECU)</option>
+                                    <option value="es_HN">Spanish (HND)</option>
+                                    <option value="es_MX">Spanish (MEX)</option>
+                                    <option value="es_PA">Spanish (PAN)</option>
+                                    <option value="es_PE">Spanish (PER)</option>
+                                    <option value="es_ES">Spanish (SPA)</option>
+                                    <option value="es_UY">Spanish (URY)</option>
+                                    <option value="sw">Swahili</option>
+                                    <option value="sv">Swedish</option>
+                                    <option value="ta">Tamil</option>
+                                    <option value="te">Telugu</option>
+                                    <option value="th">Thai</option>
+                                    <option value="tr">Turkish</option>
+                                    <option value="uk">Ukrainian</option>
+                                    <option value="ur">Urdu</option>
+                                    <option value="uz">Uzbek</option>
+                                    <option value="vi">Vietnamese</option>
+                                    <option value="zu">Zulu</option>
+                                </x-slot>
+                            </x-lw.input-field>
+                            <div class="alert alert-secondary my-3">
+                                {{  __tr('While Authentication and Flow templates are supported for sending however you need to create/edit those templates on Meta.') }} <a class="lw-btn btn btn-sm btn-light float-right" target="_blank" href="https://business.facebook.com/wa/manage/message-templates/?waba_id={{ getVendorSettings('whatsapp_business_account_id') }}" > {{ __tr('Manage Templates on Meta') }} <i class="fas fa-external-link-alt"></i></a>
+                            </div>
                             <!-- /Template Language -->
                             <x-lw.input-field type="selectize" data-lw-plugin="lwSelectize" id="lwSelectCategoryField"
                                 data-form-group-class="" data-selected=" " :label="__tr('Category')" name="category">
