@@ -150,7 +150,7 @@
         <script type="text/template" id="userActionColumnTemplate">
             <a data-pre-callback="appFuncs.clearContainer" title="{!! __tr('Edit Agent & Permissions') !!}" class="lw-btn btn btn-sm btn-default lw-ajax-link-action" data-response-template="#lwEditUserBody" href="<%= __Utils.apiURL("{{ route('vendor.user.read.update.data', [ 'userIdOrUid']) }}", {'userIdOrUid': __tData._uid}) %>"  data-toggle="modal" data-target="#lwEditUser"><i class="fa fa-edit"></i> {!! __tr('Edit User & Permissions') !!}</a>
 <!--  Delete Action -->
-<a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.user.write.delete', [ 'userIdOrUid']) }}", {'userIdOrUid': __tData._uid}) %>" class="btn btn-danger btn-sm lw-ajax-link-action" data-confirm="#lwDeleteUser-template" title="{{ __tr('Delete') }}" data-callback-params="{{ json_encode(['datatableId' => '#lwUserList']) }}" data-callback="appFuncs.modelSuccessCallback"><i class="fa fa-trash"></i> {{  __tr('Delete') }}</a>
+<a data-method="post" href="<%= __Utils.apiURL("{{ route('vendor.user.write.delete', [ 'userIdOrUid']) }}", {'userIdOrUid': __tData._uid}) %>" class="btn btn-outline-danger btn-sm lw-ajax-link-action" data-confirm="#lwDeleteUser-template" title="{{ __tr('Delete') }}" data-callback-params="{{ json_encode(['datatableId' => '#lwUserList']) }}" data-callback="appFuncs.modelSuccessCallback"><i class="fa fa-trash"></i> {{  __tr('Delete') }}</a>
 {{-- login as  --}}
 <!-- login as button -->
 
@@ -177,3 +177,4 @@
     </div>
 </div>
 @endsection()
+
