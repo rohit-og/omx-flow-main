@@ -49,114 +49,136 @@ $vendorViewBySuperAdmin = false;
 
 <!-- features section  -->
 <div class="container-fluid mt-4 ">
-        <div class="row features-row">
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-comments"></i>
-                        <span x-cloak x-show="unreadMessagesCount" class="feature-counter" x-text="unreadMessagesCount">{{ __tr('Live Chat') }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Live Chat</h3>
-                        <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
-                        <a href="{{ isWhatsAppBusinessAccountReady() ? route('vendor.chat_message.contact.view') : route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}"
-   class="feature-button">
-   Go To Unified Team Inbox <i class="fas fa-arrow-right ml-2"></i>
-</a>
-
-                    </div>
+    <div class="row features-row">
+        <!-- Live Chat -->
+        <div class="col-md-4 col-sm-6">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-comments"></i>
+                    <span x-cloak x-show="unreadMessagesCount" class="feature-counter" x-text="unreadMessagesCount">{{ __tr('Live Chat') }}</span>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Live Chat</h3>
+                    <p class="feature-description">Manage all your WhatsApp conversations in one unified team inbox for seamless customer support.</p>
+                    <a href="{{ route('vendor.chat_message.contact.view') }}"
+                       class="feature-button"
+                       @if (!isWhatsAppBusinessAccountReady())
+                           onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
+                       @endif>
+                       Go To Unified Team Inbox <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
                 </div>
             </div>
-            
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon template-icon">
-                        <i class="fa fa-layer-group"></i>
-                        <span class="feature-counter">{{ __tr($totalTemplates) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Template</h3>
-                        <p class="feature-description">Create and manage pre-approved message templates for consistent and compliant WhatsApp business messaging.</p>
-                        <a href="{{ isWhatsAppBusinessAccountReady() ? route('vendor.whatsapp_service.templates.read.new_view') : route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}"
-   class="feature-button template-button">
-   Create New Template <i class="fas fa-arrow-right ml-2"></i>
-</a>
-
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon campaign-icon">
-                        <i class="fa fa-rocket"></i>
-                        <span class="feature-counter">{{ __tr($totalCampaigns) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Campaign</h3>
-                        <p class="feature-description">Launch targeted messaging campaigns to engage your audience with personalized content at scale.</p>
-                        <a href="{{ isWhatsAppBusinessAccountReady() ? route('vendor.campaign.new.view') : route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}"
-   class="feature-button campaign-button">
-   Create New Campaign <i class="fas fa-arrow-right ml-2"></i>
-</a>
-
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon contact-icon">
-                        <i class="fa fa-users"></i>
-                        <span class="feature-counter">{{ __tr($totalContacts) }}</span>
-                    </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Contacts</h3>
-                        <p class="feature-description">Organize and manage your customer database with custom fields, tags, and segmentation for targeted messaging.</p>
-                        <a href="{{ isWhatsAppBusinessAccountReady() ? route('vendor.contact.read.list_view') : route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}"
-   class="feature-button contact-button">
-   Create New Contact <i class="fas fa-arrow-right ml-2"></i>
-</a>
-
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon bot-icon">
-                        <i class="fas fa-robot"></i>
-                        <span class="feature-counter">{{ __tr($totalBotReplies) }}</span>
         </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Bot Reply</h3>
-                        <p class="feature-description">Set up automated responses to handle common inquiries and provide 24/7 customer support through WhatsApp.</p>
-                        <a href="{{ isWhatsAppBusinessAccountReady() ? route('vendor.bot_reply.read.list_view') : route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}"
-   class="feature-button bot-button">
-   Create New Chatbot <i class="fas fa-arrow-right ml-2"></i>
-</a>
 
-                    </div>
+        <!-- Template -->
+        <div class="col-md-4 col-sm-6">
+            <div class="feature-card">
+                <div class="feature-icon template-icon">
+                    <i class="fa fa-layer-group"></i>
+                    <span class="feature-counter">{{ __tr($totalTemplates) }}</span>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Template</h3>
+                    <p class="feature-description">Create and manage pre-approved message templates for consistent and compliant WhatsApp business messaging.</p>
+                    <a href="{{ route('vendor.whatsapp_service.templates.read.new_view') }}"
+                       class="feature-button template-button"
+                       @if (!isWhatsAppBusinessAccountReady())
+                           onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
+                       @endif>
+                       Create New Template <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6">
-                <div class="feature-card">
-                    <div class="feature-icon agent-icon">
-                        <i class="fa fa-user-tie"></i>
-                        <span class="feature-counter">{{ __tr($activeTeamMembers) }}</span>
         </div>
-                    <div class="feature-content">
-                        <h3 class="feature-title">Agents</h3>
-                        <p class="feature-description">Manage your support team with role-based access control and monitor agent performance for better service.</p>
-                        <a href="{{ isWhatsAppBusinessAccountReady() ? route('vendor.user.read.list_view') : route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}"
-   class="feature-button agent-button">
-   Create New Agent <i class="fas fa-arrow-right ml-2"></i>
-</a>
 
-                    </div>
+        <!-- Campaign -->
+        <div class="col-md-4 col-sm-6">
+            <div class="feature-card">
+                <div class="feature-icon campaign-icon">
+                    <i class="fa fa-rocket"></i>
+                    <span class="feature-counter">{{ __tr($totalCampaigns) }}</span>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Campaign</h3>
+                    <p class="feature-description">Launch targeted messaging campaigns to engage your audience with personalized content at scale.</p>
+                    <a href="{{ route('vendor.campaign.new.view') }}"
+                       class="feature-button campaign-button"
+                       @if (!isWhatsAppBusinessAccountReady())
+                           onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
+                       @endif>
+                       Create New Campaign <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contacts -->
+        <div class="col-md-4 col-sm-6">
+            <div class="feature-card">
+                <div class="feature-icon contact-icon">
+                    <i class="fa fa-users"></i>
+                    <span class="feature-counter">{{ __tr($totalContacts) }}</span>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Contacts</h3>
+                    <p class="feature-description">Organize and manage your customer database with custom fields, tags, and segmentation for targeted messaging.</p>
+                    <a href="{{ route('vendor.contact.read.list_view') }}"
+                       class="feature-button contact-button"
+                       @if (!isWhatsAppBusinessAccountReady())
+                           onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
+                       @endif>
+                       Create New Contact <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bot Reply -->
+        <div class="col-md-4 col-sm-6">
+            <div class="feature-card">
+                <div class="feature-icon bot-icon">
+                    <i class="fas fa-robot"></i>
+                    <span class="feature-counter">{{ __tr($totalBotReplies) }}</span>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Bot Reply</h3>
+                    <p class="feature-description">Set up automated responses to handle common inquiries and provide 24/7 customer support through WhatsApp.</p>
+                    <a href="{{ route('vendor.bot_reply.read.list_view') }}"
+                       class="feature-button bot-button"
+                       @if (!isWhatsAppBusinessAccountReady())
+                           onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
+                       @endif>
+                       Create New Chatbot <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agents -->
+        <div class="col-md-4 col-sm-6">
+            <div class="feature-card">
+                <div class="feature-icon agent-icon">
+                    <i class="fa fa-user-tie"></i>
+                    <span class="feature-counter">{{ __tr($activeTeamMembers) }}</span>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Agents</h3>
+                    <p class="feature-description">Manage your support team with role-based access control and monitor agent performance for better service.</p>
+                    <a href="{{ route('vendor.user.read.list_view') }}"
+                       class="feature-button agent-button"
+                       @if (!isWhatsAppBusinessAccountReady())
+                           onclick="alertAndRedirect(event, '{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}')"
+                       @endif>
+                       Create New Agent <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-        <!--feature section end  -->
+</div>
+<!-- feature section end -->
+
 
 
 <div class="container-fluid ">

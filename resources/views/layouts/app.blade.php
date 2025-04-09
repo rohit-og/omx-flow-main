@@ -641,5 +641,16 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
     @if(isLoggedIn())
     {!! getAppSettings('page_footer_code_logged_user_only') !!}
     @endif
+    @push('scripts')
+<script>
+    function alertAndRedirect(event, redirectUrl) {
+        event.preventDefault();
+        if (confirm("You need to complete your WhatsApp setup to access this feature.")) {
+            window.location.href = redirectUrl;
+        }
+    }
+</script>
+@endpush
+@stack('scripts')
 </body>
 </html>
