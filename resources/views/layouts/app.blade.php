@@ -1,3 +1,4 @@
+
 @php
 $hasActiveLicense = true;
 if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.product_registration') and (!getAppSettings('product_registration', 'registration_id') or sha1(array_get($_SERVER, 'HTTP_HOST', '') . getAppSettings('product_registration', 'registration_id') . '4.5+') !== getAppSettings('product_registration', 'signature'))) {
@@ -11,6 +12,11 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ $CURRENT_LOCALE_DIRECTION }}">
 <head>
+    <!-- SweetAlert2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,18 +25,16 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
     <!-- Favicon -->
     <link href="{{getAppSettings('favicon_image_url') }}" rel="icon">
     <!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     @stack('head')
-    {!! __yesset(
-    [
-    // Icons
-    'static-assets/packages/fontawesome/css/all.css',
-    'dist/css/common-vendorlibs.css',
-    'dist/css/vendorlibs.css',
-    'argon/css/argon.min.css',
-    'dist/css/app.css',
+    {!! __yesset([
+        'static-assets/packages/fontawesome/css/all.css',
+        'dist/css/common-vendorlibs.css',
+        'dist/css/vendorlibs.css',
+        'argon/css/argon.min.css',
+        'dist/css/app.css',
     ]) !!}
     {{-- custom app css --}}
     <link href="{{ route('app.load_custom_style') }}" rel="stylesheet" />
@@ -112,6 +116,27 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
         }
     </style>
 </head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.redirect-to-setup').forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'info',
+                    title: 'WhatsApp Setup Required',
+                    text: 'Please setup WhatsApp to access this feature',
+                    confirmButtonText: 'Go to Setup'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = "{{ route('vendor.settings.read', ['pageType' => 'whatsapp-cloud-api-setup']) }}";
+                    }
+                });
+            });
+        });
+    });
+</script>
+
 <body class="@if(hasVendorAccess() or hasVendorUserAccess()) empty @endif pb-5 @if(isLoggedIn()) lw-authenticated-page @else lw-guest-page @endif {{ $class ?? '' }}" x-cloak x-data="{disableSoundForMessageNotification:{{ getVendorSettings('is_disabled_message_sound_notification') ? 1 : 0 }},unreadMessagesCount:null}">
     @auth()
     @include('layouts.navbars.sidebar')
@@ -371,5 +396,32 @@ if(isLoggedIn() and (request()->route()->getName() != 'manage.configuration.prod
     @if(isLoggedIn())
     {!! getAppSettings('page_footer_code_logged_user_only') !!}
     @endif
+    @push('scripts')
+<script>
+    function alertAndRedirect(event, redirectUrl) {
+    event.preventDefault();
+
+    Swal.fire({
+        title: 'WhatsApp Setup Required',
+        text: 'Please complete your WhatsApp API setup to access this feature.',
+        icon: 'warning',
+        confirmButtonText: 'Go to Setup',
+        confirmButtonColor: '#3085d6',
+        background: '#f7f7f7',
+        customClass: {
+            popup: 'rounded-lg shadow-lg',
+            title: 'text-lg font-semibold',
+            confirmButton: 'btn btn-primary'
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = redirectUrl;
+        }
+    });
+}
+
+</script>
+@endpush
+@stack('scripts')
 </body>
 </html>
