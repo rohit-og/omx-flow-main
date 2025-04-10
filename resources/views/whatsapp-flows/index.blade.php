@@ -14,9 +14,12 @@
             <a class="lw-btn btn btn-primary" href="{{ route('whatsapp-flows.create') }}">
                 <i class="fa fa-plus"></i> {{ __tr('Create New Flow') }}
             </a>
-            <button id="refresh-btn" class="btn btn-outline-primary">
+            <button id="refresh-btn" class="lw-btn btn btn-dark">
                 <i class="fa fa-refresh"></i> {{ __tr('Refresh') }}
             </button>
+            <a class="lw-btn btn btn-default" target="_blank" href="https://business.facebook.com/wa/manage/flows?waba_id={{ getVendorSettings('whatsapp_business_account_id') }}">
+                {{ __tr('Manage Flows on Meta') }} <i class="fas fa-external-link-alt"></i>
+            </a>
         </div>
         <!-- /Button -->
 
@@ -46,6 +49,9 @@
 
         <div class="col-xl-12">
             <div class="card">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0">{{ __tr('WhatsApp Flows List') }}</h3>
+                </div>
                 <div class="card-body">
                     <div id="loading" class="text-center py-4 d-none">
                         <div class="spinner-border text-primary" role="status">
@@ -61,8 +67,8 @@
                             </div>
                         @else
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover">
-                                    <thead>
+                                <table id="flowsTable" class="table table-flush">
+                                    <thead class="thead-light">
                                         <tr>
                                             <th>{{ __tr('ID') }}</th>
                                             <th>{{ __tr('Name') }}</th>
@@ -77,9 +83,19 @@
                                                 <td>{{ $flow['id'] }}</td>
                                                 <td>{{ $flow['name'] }}</td>
                                                 <td>
-                                                    <span class="badge badge-{{ $flow['status'] === 'PUBLISHED' ? 'success' : 'warning' }} p-2">
-                                                        {{ $flow['status'] }}
-                                                    </span>
+                                                    @if($flow['status'] === 'PUBLISHED')
+                                                        <span class="badge badge-success p-2">
+                                                            <i class="fa fa-check-circle"></i> {{ $flow['status'] }}
+                                                        </span>
+                                                    @elseif($flow['status'] === 'DRAFT')
+                                                        <span class="badge badge-warning p-2">
+                                                            <i class="fa fa-clock"></i> {{ $flow['status'] }}
+                                                        </span>
+                                                    @else
+                                                        <span class="badge badge-info p-2">
+                                                            {{ $flow['status'] }}
+                                                        </span>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     @foreach($flow['categories'] as $category)
@@ -90,7 +106,7 @@
                                                     <div class="btn-group" role="group">
                                                         @if($flow['status'] === 'DRAFT')
                                                             <a href="{{ route('whatsapp-flows.edit', ['id' => $flow['id']]) }}" 
-                                                               class="btn btn-sm btn-secondary" 
+                                                               class="lw-btn btn btn-sm btn-default" 
                                                                title="{{ __tr('Edit') }}">
                                                                 <i class="fa fa-pencil"></i> {{ __tr('Edit') }}
                                                             </a>
@@ -100,7 +116,7 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" 
-                                                                        class="btn btn-sm btn-danger delete-flow-btn" 
+                                                                        class="lw-btn btn btn-sm btn-outline-danger delete-flow-btn" 
                                                                         data-flow-id="{{ $flow['id'] }}"
                                                                         data-flow-name="{{ $flow['name'] }}"
                                                                         title="{{ __tr('Delete') }}">
@@ -111,13 +127,13 @@
                                                         
                                                         @if($flow['status'] !== 'DEPRECATED')
                                                             <a href="{{ route('whatsapp-flows.send', ['id' => $flow['id']]) }}" 
-                                                               class="btn btn-sm btn-info" title="{{ __tr('Send') }}">
+                                                               class="lw-btn btn btn-sm btn-primary" title="{{ __tr('Send') }}">
                                                                 <i class="fa fa-paper-plane"></i> {{ __tr('Send') }}
                                                             </a>
                                                         @endif
                                                         
                                                         <a href="{{ route('whatsapp-flows.preview', ['id' => $flow['id']]) }}" 
-                                                           class="btn btn-sm btn-dark" title="{{ __tr('Preview') }}">
+                                                           class="lw-btn btn btn-sm btn-light" title="{{ __tr('Preview') }}">
                                                             <i class="fa fa-eye"></i> {{ __tr('Preview') }}
                                                         </a>
                                                     </div>
@@ -127,8 +143,6 @@
                                     </tbody>
                                 </table>
                             </div>
-
-                            
                         @endif
                     </div>
                 </div>
@@ -156,6 +170,20 @@
     
     .btn-group .btn {
         margin-right: 2px;
+    }
+
+    .table-flush th, .table-flush td {
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+    .thead-light th {
+        font-weight: 600;
+    }
+
+    .card-header {
+        border-bottom: 1px solid #e9ecef;
+        padding: 1.25rem 1.5rem;
     }
 </style>
 @endsection
@@ -197,6 +225,20 @@
                 loadingElement.classList.remove('d-none');
                 flowsContainer.classList.add('d-none');
                 window.location.reload();
+            });
+        }
+
+        // Initialize DataTable if it exists
+        if (typeof $.fn.DataTable !== 'undefined') {
+            $('#flowsTable').DataTable({
+                "pageLength": 25,
+                "lengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+                "language": {
+                    "paginate": {
+                        "next": '<i class="fa fa-angle-right"></i>',
+                        "previous": '<i class="fa fa-angle-left"></i>'
+                    }
+                }
             });
         }
     });

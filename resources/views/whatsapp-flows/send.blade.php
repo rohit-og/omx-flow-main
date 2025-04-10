@@ -1,5 +1,75 @@
 @extends('layouts.app')
 
+@section('styles')
+<style>
+/* Custom Toast Styling */
+.custom-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    min-width: 300px;
+    z-index: 9999;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    color: white;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: slideIn 0.3s ease-out forwards;
+    opacity: 0;
+}
+
+.custom-toast-success {
+    background: linear-gradient(to right, #28a745, #218838);
+    border-left: 5px solid #1e7e34;
+}
+
+.custom-toast-error {
+    background: linear-gradient(to right, #dc3545, #c82333);
+    border-left: 5px solid #bd2130;
+}
+
+.custom-toast-icon {
+    margin-right: 12px;
+    font-size: 20px;
+}
+
+.custom-toast-close {
+    cursor: pointer;
+    margin-left: 15px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    font-size: 18px;
+}
+
+.custom-toast-close:hover {
+    opacity: 1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+</style>
+@endsection
+
 @section('content')
 <div class="container py-4 mt-5">
     <div class="row justify-content-center">
@@ -62,6 +132,50 @@
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing form handler');
     
+    // Custom toast notification function
+    function showCustomToast(message, type = 'success', duration = 5000) {
+        console.log('Showing custom toast:', message, type);
+        
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `custom-toast custom-toast-${type}`;
+        
+        // Create icon based on type
+        const icon = document.createElement('span');
+        icon.className = 'custom-toast-icon';
+        icon.innerHTML = type === 'success' ? '<i class="fa fa-check-circle"></i>' : '<i class="fa fa-exclamation-circle"></i>';
+        
+        // Create message container
+        const messageEl = document.createElement('span');
+        messageEl.textContent = message;
+        
+        // Create close button
+        const closeBtn = document.createElement('span');
+        closeBtn.className = 'custom-toast-close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.onclick = function() {
+            document.body.removeChild(toast);
+        };
+        
+        // Assemble toast
+        toast.appendChild(icon);
+        toast.appendChild(messageEl);
+        toast.appendChild(closeBtn);
+        
+        // Add to document
+        document.body.appendChild(toast);
+        
+        // Automatically remove after duration
+        setTimeout(function() {
+            toast.style.animation = 'fadeOut 0.5s forwards';
+            setTimeout(function() {
+                if (document.body.contains(toast)) {
+                    document.body.removeChild(toast);
+                }
+            }, 500);
+        }, duration);
+    }
+    
     const form = document.getElementById('sendFlowForm');
     const sendButton = document.getElementById('sendButton');
     const phoneNumberInput = document.getElementById('phone_number');
@@ -93,11 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Validate phone number format (numbers only)
         if (!/^[0-9]+$/.test(phoneNumber)) {
             console.error('Invalid phone number format');
-            if (window.__Utils && window.__Utils.notification) {
-                window.__Utils.notification('Please enter a valid phone number (numbers only)', 'error');
-            } else {
-                alert('Please enter a valid phone number (numbers only)');
-            }
+            showCustomToast('Please enter a valid phone number (numbers only)', 'error');
             return;
         }
 
@@ -130,7 +240,9 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => {
             console.log('Response status:', response.status);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                });
             }
             return response.json();
         })
@@ -142,23 +254,58 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendButton.classList.add('btn-success');
                 sendButton.innerHTML = '<i class="fa fa-check"></i> Flow Sent Successfully';
                 
-                // Show success notification
+                // Show detailed success notification
+                const successMessage = 'Flow sent successfully to ' + phoneNumber;
+                console.log('Showing success notification:', successMessage);
+                
+                // Try multiple notification methods to ensure it works
                 if (window.__Utils && window.__Utils.notification) {
-                    window.__Utils.notification('Flow sent successfully', 'success');
+                    // Primary method - app's notification system
+                    window.__Utils.notification(successMessage, 'success', 5000); // 5 second duration
+                } else if (typeof toastr !== 'undefined') {
+                    // Secondary method - toastr if available
+                    toastr.success(successMessage, 'Success', {timeOut: 5000});
+                } else if (typeof Swal !== 'undefined') {
+                    // Tertiary method - SweetAlert if available
+                    Swal.fire({
+                        title: 'Success!',
+                        text: successMessage,
+                        icon: 'success',
+                        timer: 3000
+                    });
                 } else {
-                    alert('Flow sent successfully');
+                    // Use our custom toast implementation
+                    showCustomToast(successMessage, 'success');
                 }
+                
+                // Clear the phone number input for next send
+                phoneNumberInput.value = '';
             } else {
                 sendButton.classList.remove('btn-primary');
                 sendButton.classList.add('btn-danger');
                 sendButton.innerHTML = '<i class="fa fa-exclamation-circle"></i> Failed to Send Flow';
                 
-                // Show error notification
+                // Show detailed error notification
                 const errorMessage = data.error || 'Failed to send flow';
+                console.log('Showing error notification:', errorMessage);
+                
+                // Try multiple notification methods to ensure it works
                 if (window.__Utils && window.__Utils.notification) {
-                    window.__Utils.notification(errorMessage, 'error');
+                    // Primary method - app's notification system
+                    window.__Utils.notification(errorMessage, 'error', 8000); // Longer duration for errors
+                } else if (typeof toastr !== 'undefined') {
+                    // Secondary method - toastr if available
+                    toastr.error(errorMessage, 'Error', {timeOut: 8000});
+                } else if (typeof Swal !== 'undefined') {
+                    // Tertiary method - SweetAlert if available
+                    Swal.fire({
+                        title: 'Error!',
+                        text: errorMessage,
+                        icon: 'error'
+                    });
                 } else {
-                    alert(errorMessage);
+                    // Use our custom toast implementation
+                    showCustomToast(errorMessage, 'error');
                 }
             }
         })
@@ -170,10 +317,22 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Show error notification
             const errorMessage = error.message || 'An unexpected error occurred';
+            console.log('Showing error notification:', errorMessage);
+            
+            // Try multiple notification methods
             if (window.__Utils && window.__Utils.notification) {
-                window.__Utils.notification(errorMessage, 'error');
+                window.__Utils.notification(errorMessage, 'error', 8000);
+            } else if (typeof toastr !== 'undefined') {
+                toastr.error(errorMessage, 'Error', {timeOut: 8000});
+            } else if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Error!',
+                    text: errorMessage,
+                    icon: 'error'
+                });
             } else {
-                alert(errorMessage);
+                // Use our custom toast implementation
+                showCustomToast(errorMessage, 'error');
             }
         })
         .finally(() => {

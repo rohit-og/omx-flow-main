@@ -7,24 +7,38 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use App\Yantrana\Components\Vendor\VendorSettingsEngine;
+use App\Yantrana\Components\Vendor\Models\VendorSettingsModel;
+use Illuminate\Support\Arr;
 
 class WhatsappFlowController extends BaseController 
 {
     protected $baseUrl;
     protected $wabaId;
     protected $accessToken;
+    protected $phoneNumberId;
     protected $defaultFlowJson;
-    protected $phoneNumberID;
+    protected $vendorSettingsEngine;
 
-    public function __construct()
+    public function __construct(
+        VendorSettingsEngine $vendorSettingsEngine
+    )
     {
-        $this->baseUrl = "https://graph.facebook.com";
-        // $this->wabaId = getVendorSettings('whatsapp_business_account_id');
-        // $this->accessToken = getVendorSettings('whatsapp_access_token');
+        $this->vendorSettingsEngine = $vendorSettingsEngine;
+        $this->baseUrl = "https://graph.facebook.com/v20.0";
+        
+        // Fetching values using getVendorSettings helper function
+        $this->wabaId = getVendorSettings('whatsapp_business_account_id');
+        $this->accessToken = getVendorSettings('whatsapp_access_token');
+        $this->phoneNumberId = getVendorSettings('current_phone_number_id');
 
-        $this->wabaId = "543180505542014";
-        $this->accessToken = "EAAFlfxGYFccBOZCJeRfNp5AkzDPMJLZASFPNGWz9gBMkwfNbJTAJj192Th43mFed0p1MFcOisaVYWZBfLCi0TPGc5ASQghQP3ksZCi97OC4p4rhmVV2gkChzZB4MsDYy6J0mfGYcDbgP2xRCnoQzL8XDzuJwwottEQZCnxab0YAoVvZBsZBZAEYgr9BWoGfhZAUMhz6QZDZD";
-        $this->phoneNumberId = "477921225415071";
+        // Log the settings we're trying to use for debugging
+        Log::info('WhatsApp Flow Controller Settings', [
+            'wabaId' => $this->wabaId,
+            'phoneNumberId' => $this->phoneNumberId,
+            'accessToken' => $this->accessToken ? 'Set' : 'Not Set'
+        ]);
+
         $this->defaultFlowJson = [
             "version" => "5.0",
             "screens" => [
@@ -57,6 +71,125 @@ class WhatsappFlowController extends BaseController
     }
 
     /**
+     * Check if WhatsApp configuration is valid
+     *
+     * @return bool
+     */
+    protected function isWhatsAppConfigValid()
+    {
+        if (empty($this->wabaId) || empty($this->accessToken) || empty($this->phoneNumberId)) {
+            Log::error('Invalid WhatsApp configuration', [
+                'wabaId' => $this->wabaId,
+                'phoneNumberId' => $this->phoneNumberId,
+                'accessToken' => !empty($this->accessToken)
+            ]);
+            
+            return false;
+        }
+        
+        return true;
+    }
+
+    /**
+     * Setup and call WhatsApp API directly
+     *
+     * @param string $endpoint
+     * @param array $params
+     * @param string $method
+     * @return array|null
+     */
+    protected function callWhatsAppApi($endpoint, $params = [], $method = 'GET')
+    {
+        try {
+            // Initialize with vendorId
+            $vendorId = getVendorId();
+            
+            // Get the business account ID and token directly
+            $wabaId = getVendorSettings('whatsapp_business_account_id', null, null, $vendorId);
+            $accessToken = getVendorSettings('whatsapp_access_token', null, null, $vendorId);
+            
+            if (empty($accessToken)) {
+                Log::error('Missing WhatsApp access token', [
+                    'vendorId' => $vendorId
+                ]);
+                return null;
+            }
+            
+            // Base URL for API requests - Default to v17.0 which is more stable
+            $baseUrl = "https://graph.facebook.com/v17.0/";
+            
+            // Build the full URL based on the endpoint format
+            $fullUrl = $baseUrl;
+            
+            // If the endpoint is a full flow ID (not a path with wabaId/flows/id)
+            if (is_numeric($endpoint) || (strlen($endpoint) > 10 && !str_contains($endpoint, '/'))) {
+                // Directly use the flow ID
+                $fullUrl .= $endpoint;
+                Log::info('Using direct flow ID format');
+            } else if (strpos($endpoint, $wabaId) === 0) {
+                // If endpoint already starts with wabaId, just use it directly
+                $fullUrl .= $endpoint;
+            } else if (strpos($endpoint, '/') === 0) {
+                // If endpoint starts with /, trim it
+                $fullUrl .= ltrim($endpoint, '/');
+            } else {
+                // Otherwise, normal endpoint
+                $fullUrl .= $endpoint;
+            }
+            
+            // Log the attempt with all details
+            Log::info('Calling WhatsApp API', [
+                'vendorId' => $vendorId,
+                'wabaId' => $wabaId,
+                'endpoint' => $endpoint,
+                'fullUrl' => $fullUrl, 
+                'method' => $method,
+                'params' => $params,
+                'has_token' => !empty($accessToken)
+            ]);
+            
+            // Make the actual request using Http facade
+            $response = null;
+            if ($method === 'GET') {
+                $response = Http::withHeaders([
+                    'Authorization' => "Bearer {$accessToken}",
+                ])->get($fullUrl, $params);
+            } else if ($method === 'POST') {
+                $response = Http::withHeaders([
+                    'Authorization' => "Bearer {$accessToken}",
+                    'Content-Type' => 'application/json'
+                ])->post($fullUrl, $params);
+            } else if ($method === 'DELETE') {
+                $response = Http::withHeaders([
+                    'Authorization' => "Bearer {$accessToken}",
+                ])->delete($fullUrl, $params);
+            }
+            
+            if ($response && $response->successful()) {
+                Log::info('WhatsApp API call successful', [
+                    'status' => $response->status()
+                ]);
+                return $response->json();
+            } else if ($response) {
+                Log::error('WhatsApp API call failed', [
+                    'status' => $response->status(),
+                    'response' => $response->json(),
+                    'url' => $fullUrl
+                ]);
+                return null;
+            }
+            
+            return null;
+        } catch (\Exception $e) {
+            Log::error('WhatsApp API call failed', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return null;
+        }
+    }
+
+    /**
      * Display a listing of WhatsApp flows.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -66,47 +199,39 @@ class WhatsappFlowController extends BaseController
     {
         try {
             $cursor = $request->query('cursor');
-            $endpoint = "{$this->baseUrl}/{$this->wabaId}/flows";
+            $wabaId = getVendorSettings('whatsapp_business_account_id');
             
-            if ($cursor) {
-                $endpoint .= "?after={$cursor}";
-            }
-
-            Log::info('Fetching WhatsApp flows', [
-                'endpoint' => $endpoint
+            // Use the wrapper method to call the API - For listing, we need the wabaId prefix
+            $response = $this->callWhatsAppApi("{$wabaId}/flows", [
+                'after' => $cursor
             ]);
-
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->get($endpoint);
-
-            if ($response->successful()) {
-                $data = $response->json();
-                $flows = $data['data'] ?? [];
+            
+            if (!empty($response) && isset($response['data'])) {
+                $flows = $response['data'] ?? [];
                 $pagination = null;
                 
-                if (isset($data['paging']['cursors'])) {
+                if (isset($response['paging']['cursors'])) {
                     $pagination = [
-                        'before' => $data['paging']['cursors']['before'] ?? null,
-                        'after' => $data['paging']['cursors']['after'] ?? null,
+                        'before' => $response['paging']['cursors']['before'] ?? null,
+                        'after' => $response['paging']['cursors']['after'] ?? null,
                     ];
                 }
-
+                
                 return view('whatsapp-flows.index', [
                     'flows' => $flows,
                     'pagination' => $pagination,
                 ]);
-            } else {
-                Log::error('WhatsApp API Error', [
-                    'status' => $response->status(),
-                    'response' => $response->json()
-                ]);
-                
-                return view('whatsapp-flows.index', [
-                    'flows' => [],
-                    'error' => 'Failed to fetch WhatsApp flows. Status: ' . $response->status()
-                ])->with('error', 'Failed to fetch WhatsApp flows. Please try again later.');
             }
+            
+            // If we get here, the API call failed
+            Log::error('Failed to get WhatsApp flows', [
+                'response' => $response
+            ]);
+            
+            return view('whatsapp-flows.index', [
+                'flows' => [],
+                'error' => 'Failed to fetch WhatsApp flows. Please check your WhatsApp API configuration.'
+            ])->with('error', 'Failed to fetch WhatsApp flows.');
         } catch (\Exception $e) {
             Log::error('WhatsApp Flows Exception', [
                 'message' => $e->getMessage(),
@@ -128,16 +253,22 @@ class WhatsappFlowController extends BaseController
     public function show($id)
     {
         try {
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}");
+            // Get the access token
+            $accessToken = getVendorSettings('whatsapp_access_token');
+            
+            if (empty($accessToken)) {
+                Log::error('Missing WhatsApp access token');
+                throw new Exception("WhatsApp access token not configured");
+            }
+            
+            // Call the API using the ID directly
+            $response = $this->callWhatsAppApi($id);
 
-            if ($response->successful()) {
-                $flow = $response->json();
-                return view('whatsapp-flows.show', ['flow' => $flow]);
+            if (!empty($response)) {
+                return view('whatsapp-flows.show', ['flow' => $response]);
             } else {
                 return redirect()->route('whatsapp-flows.index')
-                    ->with('error', 'Failed to fetch flow details. Status: ' . $response->status());
+                    ->with('error', 'Failed to fetch flow details.');
             }
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Details Exception', [
@@ -158,16 +289,17 @@ class WhatsappFlowController extends BaseController
     public function refresh()
     {
         try {
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows");
+            $wabaId = getVendorSettings('whatsapp_business_account_id');
+            
+            // For listing flows, we need the wabaId prefix
+            $response = $this->callWhatsAppApi("{$wabaId}/flows");
 
-            if ($response->successful()) {
+            if (!empty($response)) {
                 return response()->json(['success' => true]);
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'API request failed with status: ' . $response->status()
+                    'message' => 'API request failed'
                 ]);
             }
         } catch (\Exception $e) {
@@ -195,34 +327,36 @@ class WhatsappFlowController extends BaseController
                 'flow_id' => $id
             ]);
 
-            // Make the API request using the correct endpoint structure
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}", [
+            // Get the access token
+            $accessToken = getVendorSettings('whatsapp_access_token');
+            
+            if (empty($accessToken)) {
+                Log::error('Missing WhatsApp access token');
+                throw new Exception("WhatsApp access token not configured");
+            }
+
+            // Call the API using the ID directly as per sample
+            $response = $this->callWhatsAppApi($id, [
                 'fields' => 'id,name,categories,preview,status,validation_errors,json_version,data_api_version,endpoint_uri,whatsapp_business_account,application,health_status'
             ]);
 
-            Log::info('API Response', [
-                'status' => $response->status(),
-                'body' => $response->json()
+            Log::info('API Response for edit', [
+                'response' => $response ? 'Success' : 'Failed',
+                'status' => $response['status'] ?? null
             ]);
 
-            if ($response->successful()) {
-                $flow = $response->json();
+            if (!empty($response)) {
                 return view('whatsapp-flows.edit', [
-                    'flow' => $flow
+                    'flow' => $response
                 ]);
             }
 
-            // If response wasn't successful, get more error details
-            $errorData = $response->json();
-            Log::error('WhatsApp API Error', [
-                'error' => $errorData,
-                'endpoint' => "{$this->baseUrl}/{$this->wabaId}/flows/{$id}"
+            // If response wasn't successful, log error
+            Log::error('WhatsApp API Error when editing', [
+                'flow_id' => $id
             ]);
             
-            $errorMessage = $errorData['error']['message'] ?? 'Unknown error occurred';
-            throw new Exception("API Error: {$errorMessage}");
+            throw new Exception("API Error: Unable to fetch flow details");
 
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Edit Exception', [
@@ -258,34 +392,35 @@ class WhatsappFlowController extends BaseController
                 'request_data' => $validated
             ]);
 
-            // Make the API request to update the flow
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-                'Content-Type' => 'application/json'
-            ])->post("{$this->baseUrl}/v20.0/{$id}", [
+            // Get the access token
+            $accessToken = getVendorSettings('whatsapp_access_token');
+            
+            if (empty($accessToken)) {
+                Log::error('Missing WhatsApp access token');
+                throw new Exception("WhatsApp access token not configured");
+            }
+
+            // Make the API request to update the flow - use ID directly
+            $response = $this->callWhatsAppApi($id, [
                 'name' => $validated['name'],
                 'categories' => $validated['categories']
-            ]);
+            ], 'POST');
 
             Log::info('Update API Response', [
-                'status' => $response->status(),
-                'body' => $response->json()
+                'response' => $response
             ]);
 
-            if ($response->successful()) {
+            if (!empty($response)) {
                 return redirect()->route('whatsapp-flows.index')
                     ->with('success', 'Flow updated successfully!');
             }
 
-            // If response wasn't successful, get more error details
-            $errorData = $response->json();
+            // If response wasn't successful, log error
             Log::error('WhatsApp API Update Error', [
-                'error' => $errorData,
-                'endpoint' => "{$this->baseUrl}/v20.0/{$id}"
+                'id' => $id
             ]);
             
-            $errorMessage = $errorData['error']['message'] ?? 'Unknown error occurred';
-            throw new Exception("API Error: {$errorMessage}");
+            throw new Exception("API Error: Failed to update flow");
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->back()
@@ -349,6 +484,20 @@ class WhatsappFlowController extends BaseController
                     ->withInput();
             }
 
+            // Get the access token and wabaId
+            $accessToken = getVendorSettings('whatsapp_access_token');
+            $wabaId = getVendorSettings('whatsapp_business_account_id');
+            
+            if (empty($accessToken)) {
+                Log::error('Missing WhatsApp access token');
+                throw new Exception("WhatsApp access token not configured");
+            }
+            
+            if (empty($wabaId)) {
+                Log::error('Missing WhatsApp Business Account ID');
+                throw new Exception("WhatsApp Business Account ID not configured");
+            }
+
             // Prepare request data
             $requestData = [
                 'name' => $validated['name'],
@@ -362,28 +511,19 @@ class WhatsappFlowController extends BaseController
                 'requestData' => $requestData
             ]);
 
-            // Make API request
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-                'Content-Type' => 'application/json'
-            ])->post(
-                "{$this->baseUrl}/{$this->wabaId}/flows",
-                $requestData
-            );
+            // Make API request using our wrapper - for flow creation, we need the wabaId prefix
+            $response = $this->callWhatsAppApi("{$wabaId}/flows", $requestData, 'POST');
 
             // Log the response for debugging
-            Log::info('WhatsApp API response', [
-                'status' => $response->status(),
-                'body' => $response->json()
+            Log::info('WhatsApp API response for flow creation', [
+                'response' => $response
             ]);
 
-            $responseData = $response->json();
-
-            if ($response->successful()) {
+            if (!empty($response)) {
                 // Check if there are validation errors in the response
-                if (isset($responseData['validation_errors']) && !empty($responseData['validation_errors'])) {
+                if (isset($response['validation_errors']) && !empty($response['validation_errors'])) {
                     $errorMessages = [];
-                    foreach ($responseData['validation_errors'] as $error) {
+                    foreach ($response['validation_errors'] as $error) {
                         $errorMessages[] = $error['message'] ?? 'Validation error';
                     }
                     
@@ -398,9 +538,8 @@ class WhatsappFlowController extends BaseController
             }
 
             // Handle error response
-            $errorMessage = $responseData['error']['message'] ?? 'Unknown error';
             return redirect()->back()
-                ->with('error', 'Failed to create flow: ' . $errorMessage)
+                ->with('error', 'Failed to create flow')
                 ->withInput();
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -424,16 +563,20 @@ class WhatsappFlowController extends BaseController
         try {
             Log::info('Attempting to delete WhatsApp flow', ['id' => $id]);
             
-            // Try to get the flow first to check its status
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}");
+            // Get the access token
+            $accessToken = getVendorSettings('whatsapp_access_token');
             
-            $flow = null;
+            if (empty($accessToken)) {
+                Log::error('Missing WhatsApp access token');
+                throw new Exception("WhatsApp access token not configured");
+            }
+            
+            // Try to get the flow first to check its status - use ID directly
+            $flow = $this->callWhatsAppApi($id);
+            
             $statusCheckSkipped = false;
             
-            if ($response->successful()) {
-                $flow = $response->json();
+            if (!empty($flow)) {
                 Log::info('Flow details retrieved', ['flow' => $flow]);
                 
                 // Check if flow is in DRAFT status
@@ -448,35 +591,29 @@ class WhatsappFlowController extends BaseController
             } else {
                 // If we can't get the flow details, log the error but continue with deletion
                 Log::warning('Failed to get flow details, proceeding with deletion anyway', [
-                    'id' => $id,
-                    'status' => $response->status(),
-                    'response' => $response->json()
+                    'id' => $id
                 ]);
                 $statusCheckSkipped = true;
             }
 
-            // Delete the flow using the correct endpoint format
+            // Delete the flow using the correct endpoint format - use ID directly
             Log::info('Sending delete request to WhatsApp API', [
-                'id' => $id,
-                'url' => "{$this->baseUrl}/v20.0/{$id}"
+                'id' => $id
             ]);
             
-            $deleteResponse = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->delete("{$this->baseUrl}/v20.0/{$id}");
+            $deleteResponse = $this->callWhatsAppApi($id, [], 'DELETE');
 
             Log::info('Delete response received', [
-                'status' => $deleteResponse->status(),
-                'response' => $deleteResponse->json()
+                'response' => $deleteResponse
             ]);
 
-            if ($deleteResponse->successful()) {
+            if (!empty($deleteResponse) && ($deleteResponse['success'] ?? false)) {
                 return redirect()->route('whatsapp-flows.index')
                     ->with('success', 'Flow deleted successfully');
             }
 
             return redirect()->route('whatsapp-flows.index')
-                ->with('error', 'Failed to delete flow: ' . ($deleteResponse->json()['error']['message'] ?? 'Unknown error'));
+                ->with('error', 'Failed to delete flow');
 
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Delete Exception', [
@@ -503,37 +640,32 @@ class WhatsappFlowController extends BaseController
                 'flow_id' => $id
             ]);
 
-            // Make the API request using the correct endpoint structure
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}", [
+            // Get the access token
+            $accessToken = getVendorSettings('whatsapp_access_token');
+            
+            if (empty($accessToken)) {
+                Log::error('Missing WhatsApp access token');
+                throw new Exception("WhatsApp access token not configured");
+            }
+
+            // Call the API using the ID directly
+            $response = $this->callWhatsAppApi($id, [
                 'fields' => 'preview.invalidate(false)'
             ]);
 
-            Log::info('API Response', [
-                'status' => $response->status(),
-                'body' => $response->json()
-            ]);
-
-            if (!$response->successful()) {
-                $errorData = $response->json();
-                Log::error('Preview fetch failed', [
-                    'error' => $errorData
-                ]);
-                throw new Exception($errorData['error']['message'] ?? 'Failed to fetch preview');
+            if (empty($response)) {
+                throw new Exception('Failed to fetch preview');
             }
 
-            $data = $response->json();
-
-            if (!isset($data['preview']) || !isset($data['preview']['preview_url'])) {
+            if (!isset($response['preview']) || !isset($response['preview']['preview_url'])) {
                 throw new Exception('Preview URL not available');
             }
 
             return view('whatsapp-flows.preview', [
                 'flow' => [
                     'id' => $id,
-                    'preview_url' => $data['preview']['preview_url'],
-                    'expires_at' => $data['preview']['expires_at'] ?? null
+                    'preview_url' => $response['preview']['preview_url'],
+                    'expires_at' => $response['preview']['expires_at'] ?? null
                 ]
             ]);
 
@@ -562,22 +694,34 @@ class WhatsappFlowController extends BaseController
             Log::info('Fetching flow details for send form', [
                 'flow_id' => $id
             ]);
+            
+            // Get the access token
+            $accessToken = getVendorSettings('whatsapp_access_token');
+            
+            if (empty($accessToken)) {
+                Log::error('Missing WhatsApp access token');
+                throw new Exception("WhatsApp access token not configured");
+            }
+            
+            // Use expanded debug logging
+            Log::info('Send form API request details', [
+                'id' => $id
+            ]);
 
-            // Get flow details with required fields
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}", [
+            // Call the API using the ID directly as per sample
+            $response = $this->callWhatsAppApi($id, [
                 'fields' => 'id,name,categories,preview,status,validation_errors,json_version,data_api_version,endpoint_uri,whatsapp_business_account,application,health_status'
             ]);
 
             // Log the response for debugging
-            Log::info('Flow details response', [
-                'status' => $response->status(),
-                'body' => $response->json()
+            Log::info('Flow details response for send form', [
+                'response' => $response ? 'Success' : 'Failed',
+                'has_data' => !empty($response),
+                'status' => $response['status'] ?? null
             ]);
 
-            if ($response->successful()) {
-                $flow = $response->json();
+            if (!empty($response)) {
+                $flow = $response;
                 
                 // Check if flow can be sent
                 $canSendMessage = $flow['health_status']['can_send_message'] ?? 'BLOCKED';
@@ -599,14 +743,11 @@ class WhatsappFlowController extends BaseController
                     'errors' => $errors
                 ]);
             } else {
-                $errorData = $response->json();
-                Log::error('WhatsApp API Error', [
-                    'error' => $errorData,
-                    'endpoint' => "{$this->baseUrl}/{$this->wabaId}/flows/{$id}"
+                Log::error('WhatsApp API Error when loading send form', [
+                    'flow_id' => $id
                 ]);
                 
-                $errorMessage = $errorData['error']['message'] ?? 'Unknown error occurred';
-                throw new Exception("API Error: {$errorMessage}");
+                throw new Exception("API Error: Failed to fetch flow details");
             }
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Send Form Exception', [
@@ -621,6 +762,93 @@ class WhatsappFlowController extends BaseController
     }
 
     /**
+     * Get preview token for a flow by ID.
+     *
+     * @param string $flowId
+     * @param string $accessToken
+     * @return string|null
+     */
+    protected function getFlowPreviewToken($flowId, $accessToken)
+    {
+        try {
+            $baseUrl = "https://graph.facebook.com/v17.0";
+            
+            // Make a direct call to invalidate the preview and get a fresh token
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$accessToken}",
+            ])->get("{$baseUrl}/{$flowId}", [
+                'fields' => 'preview.invalidate(true)'
+            ]);
+            
+            Log::info('Getting preview token', [
+                'flow_id' => $flowId,
+                'response_status' => $response->status()
+            ]);
+            
+            if (!$response->successful()) {
+                Log::error('Preview token API call failed', [
+                    'status' => $response->status(),
+                    'response' => $response->json()
+                ]);
+                return null;
+            }
+            
+            $data = $response->json();
+            
+            // Check if preview data exists
+            if (!isset($data['preview']) || !isset($data['preview']['preview_url'])) {
+                Log::error('Preview data missing in response', [
+                    'response' => $data
+                ]);
+                return null;
+            }
+            
+            $previewUrl = $data['preview']['preview_url'];
+            Log::info('Preview URL received', ['url' => $previewUrl]);
+            
+            // Try different methods to extract token
+            $token = null;
+            
+            // Method 1: Standard query parameter format
+            if (preg_match('/[\?&]preview_token=([^&]+)/', $previewUrl, $matches)) {
+                $token = $matches[1];
+            }
+            // Method 2: Alternative parameter name
+            else if (preg_match('/[\?&]token=([^&]+)/', $previewUrl, $matches)) {
+                $token = $matches[1];
+            }
+            // Method 3: Parse URL query parameters
+            else {
+                $parsedUrl = parse_url($previewUrl);
+                if (isset($parsedUrl['query'])) {
+                    parse_str($parsedUrl['query'], $queryParams);
+                    if (isset($queryParams['preview_token'])) {
+                        $token = $queryParams['preview_token'];
+                    } else if (isset($queryParams['token'])) {
+                        $token = $queryParams['token'];
+                    }
+                }
+            }
+            
+            if ($token) {
+                Log::info('Preview token found', ['token' => $token]);
+                return $token;
+            }
+            
+            Log::error('Could not extract token from preview URL', [
+                'url' => $previewUrl
+            ]);
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Exception getting preview token', [
+                'flow_id' => $flowId,
+                'message' => $e->getMessage()
+            ]);
+            return null;
+        }
+    }
+
+    /**
      * Send flow to a customer.
      *
      * @param Request $request
@@ -630,6 +858,22 @@ class WhatsappFlowController extends BaseController
     public function send(Request $request, $id)
     {
         try {
+            Log::info('Sending WhatsApp flow', [
+                'flow_id' => $id,
+                'request_data' => $request->all()
+            ]);
+
+            // Get required settings
+            $accessToken = getVendorSettings('whatsapp_access_token');
+            $phoneNumberId = getVendorSettings('current_phone_number_id');
+            $baseUrl = "https://graph.facebook.com/v17.0";
+
+            if (empty($accessToken) || empty($phoneNumberId)) {
+                throw new Exception('Missing WhatsApp configuration: ' . 
+                    (empty($accessToken) ? 'Access Token ' : '') . 
+                    (empty($phoneNumberId) ? 'Phone Number ID' : ''));
+            }
+
             // Validate the request
             $validated = $request->validate([
                 'phone_number' => 'required|string|regex:/^[0-9]+$/'
@@ -637,8 +881,8 @@ class WhatsappFlowController extends BaseController
 
             // Get flow details to determine status
             $flowResponse = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}", [
+                'Authorization' => "Bearer {$accessToken}",
+            ])->get("{$baseUrl}/{$id}", [
                 'fields' => 'status'
             ]);
 
@@ -669,74 +913,251 @@ class WhatsappFlowController extends BaseController
                 ]
             ];
 
-            // If the flow is in DRAFT status, we need to get a preview token
+            // Add different content based on flow status
             if ($isDraft) {
-                Log::info('Flow is in DRAFT status, getting preview token', [
-                    'flow_id' => $id
-                ]);
-
-                $previewResponse = Http::withHeaders([
-                    'Authorization' => "Bearer {$this->accessToken}",
-                ])->get("{$this->baseUrl}/{$this->wabaId}/flows/{$id}", [
-                    'fields' => 'preview'
-                ]);
-
-                if (!$previewResponse->successful()) {
-                    throw new Exception('Failed to get preview token');
-                }
-
-                $previewData = $previewResponse->json();
-                if (!isset($previewData['preview']) || !isset($previewData['preview']['preview_url'])) {
-                    throw new Exception('Preview URL not available');
-                }
-
-                // Extract the preview token from the URL
-                $previewUrl = $previewData['preview']['preview_url'];
-                preg_match('/preview_token=([^&]+)/', $previewUrl, $matches);
+                $payload["interactive"]["header"] = [
+                    "type" => "text",
+                    "text" => "Not shown in draft mode"
+                ];
+                $payload["interactive"]["body"] = [
+                    "text" => "Not shown in draft mode"
+                ];
+                $payload["interactive"]["footer"] = [
+                    "text" => "Not shown in draft mode"
+                ];
+                $payload["interactive"]["action"]["parameters"]["flow_cta"] = "Not shown in draft mode";
+                $payload["interactive"]["action"]["parameters"]["mode"] = "draft";
                 
-                if (empty($matches[1])) {
-                    throw new Exception('Could not extract preview token');
+                // For draft mode, get the preview token using our dedicated method
+                $previewToken = $this->getFlowPreviewToken($id, $accessToken);
+                
+                if (empty($previewToken)) {
+                    throw new Exception('Failed to get preview token for draft flow');
                 }
-
-                $previewToken = $matches[1];
+                
                 $payload['interactive']['action']['parameters']['flow_token'] = $previewToken;
+            } else {
+                $payload["interactive"]["header"] = [
+                    "type" => "text",
+                    "text" => "Hii"
+                ];
+                $payload["interactive"]["body"] = [
+                    "text" => "Open the flow"
+                ];
+                $payload["interactive"]["footer"] = [
+                    "text" => "Choose an option"
+                ];
+                $payload["interactive"]["action"]["parameters"]["flow_cta"] = "Open Flow!";
             }
 
-            // Send the message
             Log::info('Sending WhatsApp message', [
-                'flow_id' => $id,
-                'phone_number' => $validated['phone_number']
+                'payload' => $payload,
+                'endpoint' => "{$baseUrl}/{$phoneNumberId}/messages"
             ]);
 
-            $sendResponse = Http::withHeaders([
-                'Authorization' => "Bearer {$this->accessToken}",
-            ])->post("{$this->baseUrl}/messages", $payload);
+            // Make the API request to send the flow
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$accessToken}",
+                'Content-Type' => 'application/json'
+            ])->post("{$baseUrl}/{$phoneNumberId}/messages", $payload);
 
-            if (!$sendResponse->successful()) {
-                $errorData = $sendResponse->json();
-                Log::error('WhatsApp Send Error', [
-                    'error' => $errorData
-                ]);
-                throw new Exception($errorData['error']['message'] ?? 'Failed to send message');
+            // Log the complete response for debugging
+            Log::info('WhatsApp API response', [
+                'status' => $response->status(),
+                'body' => $response->json()
+            ]);
+
+            $responseData = $response->json();
+
+            if (!$response->successful()) {
+                // Check if this is an AJAX request
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'error' => $responseData['error']['message'] ?? 'Failed to send flow',
+                        'status_code' => $response->status(),
+                        'response' => $responseData
+                    ]);
+                }
+                
+                // For regular form submissions, redirect back with error
+                $errorMessage = $responseData['error']['message'] ?? 'Failed to send flow';
+                return back()->with('error', $errorMessage);
             }
 
-            return redirect()->route('whatsapp-flows.index')
-                ->with('success', 'Message sent successfully!');
+            // Check if this is an AJAX request
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Flow sent successfully',
+                    'status_code' => $response->status(),
+                    'response_data' => $responseData
+                ]);
+            }
+            
+            // For regular form submissions, redirect back with success
+            return back()->with('success', 'Flow sent successfully');
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()
-                ->withErrors($e->errors())
-                ->withInput();
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Send Exception', [
                 'id' => $id,
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
+
+            // Check if this is an AJAX request
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'error' => $e->getMessage()
+                ], 500);
+            }
             
-            return redirect()->back()
-                ->with('error', 'Failed to send message: ' . $e->getMessage())
-                ->withInput();
+            // For regular form submissions, redirect back with error
+            return back()->with('error', 'Failed to send message: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Debug settings to find out why they're not being properly fetched
+     *
+     * @return \Illuminate\View\View
+     */
+    public function debugSettings()
+    {
+        // Get vendor ID
+        $vendorId = getVendorId();
+        
+        // Direct DB query to see all WhatsApp related settings
+        $allSettings = VendorSettingsModel::where('vendors__id', $vendorId)
+            ->where(function($query) {
+                $query->where('name', 'like', '%whatsapp%')
+                    ->orWhere('name', 'like', '%waba%')
+                    ->orWhere('name', 'like', '%phone%');
+            })
+            ->select('name', 'value')
+            ->get()
+            ->toArray();
+        
+        // Check specific keys we're trying to use
+        $specificKeys = [
+            'whatsapp_business_account_id' => getVendorSettings('whatsapp_business_account_id'),
+            'whatsapp_access_token' => getVendorSettings('whatsapp_access_token') ? 'Set (value hidden)' : 'Not Set',
+            'current_phone_number_id' => getVendorSettings('current_phone_number_id'),
+            // Try alternative names
+            'whatsapp_phone_numbers' => getVendorSettings('whatsapp_phone_numbers'),
+            'whatsapp_phone_number_id' => getVendorSettings('whatsapp_phone_number_id')
+        ];
+        
+        // Structure for debug output
+        $debugData = [
+            'vendor_id' => $vendorId,
+            'specific_keys' => $specificKeys,
+            'all_whatsapp_settings' => $allSettings
+        ];
+        
+        Log::info('WhatsApp Flow Debug Settings', $debugData);
+        
+        return view('whatsapp-flows.debug', [
+            'debugData' => $debugData
+        ]);
+    }
+
+    /**
+     * Debug API settings and test connection
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function debugApi(Request $request)
+    {
+        try {
+            // Get all the relevant settings
+            $vendorId = getVendorId();
+            $wabaId = getVendorSettings('whatsapp_business_account_id');
+            $accessToken = getVendorSettings('whatsapp_access_token');
+            $phoneNumberId = getVendorSettings('current_phone_number_id');
+            
+            // Settings details
+            $settingsInfo = [
+                'vendor_id' => $vendorId,
+                'waba_id' => $wabaId,
+                'has_access_token' => !empty($accessToken),
+                'phone_number_id' => $phoneNumberId
+            ];
+            
+            // Log the settings info
+            Log::info('Debug API settings', $settingsInfo);
+            
+            // Now test the API connections
+            $apiChecks = [];
+            
+            // Check 1: Test access to WABA (if set)
+            if (!empty($wabaId) && !empty($accessToken)) {
+                try {
+                    $baseUrl = "https://graph.facebook.com/v17.0";
+                    $wabaUrl = "{$baseUrl}/{$wabaId}";
+                    
+                    $wabaResponse = Http::withHeaders([
+                        'Authorization' => "Bearer {$accessToken}",
+                    ])->get($wabaUrl);
+                    
+                    $apiChecks['waba_check'] = [
+                        'success' => $wabaResponse->successful(),
+                        'status' => $wabaResponse->status(),
+                        'response' => $wabaResponse->successful() ? $wabaResponse->json() : null
+                    ];
+                } catch (\Exception $e) {
+                    $apiChecks['waba_check'] = [
+                        'success' => false,
+                        'error' => $e->getMessage()
+                    ];
+                }
+            }
+            
+            // Check 2: Test access to phone number (if set)
+            if (!empty($phoneNumberId) && !empty($accessToken)) {
+                try {
+                    $baseUrl = "https://graph.facebook.com/v17.0";
+                    $phoneUrl = "{$baseUrl}/{$phoneNumberId}";
+                    
+                    $phoneResponse = Http::withHeaders([
+                        'Authorization' => "Bearer {$accessToken}",
+                    ])->get($phoneUrl);
+                    
+                    $apiChecks['phone_check'] = [
+                        'success' => $phoneResponse->successful(),
+                        'status' => $phoneResponse->status(),
+                        'response' => $phoneResponse->successful() ? $phoneResponse->json() : null
+                    ];
+                } catch (\Exception $e) {
+                    $apiChecks['phone_check'] = [
+                        'success' => false,
+                        'error' => $e->getMessage()
+                    ];
+                }
+            }
+            
+            // Check 3: Test formatting of URLs
+            $urlFormats = [
+                'base_url' => "https://graph.facebook.com/v17.0",
+                'waba_flows_url' => "https://graph.facebook.com/v17.0/{$wabaId}/flows",
+                'flow_detail_url' => "https://graph.facebook.com/v17.0/FLOW_ID_HERE",
+                'messages_url' => "https://graph.facebook.com/v17.0/{$phoneNumberId}/messages"
+            ];
+            
+            // Return detailed debug information
+            return response()->json([
+                'success' => true,
+                'settings' => $settingsInfo,
+                'api_checks' => $apiChecks,
+                'url_formats' => $urlFormats
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ]);
         }
     }
 } 
