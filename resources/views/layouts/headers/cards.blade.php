@@ -231,7 +231,7 @@ $vendorViewBySuperAdmin = false;
                             <div class="stat-card-content">
                                 <div style="font-size:15px;">
                                   Total<br>
-                                    <span class="font-weight-bold text-primary" style="font-size:20px;">{{ __tr($totalMessagesProcessed + $messagesInQueue) }}</span>
+                                    <span class="font-weight-bold text-primary total" style="font-size:20px;">{{ __tr($totalMessagesProcessed + $messagesInQueue) }}</span>
                                      <span class="font-weight-bold text-primary"> Messages</span>
                                 </div>
                             </div>
@@ -246,7 +246,7 @@ $vendorViewBySuperAdmin = false;
                             <div class="stat-card-content">
                             <div style="font-size:15px;">
                                     Sent<br>
-                                    <span class="font-weight-bold text-success" style="font-size:20px;">{{ __tr($totalMessagesProcessed) }}</span>
+                                    <span class="font-weight-bold text-success total" style="font-size:20px;">{{ __tr($totalMessagesProcessed) }}</span>
                                     <span class="font-weight-bold text-success"> Messages</span>
                                 </div>
                             </div>
@@ -261,7 +261,7 @@ $vendorViewBySuperAdmin = false;
                             <div class="stat-card-content">
                                 <div style="font-size:15px;">
                                      Pending<br>
-                                     <span class="font-weight-bold text-muted" style="font-size:20px;">{{ __tr($messagesInQueue) }}</span>
+                                     <span class="font-weight-bold text-muted total" style="font-size:20px;">{{ __tr($messagesInQueue) }}</span>
                                     <span class="font-weight-bold text-muted"> Messages</span>
                                 </div>
                             </div>
@@ -334,6 +334,35 @@ $vendorViewBySuperAdmin = false;
         // Render the chart
         new Chart(ctx, config);
     });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const featureCounter = document.querySelectorAll('.feature-counter, .total');
+
+    featureCounter.forEach(counter => {
+        const target = parseInt(counter.innerText, 10);
+
+        // If target is 0 or invalid, just show 0
+        if (isNaN(target) || target === 0) {
+            counter.innerText = 0;
+            return;
+        }
+
+        let count = 0;
+        const duration = 2000;
+        const incrementTime = Math.floor(duration / target);
+
+        const interval = setInterval(() => {
+            count += 1;
+            counter.innerText = count;
+
+            if (count >= target) {
+                clearInterval(interval);
+            }
+        }, incrementTime);
+    });
+});
+
 </script>
 @endif
 <style>
