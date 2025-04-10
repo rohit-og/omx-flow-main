@@ -121,7 +121,7 @@ EOT;
         
         $script .= <<<'EOT'
 // We'll store the last processed row count to track new additions
-let PROPERTY_NAME = "lastProcessedRowCount";
+const PROPERTY_NAME = "lastProcessedRowCount";
 
 /**
  * Creates a trigger to run the checkForNewRows function every minute
@@ -170,8 +170,8 @@ EOT;
         
         $script .= <<<'EOT'
         
-        // Send the API request
-        sendApiRequest(phoneNumber);
+        // Send the API request with the row data
+        sendApiRequest(phoneNumber, rowData);
       }
       
       // Update the last processed row count
@@ -184,8 +184,10 @@ EOT;
 
 /**
  * Sends the API request with the phone number
+ * @param {string} phoneNumber - The phone number to send the message to
+ * @param {Array} rowData - The entire row data
  */
-function sendApiRequest(phoneNumber) {
+function sendApiRequest(phoneNumber, rowData) {
   try {
     // Format the phone number - remove any non-digit characters if needed
     const formattedPhoneNumber = phoneNumber.toString().replace(/\D/g, "");
@@ -195,16 +197,16 @@ function sendApiRequest(phoneNumber) {
       "phone_number": formattedPhoneNumber,
 EOT;
     
-    $script .= "\n      \"template_name\": \"" . $templateName . "\",";
-    $script .= "\n      \"template_language\": \"" . $templateLanguage . "\"";
+        $script .= "\n      \"template_name\": \"" . $templateName . "\",";
+        $script .= "\n      \"template_language\": \"" . $templateLanguage . "\"";
     
-    // Add custom fields to payload
-    foreach ($customFields as $index => $columnIndex) {
-        $fieldNumber = $index + 1;
-        $script .= ",\n      \"field_{$fieldNumber}\": rowData[{$columnIndex}]";
-    }
+        // Add custom fields to payload
+        foreach ($customFields as $index => $columnIndex) {
+            $fieldNumber = $index + 1;
+            $script .= ",\n      \"field_{$fieldNumber}\": rowData[{$columnIndex}]";
+        }
 
-    $script .= <<<'EOT'
+        $script .= <<<'EOT'
     };
     
     // Set up the request options
@@ -224,12 +226,13 @@ EOT;
     
     // Add a note to the cell indicating the message was sent
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    const lastRow = sheet.getLastRow();
 EOT;
 
-    $script .= "\n    sheet.getRange(lastRow, " . ($phoneColumnIndex + 1) . ").setNote(\"Message sent: \" + new Date().toLocaleString());\n";
-
-    $script .= <<<'EOT'
+        // Add code to find the row based on a unique identifier in the first column if possible
+        $script .= "\n    const rowIndex = rowData[0] ? sheet.createTextFinder(rowData[0]).findNext().getRow() : sheet.getLastRow();\n";
+        $script .= "    sheet.getRange(rowIndex, " . ($phoneColumnIndex + 1) . ").setNote(\"Message sent: \" + new Date().toLocaleString());\n";
+    
+        $script .= <<<'EOT'
     
   } catch (error) {
     Logger.log("API Request Error: " + error.toString());
