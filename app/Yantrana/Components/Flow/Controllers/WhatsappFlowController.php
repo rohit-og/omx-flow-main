@@ -876,7 +876,7 @@ class WhatsappFlowController extends BaseController
 
             // Validate the request
             $validated = $request->validate([
-                'phone_number' => 'required|string|regex:/^[0-9]+$/',
+                'phone_number' => 'required|string',
                 'header_text' => 'nullable|string|max:60',
                 'body_text' => 'nullable|string|max:1024',
                 'footer_text' => 'nullable|string|max:60'
@@ -896,115 +896,158 @@ class WhatsappFlowController extends BaseController
             $flowData = $flowResponse->json();
             $isDraft = $flowData['status'] === 'DRAFT';
 
-            // Prepare the base payload
-            $payload = [
-                "messaging_product" => "whatsapp",
-                "to" => $validated['phone_number'],
-                "recipient_type" => "individual",
-                "type" => "interactive",
-                "interactive" => [
-                    "type" => "flow",
-                    "action" => [
-                        "name" => "flow",
-                        "parameters" => [
-                            "flow_message_version" => "3",
-                            "flow_action" => "navigate",
-                            "flow_token" => "<FLOW_TOKEN>",
-                            "flow_id" => $id
-                        ]
-                    ]
-                ]
-            ];
+            // Split phone numbers by comma
+            $phoneNumbers = array_filter(array_map('trim', explode(',', $validated['phone_number'])));
+            
+            if (empty($phoneNumbers)) {
+                throw new Exception('No valid phone numbers provided');
+            }
+            
+            // Validate each phone number
+            foreach ($phoneNumbers as $phoneNumber) {
+                if (!preg_match('/^[0-9]+$/', $phoneNumber)) {
+                    throw new Exception('Invalid phone number format: ' . $phoneNumber);
+                }
+            }
 
-            // Add different content based on flow status
+            Log::info('Sending to multiple recipients', [
+                'count' => count($phoneNumbers),
+                'recipients' => $phoneNumbers
+            ]);
+            
+            $results = [];
+            $hasErrors = false;
+            
+            // Prepare common message template
+            // For published flows, use the provided header, body, and footer text
+            $headerText = $request->input('header_text', 'Hii');
+            $bodyText = $request->input('body_text', 'Open the flow');
+            $footerText = $request->input('footer_text', 'Choose an option');
+            
+            // For draft mode, get the preview token
+            $previewToken = null;
             if ($isDraft) {
-                $payload["interactive"]["header"] = [
-                    "type" => "text",
-                    "text" => "Not shown in draft mode"
-                ];
-                $payload["interactive"]["body"] = [
-                    "text" => "Not shown in draft mode"
-                ];
-                $payload["interactive"]["footer"] = [
-                    "text" => "Not shown in draft mode"
-                ];
-                $payload["interactive"]["action"]["parameters"]["flow_cta"] = "Not shown in draft mode";
-                $payload["interactive"]["action"]["parameters"]["mode"] = "draft";
-                
-                // For draft mode, get the preview token using our dedicated method
                 $previewToken = $this->getFlowPreviewToken($id, $accessToken);
                 
                 if (empty($previewToken)) {
                     throw new Exception('Failed to get preview token for draft flow');
                 }
-                
-                $payload['interactive']['action']['parameters']['flow_token'] = $previewToken;
-            } else {
-                // For published flows, use the provided header, body, and footer text
-                $headerText = $request->input('header_text', 'Hii');
-                $bodyText = $request->input('body_text', 'Open the flow');
-                $footerText = $request->input('footer_text', 'Choose an option');
-                
-                $payload["interactive"]["header"] = [
-                    "type" => "text",
-                    "text" => $headerText
-                ];
-                $payload["interactive"]["body"] = [
-                    "text" => $bodyText
-                ];
-                $payload["interactive"]["footer"] = [
-                    "text" => $footerText
-                ];
-                $payload["interactive"]["action"]["parameters"]["flow_cta"] = "Open Flow!";
             }
 
-            Log::info('Sending WhatsApp message', [
-                'payload' => $payload,
-                'endpoint' => "{$baseUrl}/{$phoneNumberId}/messages"
-            ]);
+            // Send to each recipient
+            foreach ($phoneNumbers as $phoneNumber) {
+                // Prepare the payload for this recipient
+                $payload = [
+                    "messaging_product" => "whatsapp",
+                    "to" => $phoneNumber,
+                    "recipient_type" => "individual",
+                    "type" => "interactive",
+                    "interactive" => [
+                        "type" => "flow",
+                        "action" => [
+                            "name" => "flow",
+                            "parameters" => [
+                                "flow_message_version" => "3",
+                                "flow_action" => "navigate",
+                                "flow_token" => "<FLOW_TOKEN>",
+                                "flow_id" => $id
+                            ]
+                        ]
+                    ]
+                ];
 
-            // Make the API request to send the flow
-            $response = Http::withHeaders([
-                'Authorization' => "Bearer {$accessToken}",
-                'Content-Type' => 'application/json'
-            ])->post("{$baseUrl}/{$phoneNumberId}/messages", $payload);
+                // Add different content based on flow status
+                if ($isDraft) {
+                    $payload["interactive"]["header"] = [
+                        "type" => "text",
+                        "text" => "Not shown in draft mode"
+                    ];
+                    $payload["interactive"]["body"] = [
+                        "text" => "Not shown in draft mode"
+                    ];
+                    $payload["interactive"]["footer"] = [
+                        "text" => "Not shown in draft mode"
+                    ];
+                    $payload["interactive"]["action"]["parameters"]["flow_cta"] = "Not shown in draft mode";
+                    $payload["interactive"]["action"]["parameters"]["mode"] = "draft";
+                    $payload['interactive']['action']['parameters']['flow_token'] = $previewToken;
+                } else {
+                    $payload["interactive"]["header"] = [
+                        "type" => "text",
+                        "text" => $headerText
+                    ];
+                    $payload["interactive"]["body"] = [
+                        "text" => $bodyText
+                    ];
+                    $payload["interactive"]["footer"] = [
+                        "text" => $footerText
+                    ];
+                    $payload["interactive"]["action"]["parameters"]["flow_cta"] = "Open Flow!";
+                }
 
-            // Log the complete response for debugging
-            Log::info('WhatsApp API response', [
-                'status' => $response->status(),
-                'body' => $response->json()
-            ]);
+                Log::info('Sending WhatsApp message to recipient', [
+                    'phone' => $phoneNumber,
+                    'endpoint' => "{$baseUrl}/{$phoneNumberId}/messages"
+                ]);
 
-            $responseData = $response->json();
+                // Make the API request to send the flow
+                $response = Http::withHeaders([
+                    'Authorization' => "Bearer {$accessToken}",
+                    'Content-Type' => 'application/json'
+                ])->post("{$baseUrl}/{$phoneNumberId}/messages", $payload);
 
-            if (!$response->successful()) {
-                // Check if this is an AJAX request
-                if ($request->ajax() || $request->wantsJson()) {
-                    return response()->json([
-                        'success' => false,
-                        'error' => $responseData['error']['message'] ?? 'Failed to send flow',
-                        'status_code' => $response->status(),
-                        'response' => $responseData
-                    ]);
+                $responseData = $response->json();
+                
+                // Store the result
+                $results[$phoneNumber] = [
+                    'success' => $response->successful(),
+                    'status' => $response->status(),
+                    'response' => $responseData
+                ];
+                
+                if (!$response->successful()) {
+                    $hasErrors = true;
                 }
                 
-                // For regular form submissions, redirect back with error
-                $errorMessage = $responseData['error']['message'] ?? 'Failed to send flow';
-                return back()->with('error', $errorMessage);
+                // Brief pause between requests to avoid rate limiting
+                if (count($phoneNumbers) > 1) {
+                    usleep(200000); // 200ms pause
+                }
+            }
+
+            Log::info('All messages sent', [
+                'results' => $results,
+                'has_errors' => $hasErrors
+            ]);
+
+            // Prepare the response
+            $responseMessage = count($phoneNumbers) > 1 
+                ? 'Flow sent to ' . count($phoneNumbers) . ' recipients' 
+                : 'Flow sent successfully';
+                
+            if ($hasErrors) {
+                $errorCount = count(array_filter($results, function($result) {
+                    return !$result['success'];
+                }));
+                
+                $responseMessage = 'Flow sent with ' . $errorCount . ' errors out of ' . count($phoneNumbers) . ' recipients';
             }
 
             // Check if this is an AJAX request
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
-                    'success' => true,
-                    'message' => 'Flow sent successfully',
-                    'status_code' => $response->status(),
-                    'response_data' => $responseData
+                    'success' => !$hasErrors,
+                    'message' => $responseMessage,
+                    'results' => $results
                 ]);
             }
             
-            // For regular form submissions, redirect back with success
-            return back()->with('success', 'Flow sent successfully');
+            // For regular form submissions, redirect back with success or mixed message
+            if ($hasErrors) {
+                return back()->with('warning', $responseMessage);
+            } else {
+                return back()->with('success', $responseMessage);
+            }
 
         } catch (\Exception $e) {
             Log::error('WhatsApp Flow Send Exception', [

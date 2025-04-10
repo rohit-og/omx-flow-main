@@ -107,11 +107,11 @@
                     <form id="sendFlowForm" method="POST" action="{{ route('whatsapp-flows.send', ['id' => $flow['id']]) }}">
                         @csrf
                         <div class="mb-3">
-                            <label for="phone_number" class="form-label">Phone Number (with country code)</label>
+                            <label for="phone_number" class="form-label">Phone Number(s)</label>
                             <input type="text" class="form-control" id="phone_number" name="phone_number"
-                                   pattern="[0-9]+" placeholder="e.g., 91882228282" required
-                                   title="Please enter numbers only">
-                            <div class="form-text">Include country code without '+' or '00'. Numbers only.</div>
+                                  placeholder="e.g., 91882228282 or multiple numbers: 91882228282,91993337777" required
+                                  title="Please enter numbers only, separate multiple numbers with commas">
+                            <div class="form-text">Include country code without '+' or '00'. For multiple numbers, separate with commas (no spaces).</div>
                         </div>
 
                         @if($flow['status'] !== 'DRAFT')
@@ -213,23 +213,34 @@ document.addEventListener('DOMContentLoaded', function() {
 
     console.log('Form elements found, setting up event listeners');
 
-    // Enforce numbers-only input for phone number
+    // Allow only numbers and commas in the phone number field
     phoneNumberInput.addEventListener('input', function(e) {
-        this.value = this.value.replace(/[^0-9]/g, '');
+        this.value = this.value.replace(/[^0-9,]/g, '');
     });
 
     form.addEventListener('submit', function(e) {
         console.log('Form submitted');
         e.preventDefault();
         
-        const phoneNumber = phoneNumberInput.value;
-        console.log('Phone number:', phoneNumber);
+        const phoneNumberValue = phoneNumberInput.value.trim();
+        const phoneNumbers = phoneNumberValue.split(',').filter(num => num.trim() !== '');
+        
+        console.log('Phone numbers:', phoneNumbers);
 
-        // Validate phone number format (numbers only)
-        if (!/^[0-9]+$/.test(phoneNumber)) {
-            console.error('Invalid phone number format');
-            showCustomToast('Please enter a valid phone number (numbers only)', 'error');
+        // Validate there's at least one phone number
+        if (phoneNumbers.length === 0) {
+            console.error('No valid phone numbers provided');
+            showCustomToast('Please enter at least one valid phone number', 'error');
             return;
+        }
+
+        // Validate each phone number format (numbers only)
+        for (const number of phoneNumbers) {
+            if (!/^[0-9]+$/.test(number)) {
+                console.error('Invalid phone number format:', number);
+                showCustomToast('Please enter valid phone numbers (numbers only)', 'error');
+                return;
+            }
         }
 
         // Disable the button and show loading state
@@ -238,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Create FormData
         const formData = new FormData();
-        formData.append('phone_number', phoneNumber);
+        formData.append('phone_number', phoneNumberValue);
         formData.append('_token', csrfToken);
         
         // Add template fields if they exist
@@ -252,7 +263,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Log the request data
         console.log('Sending request with data:', {
-            phone_number: phoneNumber,
+            phone_number: phoneNumberValue,
+            phone_numbers: phoneNumbers,
             flow_id: '{{ $flow["id"] }}',
             csrf_token: csrfToken,
             header_text: headerText ? headerText.value : null,
@@ -288,7 +300,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendButton.innerHTML = '<i class="fa fa-check"></i> Flow Sent Successfully';
                 
                 // Show detailed success notification
-                const successMessage = 'Flow sent successfully to ' + phoneNumber;
+                let recipientText = phoneNumbers.length > 1 ? 
+                    `${phoneNumbers.length} recipients` : 
+                    phoneNumberValue;
+                const successMessage = `Flow sent successfully to ${recipientText}`;
                 console.log('Showing success notification:', successMessage);
                 
                 // Try multiple notification methods to ensure it works
