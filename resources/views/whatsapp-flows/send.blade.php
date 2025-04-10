@@ -114,6 +114,27 @@
                             <div class="form-text">Include country code without '+' or '00'. Numbers only.</div>
                         </div>
 
+                        @if($flow['status'] !== 'DRAFT')
+                        <!-- Message Template Fields - Only shown for published flows -->
+                        <div class="mb-3">
+                            <label for="header_text" class="form-label">Header Text</label>
+                            <input type="text" class="form-control" id="header_text" name="header_text" 
+                                  placeholder="Header text for your message">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="body_text" class="form-label">Body Text</label>
+                            <textarea class="form-control" id="body_text" name="body_text" 
+                                     rows="3" placeholder="Main body of your message"></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="footer_text" class="form-label">Footer Text</label>
+                            <input type="text" class="form-control" id="footer_text" name="footer_text" 
+                                  placeholder="Footer text for your message">
+                        </div>
+                        @endif
+
                         <div class="text-end">
                             <button type="submit" class="btn btn-primary" id="sendButton">
                                 <i class="fa fa-paper-plane"></i> Send Flow
@@ -219,12 +240,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const formData = new FormData();
         formData.append('phone_number', phoneNumber);
         formData.append('_token', csrfToken);
+        
+        // Add template fields if they exist
+        const headerText = document.getElementById('header_text');
+        const bodyText = document.getElementById('body_text');
+        const footerText = document.getElementById('footer_text');
+        
+        if (headerText) formData.append('header_text', headerText.value);
+        if (bodyText) formData.append('body_text', bodyText.value);
+        if (footerText) formData.append('footer_text', footerText.value);
 
         // Log the request data
         console.log('Sending request with data:', {
             phone_number: phoneNumber,
             flow_id: '{{ $flow["id"] }}',
-            csrf_token: csrfToken
+            csrf_token: csrfToken,
+            header_text: headerText ? headerText.value : null,
+            body_text: bodyText ? bodyText.value : null,
+            footer_text: footerText ? footerText.value : null
         });
 
         // Make the API request

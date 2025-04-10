@@ -876,7 +876,10 @@ class WhatsappFlowController extends BaseController
 
             // Validate the request
             $validated = $request->validate([
-                'phone_number' => 'required|string|regex:/^[0-9]+$/'
+                'phone_number' => 'required|string|regex:/^[0-9]+$/',
+                'header_text' => 'nullable|string|max:60',
+                'body_text' => 'nullable|string|max:1024',
+                'footer_text' => 'nullable|string|max:60'
             ]);
 
             // Get flow details to determine status
@@ -937,15 +940,20 @@ class WhatsappFlowController extends BaseController
                 
                 $payload['interactive']['action']['parameters']['flow_token'] = $previewToken;
             } else {
+                // For published flows, use the provided header, body, and footer text
+                $headerText = $request->input('header_text', 'Hii');
+                $bodyText = $request->input('body_text', 'Open the flow');
+                $footerText = $request->input('footer_text', 'Choose an option');
+                
                 $payload["interactive"]["header"] = [
                     "type" => "text",
-                    "text" => "Hii"
+                    "text" => $headerText
                 ];
                 $payload["interactive"]["body"] = [
-                    "text" => "Open the flow"
+                    "text" => $bodyText
                 ];
                 $payload["interactive"]["footer"] = [
-                    "text" => "Choose an option"
+                    "text" => $footerText
                 ];
                 $payload["interactive"]["action"]["parameters"]["flow_cta"] = "Open Flow!";
             }
