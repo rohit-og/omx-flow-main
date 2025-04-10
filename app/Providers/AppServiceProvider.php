@@ -15,7 +15,22 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // Register ECommerce Interface
+        $this->app->bind(
+            \App\Yantrana\Components\ECommerce\Interfaces\ECommerceEngineInterface::class,
+            \App\Yantrana\Components\ECommerce\ECommerceEngine::class
+        );
+
+        // Register WhatsApp ECommerce Service
+        $this->app->singleton('App\Yantrana\Components\ECommerce\ECommerceEngine', function ($app) {
+            return new \App\Yantrana\Components\ECommerce\ECommerceEngine(
+                $app->make(\App\Yantrana\Components\ECommerce\Repositories\ProductRepository::class),
+                $app->make(\App\Yantrana\Components\ECommerce\Repositories\CartRepository::class),
+                $app->make(\App\Yantrana\Components\ECommerce\Repositories\OrderRepository::class),
+                $app->make(\App\Yantrana\Components\Contact\Repositories\ContactRepository::class),
+                $app->make(\App\Yantrana\Components\ECommerce\Services\WhatsAppECommerceService::class)
+            );
+        });
     }
 
     /**
