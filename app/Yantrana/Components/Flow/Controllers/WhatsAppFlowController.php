@@ -11,7 +11,7 @@ use App\Yantrana\Components\Vendor\VendorSettingsEngine;
 use App\Yantrana\Components\Vendor\Models\VendorSettingsModel;
 use Illuminate\Support\Arr;
 
-class WhatsappFlowController extends BaseController 
+class WhatsAppFlowController extends BaseController 
 {
     protected $baseUrl;
     protected $wabaId;
