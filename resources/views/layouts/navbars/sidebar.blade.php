@@ -558,6 +558,12 @@
                                     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!! __tr('API Integration') !!}
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-ul <?= (isset($pageType) and $pageType == 'api-access') ? 'active' : '' ?>"
+                                    href="<?= route('google-sheet-script.index', ['pageType' => 'api-access']) ?>">
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{!! __tr('Sheets Integration') !!}
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

@@ -23,6 +23,7 @@ use App\Yantrana\Components\Subscription\Controllers\ManualSubscriptionControlle
 use App\Yantrana\Components\WhatsAppService\Controllers\WhatsAppServiceController;
 use App\Yantrana\Components\WhatsAppService\Controllers\WhatsAppTemplateController;
 use App\Yantrana\Components\Flow\Controllers\WhatsAppFlowController;
+use App\Yantrana\Components\Sheets\Controllers\GoogleSheetScriptController;
 
 Route::middleware(['web', 'auth'])->group(function () {
     \Log::info('Registration ID: ' . getAppSettings('product_registration', 'registration_id'));
@@ -876,6 +877,12 @@ Route::middleware([
                 VendorSettingsController::class,
                 'updateBasicSettings',
             ])->name('vendor.settings_basic.write.update');
+
+            Route::get('/google-sheet-script', [GoogleSheetScriptController::class, 'index'])
+            ->name('google-sheet-script.index');
+
+            Route::post('/google-sheet-script/generate', [GoogleSheetScriptController::class, 'generateScript'])
+            ->name('google-sheet-script.generate');
 
             Route::post('/disconnect-webhook', [
                 WhatsAppServiceController::class,

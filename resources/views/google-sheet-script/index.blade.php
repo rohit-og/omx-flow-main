@@ -4,7 +4,12 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Generate Google Sheets Integration Script</div>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Generate Google Sheets Integration Script</span>
+                    <a href="https://drive.google.com/file/d/15ZqjRlzqpFoGrD0DOSDd4zZMRDwunRAD/view?usp=sharing" target="_blank" class="btn btn-primary btn-sm">
+                        <i class="fas fa-video"></i> {{ __tr('Watch Instructions') }}
+                    </a>
+                </div>
 
                 <div class="card-body">
                     @if ($errors->any())

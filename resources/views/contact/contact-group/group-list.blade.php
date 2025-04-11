@@ -215,6 +215,7 @@
                     </th>
                     <th data-orderable="true" data-name="title">{{ __tr('Title') }}</th>
                     <th data-name="description">{{ __tr('Description') }}</th>
+                    <th data-name="total_contacts" data-template="#totalContactsTemplate">{{ __tr('Total Contacts') }}</th>
                     <th data-template="#groupActionColumnTemplate" name="null">{{ __tr('Action') }}</th>
                 </x-lw.datatable>
 
@@ -246,6 +247,12 @@
             <input @click="toggle('<%- __tData._uid %>')" type="checkbox" name="selected_groups[]" class="lw-checkboxes custom-checkbox" value="<%- __tData._uid %>">
         </script>
         <!-- /select multiple -->
+
+        <!-- Total Contacts Template -->
+        <script type="text/template" id="totalContactsTemplate">
+            <%- __tData.total_contacts || 0 %>
+        </script>
+        <!-- /Total Contacts Template -->
 
         <!-- Group delete template -->
         <script type="text/template" id="lwDeleteGroup-template">
